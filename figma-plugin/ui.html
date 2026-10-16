@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px;
+    font: 12px/1.5 "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #0F172A; background: #F8FAFC;
+  }
+  h1 { font-size: 13px; margin: 0 0 2px; letter-spacing: -0.01em; }
+  p.sub { margin: 0 0 14px; color: #64748B; font-size: 11px; }
+
+  .btn {
+    display: block; width: 100%; margin-bottom: 7px;
+    padding: 9px 12px; border-radius: 7px;
+    border: 1.5px solid #E2E8F0; background: #FFFFFF;
+    color: #0F172A; font: inherit; font-weight: 600;
+    text-align: left; cursor: pointer;
+  }
+  .btn:hover { border-color: #4087C4; background: #EAF5FF; }
+  .btn small { display: block; font-weight: 400; color: #64748B; font-size: 10px; margin-top: 1px; }
+  .btn--all { background: #35A8FF; border-color: #35A8FF; color: #FFFFFF; }
+  .btn--all:hover { background: #1E8FE6; border-color: #1E8FE6; }
+  .btn--all small { color: rgba(255,255,255,0.85); }
+
+  .sep { height: 1px; background: #E2E8F0; margin: 12px 0; }
+
+  #log {
+    margin-top: 12px; padding: 9px 10px;
+    background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 7px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px; line-height: 1.55;
+    height: 148px; overflow-y: auto; white-space: pre-wrap;
+    color: #1E293B;
+  }
+  #log .ok   { color: #15803D; }
+  #log .err  { color: #DC2626; }
+  #log .warn { color: #A16207; }
+</style>
+</head>
+<body>
+  <h1>Kelana Design System Builder</h1>
+  <p class="sub">Membangun palet, style, komponen, dan frame langsung di file ini.</p>
+
+  <button class="btn btn--all" data-phase="all">
+    Bangun semuanya
+    <small>Jalankan ini kalau ragu — urutannya sudah benar</small>
+  </button>
+
+  <div class="sep"></div>
+
+  <button class="btn" data-phase="variables">
+    1 · Variables
+    <small>Warna, spacing, radius — jadi Figma Variables</small>
+  </button>
+  <button class="btn" data-phase="styles">
+    2 · Styles
+    <small>Paint, text, dan effect styles</small>
+  </button>
+  <button class="btn" data-phase="icons">
+    3 · Ikon
+    <small>38 ikon jadi component 24px</small>
+  </button>
+  <button class="btn" data-phase="components">
+    4 · Komponen
+    <small>Button, badge, chip, input, kartu, navbar, dll.</small>
+  </button>
+  <button class="btn" data-phase="screens">
+    5 · Frame halaman
+    <small>Beranda, Jelajah, Booking — 1440px</small>
+  </button>
+
+  <div id="log">Siap. Pilih salah satu tombol di atas.</div>
+
+<script>
+  var log = document.getElementById('log');
+
+  document.querySelectorAll('.btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      log.textContent = '';
+      parent.postMessage({ pluginMessage: { type: 'run', phase: b.dataset.phase } }, '*');
+    });
+  });
+
+  onmessage = function (e) {
+    var msg = e.data.pluginMessage;
+    if (!msg) return;
+    if (msg.type === 'log') {
+      var line = document.createElement('div');
+      if (msg.level) line.className = msg.level;
+      line.textContent = msg.text;
+      log.appendChild(line);
+      log.scrollTop = log.scrollHeight;
+    }
+  };
+</script>
+</body>
+</html>

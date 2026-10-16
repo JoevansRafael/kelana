@@ -1,0 +1,23 @@
+# Python (tools/)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Node (kalau nanti ada tooling tambahan)
+node_modules/
+npm-debug.log*
+
+# Output sementara
+*.log
+tmp/

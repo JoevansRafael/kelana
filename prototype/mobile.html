@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frame Mobile — Kelana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  /* ======================================================================
+     Papan pamer frame mobile — 390 × 844 (iPhone 15 / Figma Mobile preset)
+     ====================================================================== */
+  .board {
+    display: flex; gap: var(--space-800);
+    overflow-x: auto;
+    padding: var(--space-600) var(--container-pad) var(--space-800);
+    scroll-snap-type: x proximity;
+  }
+  .frame-wrap { flex: none; scroll-snap-align: center; display: flex; flex-direction: column; gap: var(--space-200); }
+  .frame-label { display: flex; flex-direction: column; gap: 2px; padding-left: 4px; }
+
+  .phone {
+    width: 390px; height: 844px;
+    background: var(--cloud-100);
+    border-radius: 44px;
+    border: 11px solid #0F172A;
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+  .phone-notch {
+    position: absolute; top: 9px; left: 50%; transform: translateX(-50%);
+    width: 112px; height: 26px; background: #0F172A; border-radius: 999px; z-index: 40;
+  }
+  .phone-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+  .phone-scroll::-webkit-scrollbar { width: 0; }
+
+  /* Status bar */
+  .m-status {
+    height: 46px; flex: none;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding: 0 26px 6px;
+    font-size: 13px; font-weight: 700;
+    background: transparent; position: relative; z-index: 30;
+  }
+
+  /* Header mobile */
+  .m-head {
+    display: flex; align-items: center; gap: var(--space-150);
+    padding: var(--space-150) var(--space-250);
+    background: rgba(248,250,252,.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-subtle);
+    position: sticky; top: 0; z-index: 20;
+  }
+  .m-body { padding: var(--space-250); display: flex; flex-direction: column; gap: var(--space-300); }
+
+  /* Bottom tab bar (Figma: BottomNav / active=*) */
+  .m-tabbar {
+    flex: none;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    padding: var(--space-100) var(--space-150) var(--space-300);
+    background: rgba(248,250,252,.96);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--border-subtle);
+  }
+  .m-tab {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: 7px 0;
+    border: none; background: transparent;
+    font-size: 10px; font-weight: 700;
+    color: var(--slate-400); cursor: pointer;
+    border-radius: var(--radius-md);
+  }
+  .m-tab i svg { width: 22px; height: 22px; }
+  .m-tab.is-active { color: var(--ocean-600); }
+  .m-tab.is-active i { position: relative; }
+
+  /* FAB */
+  .m-fab {
+    position: absolute; right: var(--space-250); bottom: 104px; z-index: 25;
+    width: 56px; height: 56px; border-radius: var(--radius-full);
+    background: var(--orange-500); color: var(--white);
+    border: none; display: grid; place-items: center;
+    box-shadow: var(--shadow-accent); cursor: pointer;
+  }
+  .m-fab i svg { width: 26px; height: 26px; }
+
+  /* Action bar bawah (detail) */
+  .m-actionbar {
+    flex: none;
+    display: flex; align-items: center; gap: var(--space-200);
+    padding: var(--space-200) var(--space-250) var(--space-300);
+    background: var(--white);
+    border-top: 1px solid var(--border-subtle);
+    box-shadow: 0 -8px 24px rgba(15,23,42,.07);
+  }
+
+  /* Carousel horizontal di mobile */
+  .m-scroller {
+    display: flex; gap: var(--space-200);
+    overflow-x: auto;
+    margin-inline: calc(-1 * var(--space-250));
+    padding-inline: var(--space-250);
+    scroll-snap-type: x mandatory;
+  }
+  .m-scroller::-webkit-scrollbar { height: 0; }
+  .m-scroller > * { flex: none; scroll-snap-align: start; }
+
+  .m-chiprow {
+    display: flex; gap: var(--space-100);
+    overflow-x: auto;
+    margin-inline: calc(-1 * var(--space-250));
+    padding: 0 var(--space-250);
+  }
+  .m-chiprow::-webkit-scrollbar { height: 0; }
+  .m-chiprow .chip { flex: none; height: 36px; font-size: var(--fs-caption); }
+
+  .board-intro { padding: var(--space-800) var(--container-pad) 0; }
+</style>
+</head>
+<body>
+
+<div data-slot="navbar"></div>
+
+<main>
+  <div class="board-intro">
+    <div class="container" style="padding:0">
+      <div class="stack stack-150" style="max-width:720px">
+        <p class="t-overline t-accent">Frame mobile · 390 × 844</p>
+        <h1 class="t-h2 t-balance">Mobile bukan desktop yang dikecilkan</h1>
+        <p class="t-body t-muted">
+          70% traveler buka itinerary saat sedang di jalan — sering dengan satu tangan dan sinyal
+          jelek. Empat frame ini punya pola navigasi sendiri: tab bar bawah, kartu yang bisa digeser,
+          dan aksi utama selalu dalam jangkauan jempol.
+        </p>
+        <p class="t-body-sm t-subtle">Geser papan di bawah ke kanan untuk melihat semua frame.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="board">
+
+    <!-- ================================================================
+         FRAME 09 — Mobile Home
+         ================================================================ -->
+    <div class="frame-wrap">
+      <div class="frame-label">
+        <strong class="t-body-sm">09 · Mobile Home</strong>
+        <span class="t-caption t-subtle">Entry point · pencarian + inspirasi</span>
+      </div>
+
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="m-status"><span>09.41</span><span class="row row-100" style="gap:5px"><i data-icon="globe" data-icon-size="13px"></i> 4G</span></div>
+
+        <div class="phone-scroll">
+          <div class="m-head">
+            <span class="logo-mark" style="width:32px;height:32px;border-radius:10px"><i data-icon="logo" data-icon-size="18px"></i></span>
+            <span class="logo-type" style="font-size:18px">kelana<em>.</em></span>
+            <span class="spacer"></span>
+            <button class="btn-icon btn-icon--sm" data-toast="Notifikasi: 2 baru" aria-label="Notifikasi">
+              <i data-icon="chat" data-icon-size="17px"></i>
+            </button>
+            <span class="avatar avatar--sm">RA</span>
+          </div>
+
+          <div class="m-body">
+            <div class="stack stack-150">
+              <h2 class="t-h3 t-balance">Mau ke mana minggu ini?</h2>
+
+              <!-- Search mobile: 1 field, bukan 3 -->
+              <button class="card" data-toast="Lembar pencarian dibuka" data-toast-icon="search"
+                      style="display:flex;align-items:center;gap:12px;padding:14px 16px;box-shadow:var(--shadow-sm);text-align:left;cursor:pointer;width:100%">
+                <i data-icon="search" data-icon-size="20px" style="color:var(--ocean-500)"></i>
+                <span class="stack" style="gap:1px">
+                  <strong class="t-body-sm">Cari destinasi</strong>
+                  <span class="t-caption t-subtle">Tanggal &amp; rombongan opsional</span>
+                </span>
+              </button>
+            </div>
+
+            <!-- Trip aktif -->
+            <div class="card" style="position:relative;overflow:hidden;border:none;background:var(--ocean-800);color:var(--white);padding:var(--space-250)">
+              <div style="position:absolute;inset:0;opacity:.35"><div data-scene="ocean" style="width:100%;height:100%"></div></div>
+              <div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(15,23,42,.94),rgba(15,23,42,.5))"></div>
+              <div class="stack stack-150" style="position:relative">
+                <span class="badge badge--glass" style="align-self:flex-start">
+                  <span class="badge-dot" style="color:var(--success-500)"></span> 27 hari lagi
+                </span>
+                <strong class="t-body">Sailing Komodo 4H3M</strong>
+                <div class="row row-100 t-caption" style="opacity:.84">
+                  <i data-icon="calendar"></i> 12–15 Nov · <i data-icon="users"></i> 6 orang
+                </div>
+                <div class="row row-100" style="margin-top:4px">
+                  <span class="btn btn--accent btn--sm">Buka rencana</span>
+                  <span class="btn btn--on-ink btn--sm"><i data-icon="offline"></i></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Destinasi: carousel -->
+            <div class="stack stack-150">
+              <div class="row row-between">
+                <strong class="t-h5">Sedang ramai</strong>
+                <span class="t-caption t-brand" style="font-weight:700">Semua</span>
+              </div>
+              <div class="m-scroller">
+                <div style="width:132px">
+                  <div class="dest-card" style="aspect-ratio:3/4;border-radius:var(--radius-md)">
+                    <div data-scene="reef" style="position:absolute;inset:0"></div>
+                    <div class="dest-card-body" style="padding:var(--space-150)">
+                      <strong class="t-body-sm">Raja Ampat</strong>
+                      <span class="t-caption" style="opacity:.8">18 itinerary</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="width:132px">
+                  <div class="dest-card" style="aspect-ratio:3/4;border-radius:var(--radius-md)">
+                    <div data-scene="ocean" style="position:absolute;inset:0"></div>
+                    <div class="dest-card-body" style="padding:var(--space-150)">
+                      <strong class="t-body-sm">Labuan Bajo</strong>
+                      <span class="t-caption" style="opacity:.8">42 itinerary</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="width:132px">
+                  <div class="dest-card" style="aspect-ratio:3/4;border-radius:var(--radius-md)">
+                    <div data-scene="temple" style="position:absolute;inset:0"></div>
+                    <div class="dest-card-body" style="padding:var(--space-150)">
+                      <strong class="t-body-sm">Yogyakarta</strong>
+                      <span class="t-caption" style="opacity:.8">66 itinerary</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rekomendasi -->
+            <div class="stack stack-150">
+              <strong class="t-h5">Cocok buat kamu</strong>
+
+              <div class="card" style="display:flex;gap:12px;padding:12px">
+                <div data-scene="volcano" style="width:76px;height:76px;border-radius:var(--radius-md);overflow:hidden;flex:none"></div>
+                <div class="stack" style="gap:4px;flex:1;min-width:0">
+                  <strong class="t-body-sm" style="line-height:1.3">Bromo – Tumpak Sewu: Dua Sunrise</strong>
+                  <span class="t-caption t-muted">3H 2M · 8 titik</span>
+                  <div class="row row-100">
+                    <span class="rating"><i data-icon="star"></i> 4,7</span>
+                    <strong class="t-caption" style="margin-left:auto">Rp 1,85 jt</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" style="display:flex;gap:12px;padding:12px">
+                <div data-scene="jungle" style="width:76px;height:76px;border-radius:var(--radius-md);overflow:hidden;flex:none"></div>
+                <div class="stack" style="gap:4px;flex:1;min-width:0">
+                  <strong class="t-body-sm" style="line-height:1.3">Bali Utara: Air Terjun &amp; Yoga</strong>
+                  <span class="t-caption t-muted">5H 4M · 12 titik</span>
+                  <div class="row row-100">
+                    <span class="rating"><i data-icon="star"></i> 4,8</span>
+                    <strong class="t-caption" style="margin-left:auto">Rp 3,40 jt</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" style="display:flex;gap:12px;padding:12px">
+                <div data-scene="sand" style="width:76px;height:76px;border-radius:var(--radius-md);overflow:hidden;flex:none"></div>
+                <div class="stack" style="gap:4px;flex:1;min-width:0">
+                  <strong class="t-body-sm" style="line-height:1.3">Belitung: Pulau Lengkuas &amp; Granit</strong>
+                  <span class="t-caption t-muted">3H 2M · 9 titik</span>
+                  <div class="row row-100">
+                    <span class="rating"><i data-icon="star"></i> 4,6</span>
+                    <strong class="t-caption" style="margin-left:auto">Rp 1,95 jt</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="height:20px"></div>
+          </div>
+        </div>
+
+        <button class="m-fab" data-toast="Buka penyusun itinerary" data-toast-icon="sparkle" aria-label="Buat itinerary">
+          <i data-icon="plus"></i>
+        </button>
+
+        <nav class="m-tabbar">
+          <button class="m-tab is-active"><i data-icon="compass"></i> Beranda</button>
+          <button class="m-tab"><i data-icon="search"></i> Jelajah</button>
+          <button class="m-tab"><i data-icon="route"></i> Trip</button>
+          <button class="m-tab"><i data-icon="users"></i> Booking</button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ================================================================
+         FRAME 10 — Mobile Explore
+         ================================================================ -->
+    <div class="frame-wrap">
+      <div class="frame-label">
+        <strong class="t-body-sm">10 · Mobile Explore</strong>
+        <span class="t-caption t-subtle">Filter jadi bottom sheet, bukan sidebar</span>
+      </div>
+
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="m-status"><span>09.41</span><span class="row row-100" style="gap:5px"><i data-icon="globe" data-icon-size="13px"></i> 4G</span></div>
+
+        <div class="phone-scroll">
+          <div class="m-head">
+            <button class="btn-icon btn-icon--sm" aria-label="Kembali"><i data-icon="chevL" data-icon-size="17px"></i></button>
+            <div class="stack" style="gap:0;flex:1;min-width:0">
+              <strong class="t-body-sm">Labuan Bajo</strong>
+              <span class="t-caption t-subtle">12–15 Nov · 2 orang</span>
+            </div>
+            <button class="btn-icon btn-icon--sm" data-toast="Bottom sheet filter dibuka" data-toast-icon="filter" aria-label="Filter">
+              <i data-icon="filter" data-icon-size="17px"></i>
+            </button>
+          </div>
+
+          <div class="m-body" style="gap:var(--space-250)">
+            <div class="m-chiprow">
+              <span class="chip is-selected"><i data-icon="filter"></i> 3 filter</span>
+              <span class="chip">3–4 hari</span>
+              <span class="chip">Alam</span>
+              <span class="chip">&lt; Rp 6 jt</span>
+              <span class="chip">Santai</span>
+            </div>
+
+            <div class="row row-between">
+              <strong class="t-body-sm">42 itinerary</strong>
+              <span class="t-caption t-brand row row-100" style="font-weight:700">
+                Paling laris <i data-icon="chevD" data-icon-size="12px"></i>
+              </span>
+            </div>
+
+            <!-- Kartu hasil mobile: vertikal penuh -->
+            <article class="card itin-card">
+              <div class="itin-card-media" style="aspect-ratio:16/10">
+                <div data-scene="ocean" style="width:100%;height:100%"></div>
+                <div class="itin-card-media-top">
+                  <span class="badge badge--glass"><i data-icon="sparkle"></i> Paling laris</span>
+                  <button class="btn-icon btn-icon--sm" data-save aria-label="Simpan"><i data-icon="heart" data-icon-size="18px"></i></button>
+                </div>
+              </div>
+              <div class="itin-card-body" style="padding:var(--space-200);gap:var(--space-100)">
+                <h3 class="itin-card-title" style="font-size:16px">Sailing Komodo: Padar, Pink Beach &amp; Manta Point</h3>
+                <div class="itin-card-meta">
+                  <span class="row row-100"><i data-icon="calendar"></i> 4H 3M</span>
+                  <span class="row row-100"><i data-icon="route"></i> 11 titik</span>
+                  <span class="rating"><i data-icon="star"></i> 4,9</span>
+                </div>
+                <div class="itin-card-foot" style="padding-top:var(--space-100)">
+                  <div class="price">
+                    <span class="price-value" style="font-size:16px">Rp 4,85 jt</span>
+                    <span class="price-note">per orang</span>
+                  </div>
+                  <span class="btn btn--primary btn--sm">Lihat</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="card itin-card">
+              <div class="itin-card-media" style="aspect-ratio:16/10">
+                <div data-scene="sand" style="width:100%;height:100%"></div>
+                <div class="itin-card-media-top">
+                  <span class="badge badge--glass"><i data-icon="wallet"></i> Hemat</span>
+                  <button class="btn-icon btn-icon--sm" data-save aria-label="Simpan"><i data-icon="heart" data-icon-size="18px"></i></button>
+                </div>
+              </div>
+              <div class="itin-card-body" style="padding:var(--space-200);gap:var(--space-100)">
+                <h3 class="itin-card-title" style="font-size:16px">Komodo Hemat: Open Trip Sharing 3 Hari</h3>
+                <div class="itin-card-meta">
+                  <span class="row row-100"><i data-icon="calendar"></i> 3H 2M</span>
+                  <span class="row row-100"><i data-icon="route"></i> 7 titik</span>
+                  <span class="rating"><i data-icon="star"></i> 4,6</span>
+                </div>
+                <div class="itin-card-foot" style="padding-top:var(--space-100)">
+                  <div class="price">
+                    <span class="price-value" style="font-size:16px">Rp 2,15 jt</span>
+                    <span class="price-note">per orang</span>
+                  </div>
+                  <span class="btn btn--primary btn--sm">Lihat</span>
+                </div>
+              </div>
+            </article>
+
+            <div style="height:20px"></div>
+          </div>
+        </div>
+
+        <nav class="m-tabbar">
+          <button class="m-tab"><i data-icon="compass"></i> Beranda</button>
+          <button class="m-tab is-active"><i data-icon="search"></i> Jelajah</button>
+          <button class="m-tab"><i data-icon="route"></i> Trip</button>
+          <button class="m-tab"><i data-icon="users"></i> Booking</button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ================================================================
+         FRAME 11 — Mobile Detail
+         ================================================================ -->
+    <div class="frame-wrap">
+      <div class="frame-label">
+        <strong class="t-body-sm">11 · Mobile Detail</strong>
+        <span class="t-caption t-subtle">Harga + CTA terkunci di bawah</span>
+      </div>
+
+      <div class="phone">
+        <div class="phone-notch"></div>
+
+        <div class="phone-scroll">
+          <!-- Hero gambar penuh dengan header mengapung -->
+          <div style="position:relative;height:300px">
+            <div data-scene="ocean" style="position:absolute;inset:0"></div>
+            <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(15,23,42,.5) 0%,transparent 35%,rgba(15,23,42,.75) 100%)"></div>
+
+            <div class="m-status" style="color:var(--white);position:absolute;top:0;left:0;right:0">
+              <span>09.41</span><span class="row row-100" style="gap:5px"><i data-icon="globe" data-icon-size="13px"></i> 4G</span>
+            </div>
+
+            <div class="row" style="position:absolute;top:52px;left:16px;right:16px;gap:8px">
+              <button class="btn-icon btn-icon--sm" aria-label="Kembali"><i data-icon="chevL" data-icon-size="17px"></i></button>
+              <span class="spacer"></span>
+              <button class="btn-icon btn-icon--sm" data-save aria-label="Simpan"><i data-icon="heart" data-icon-size="17px"></i></button>
+              <button class="btn-icon btn-icon--sm" data-toast="Tautan disalin" data-toast-icon="share" aria-label="Bagikan">
+                <i data-icon="share" data-icon-size="17px"></i>
+              </button>
+            </div>
+
+            <div style="position:absolute;bottom:16px;left:16px;right:16px" class="stack stack-100">
+              <span class="badge badge--glass" style="align-self:flex-start"><i data-icon="sparkle"></i> Paling laris</span>
+              <h2 class="t-h4" style="color:var(--white)">Sailing Komodo: Padar, Pink Beach &amp; Manta Point</h2>
+              <div class="row row-100 t-caption" style="color:rgba(255,255,255,.88)">
+                <span class="rating" style="color:var(--white)"><i data-icon="star"></i> 4,9</span>
+                <span>· 412 ulasan ·</span>
+                <i data-icon="pin"></i> Labuan Bajo
+              </div>
+            </div>
+          </div>
+
+          <div class="m-body" style="gap:var(--space-250)">
+            <div class="row" style="gap:var(--space-100);justify-content:space-between">
+              <div class="stack" style="gap:1px;align-items:center;flex:1">
+                <i data-icon="calendar" data-icon-size="19px" style="color:var(--ocean-500)"></i>
+                <strong class="t-caption">4H 3M</strong>
+              </div>
+              <div class="stack" style="gap:1px;align-items:center;flex:1">
+                <i data-icon="route" data-icon-size="19px" style="color:var(--ocean-500)"></i>
+                <strong class="t-caption">11 titik</strong>
+              </div>
+              <div class="stack" style="gap:1px;align-items:center;flex:1">
+                <i data-icon="users" data-icon-size="19px" style="color:var(--ocean-500)"></i>
+                <strong class="t-caption">4–12 org</strong>
+              </div>
+              <div class="stack" style="gap:1px;align-items:center;flex:1">
+                <i data-icon="compass" data-icon-size="19px" style="color:var(--ocean-500)"></i>
+                <strong class="t-caption">Sedang</strong>
+              </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="tabs" style="align-self:stretch;display:flex">
+              <button class="tab is-active" style="flex:1" data-no-toggle>Jadwal</button>
+              <button class="tab" style="flex:1" data-no-toggle>Biaya</button>
+              <button class="tab" style="flex:1" data-no-toggle>Ulasan</button>
+            </div>
+
+            <!-- Timeline versi mobile: tanpa thumbnail, lebih padat -->
+            <div class="day-group">
+              <div class="day-head" style="padding:var(--space-150)">
+                <span class="day-chip" style="width:42px;height:42px"><span>Hari</span><strong>2</strong></span>
+                <div class="stack" style="gap:0">
+                  <strong class="t-body-sm">Padar &amp; Pink Beach</strong>
+                  <span class="t-caption t-muted">Kam, 13 Nov · 4 aktivitas</span>
+                </div>
+              </div>
+
+              <div class="timeline" style="padding-left:var(--space-300)">
+                <article class="activity" style="padding:var(--space-150)">
+                  <span class="activity-time" style="width:44px;font-size:13px">05.00</span>
+                  <div class="activity-body">
+                    <strong class="t-body-sm">Trekking sunrise Pulau Padar</strong>
+                    <div class="activity-tags">
+                      <span class="badge badge--accent">Wajib</span>
+                      <span class="badge badge--neutral">2 jam</span>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="activity" style="padding:var(--space-150)">
+                  <span class="activity-time" style="width:44px;font-size:13px">08.30</span>
+                  <div class="activity-body">
+                    <strong class="t-body-sm">Pink Beach — snorkeling</strong>
+                    <div class="activity-tags">
+                      <span class="badge badge--neutral">2 jam</span>
+                      <span class="badge badge--neutral">Sarapan</span>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="activity activity--transit" style="padding:var(--space-150)">
+                  <span class="activity-time" style="width:44px;font-size:13px;color:var(--text-tertiary)">11.00</span>
+                  <span class="t-caption t-muted row row-100"><i data-icon="car"></i> Berlayar · 75 mnt</span>
+                </article>
+
+                <article class="activity" style="padding:var(--space-150)">
+                  <span class="activity-time" style="width:44px;font-size:13px">12.00</span>
+                  <div class="activity-body">
+                    <strong class="t-body-sm">Pulau Komodo + ranger</strong>
+                    <div class="activity-tags">
+                      <span class="badge badge--brand">Ranger</span>
+                      <span class="badge badge--neutral">2,5 jam</span>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <button class="btn btn--secondary btn--block" data-toast="Hari 3 &amp; 4 dibentangkan" data-toast-icon="chevD">
+              Lihat Hari 3 &amp; 4 <i data-icon="chevD"></i>
+            </button>
+
+            <div class="card card--pad stack stack-100" style="background:var(--ocean-50);border-color:var(--ocean-100)">
+              <div class="row row-100">
+                <i data-icon="offline" data-icon-size="18px" style="color:var(--ocean-600)"></i>
+                <strong class="t-body-sm">Sinyal hilang di area ini</strong>
+              </div>
+              <p class="t-caption t-muted">Simpan rencana supaya tetap kebuka tanpa internet.</p>
+              <button class="btn btn--primary btn--sm" data-toast="Tersimpan offline" data-toast-icon="download">
+                Simpan offline
+              </button>
+            </div>
+
+            <div style="height:12px"></div>
+          </div>
+        </div>
+
+        <!-- Action bar: harga + CTA, selalu kelihatan -->
+        <div class="m-actionbar">
+          <div class="price" style="flex:1">
+            <span class="price-value" style="font-size:18px">Rp 4,85 jt</span>
+            <span class="price-note">per orang · 2 orang</span>
+          </div>
+          <button class="btn btn--accent btn--lg" data-toast="Lanjut ke pemesanan" data-toast-icon="check">
+            Pesan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================
+         FRAME 12 — Mobile Trip (mode perjalanan)
+         ================================================================ -->
+    <div class="frame-wrap">
+      <div class="frame-label">
+        <strong class="t-body-sm">12 · Mobile Trip — mode jalan</strong>
+        <span class="t-caption t-subtle">Dipakai saat trip berlangsung, offline</span>
+      </div>
+
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="m-status">
+          <span>05.12</span>
+          <span class="row row-100" style="gap:5px;color:var(--orange-600)"><i data-icon="offline" data-icon-size="13px"></i> Offline</span>
+        </div>
+
+        <div class="phone-scroll">
+          <div class="m-head">
+            <div class="stack" style="gap:0;flex:1">
+              <strong class="t-body-sm">Sailing Komodo</strong>
+              <span class="t-caption t-subtle">Hari 2 dari 4 · Kam, 13 Nov</span>
+            </div>
+            <span class="badge badge--warning"><i data-icon="offline"></i> Offline</span>
+          </div>
+
+          <div class="m-body" style="gap:var(--space-250)">
+
+            <!-- Kartu "sekarang" — fokus utama saat sedang jalan -->
+            <div class="card" style="position:relative;overflow:hidden;border:none;background:var(--ocean-800);color:var(--white);padding:var(--space-250)">
+              <div style="position:absolute;inset:0;opacity:.4"><div data-scene="dawn" style="width:100%;height:100%"></div></div>
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(15,23,42,.95),rgba(15,23,42,.55))"></div>
+              <div class="stack stack-150" style="position:relative">
+                <span class="badge badge--accent" style="align-self:flex-start">
+                  <span class="badge-dot"></span> Sedang berlangsung
+                </span>
+                <strong class="t-h5" style="color:var(--white)">Trekking sunrise Pulau Padar</strong>
+                <div class="row row-100 t-caption" style="opacity:.86">
+                  <i data-icon="clock"></i> 05.00 – 07.00 · sisa 1 jam 48 menit
+                </div>
+                <div class="budget-bar" style="background:rgba(255,255,255,.22);margin-top:4px">
+                  <span style="width:10%;background:var(--orange-400)"></span>
+                </div>
+                <div class="row row-100" style="margin-top:var(--space-100)">
+                  <span class="btn btn--accent btn--sm"><i data-icon="check"></i> Tandai selesai</span>
+                  <span class="btn btn--on-ink btn--sm"><i data-icon="pin"></i></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Berikutnya -->
+            <div class="stack stack-150">
+              <div class="row row-between">
+                <strong class="t-body-sm">Berikutnya hari ini</strong>
+                <span class="t-caption t-subtle">3 aktivitas</span>
+              </div>
+
+              <div class="card" style="display:flex;gap:10px;padding:12px;align-items:center">
+                <span class="activity-time" style="width:44px">08.30</span>
+                <div class="stack" style="gap:2px;flex:1">
+                  <strong class="t-body-sm">Pink Beach — snorkeling</strong>
+                  <span class="t-caption t-muted">2 jam · sarapan termasuk</span>
+                </div>
+                <i data-icon="chevR" data-icon-size="16px" style="color:var(--slate-300)"></i>
+              </div>
+
+              <div class="card" style="display:flex;gap:10px;padding:12px;align-items:center">
+                <span class="activity-time" style="width:44px">12.00</span>
+                <div class="stack" style="gap:2px;flex:1">
+                  <strong class="t-body-sm">Pulau Komodo + ranger</strong>
+                  <span class="t-caption t-muted">2,5 jam · tiket sudah dibayar</span>
+                </div>
+                <i data-icon="chevR" data-icon-size="16px" style="color:var(--slate-300)"></i>
+              </div>
+
+              <div class="card" style="display:flex;gap:10px;padding:12px;align-items:center">
+                <span class="activity-time" style="width:44px">15.30</span>
+                <div class="stack" style="gap:2px;flex:1">
+                  <strong class="t-body-sm">Manta Point</strong>
+                  <span class="t-caption t-muted">1,5 jam · tergantung cuaca</span>
+                </div>
+                <i data-icon="chevR" data-icon-size="16px" style="color:var(--slate-300)"></i>
+              </div>
+            </div>
+
+            <!-- Kontak darurat — penting saat offline -->
+            <div class="card card--pad stack stack-150">
+              <strong class="t-body-sm">Kontak di lokasi</strong>
+              <div class="row row-100">
+                <span class="avatar avatar--sm avatar--c2">YN</span>
+                <div class="stack" style="gap:0;flex:1">
+                  <strong class="t-caption">Yanto · pemandu</strong>
+                  <span class="t-caption t-subtle">+62 812 •••• 4471</span>
+                </div>
+                <button class="btn btn--secondary btn--sm" data-toast="Memanggil pemandu…" data-toast-icon="chat">Hubungi</button>
+              </div>
+              <hr class="divider">
+              <div class="row row-100">
+                <span class="avatar avatar--sm avatar--c5">SAR</span>
+                <div class="stack" style="gap:0;flex:1">
+                  <strong class="t-caption">Basarnas Labuan Bajo</strong>
+                  <span class="t-caption t-subtle">115</span>
+                </div>
+                <button class="btn btn--secondary btn--sm" data-toast="Memanggil 115…" data-toast-icon="chat">Darurat</button>
+              </div>
+            </div>
+
+            <div style="height:20px"></div>
+          </div>
+        </div>
+
+        <nav class="m-tabbar">
+          <button class="m-tab"><i data-icon="compass"></i> Beranda</button>
+          <button class="m-tab"><i data-icon="search"></i> Jelajah</button>
+          <button class="m-tab is-active"><i data-icon="route"></i> Trip</button>
+          <button class="m-tab"><i data-icon="users"></i> Booking</button>
+        </nav>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Catatan desain mobile -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack stack-150">
+          <p class="t-overline t-accent">Keputusan desain</p>
+          <h2 class="t-h2 t-balance">Kenapa mobile-nya dibedakan</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-3">
+        <article class="feature-card">
+          <span class="feature-icon"><i data-icon="search" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Satu field, bukan tiga</h3>
+          <p class="t-body t-muted">
+            Search bar desktop punya 3 kolom. Di mobile itu bikin form panjang, jadi diganti satu
+            tombol yang membuka bottom sheet bertahap.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <span class="feature-icon feature-icon--accent"><i data-icon="offline" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Offline jadi kelas utama</h3>
+          <p class="t-body t-muted">
+            Status offline muncul di status bar dan header, bukan sebagai error. Di Komodo, Bromo,
+            dan Raja Ampat, offline adalah kondisi normal.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <span class="feature-icon feature-icon--sand"><i data-icon="clock" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Mode jalan</h3>
+          <p class="t-body t-muted">
+            Saat trip berlangsung, yang dibutuhkan bukan seluruh rencana — cuma "sekarang ngapain"
+            dan "berikutnya apa". Frame 12 dirancang khusus untuk itu.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div data-slot="footer"></div>
+<div data-slot="protobar"></div>
+
+<script src="assets/js/scenes.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trip Saya — Kelana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  /* Figma: Desktop/07 My Trips */
+  .countdown {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-150);
+  }
+  /* Sel hitung-mundur: panel Ice Blue di atas kartu putih */
+  .countdown-cell {
+    background: var(--bg-ice);
+    border: 1px solid var(--ocean-100);
+    border-radius: var(--radius-md);
+    padding: var(--space-150);
+    text-align: center;
+  }
+  .countdown-cell strong {
+    display: block; font-size: 26px; font-weight: 800;
+    letter-spacing: -.02em; line-height: 1.1;
+    color: var(--text-brand);
+  }
+  .countdown-cell span {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--text-secondary);
+  }
+</style>
+</head>
+<body>
+
+<div data-slot="navbar"></div>
+
+<main>
+
+  <!-- ====================================================================
+       FRAME 07 — Trip Saya / Dashboard
+       ==================================================================== -->
+  <section style="padding-block:var(--space-600) var(--space-400)">
+    <div class="container">
+      <div class="row row-wrap row-between" style="gap:var(--space-300);align-items:flex-end">
+        <div class="stack stack-150">
+          <p class="t-overline t-accent">Dasbor</p>
+          <h1 class="t-h2">Halo, Rizky 👋</h1>
+          <p class="t-body t-muted">Satu trip sudah dekat, dua masih jadi draf.</p>
+        </div>
+        <a class="btn btn--primary" href="builder.html">
+          <i data-icon="plus"></i> Trip baru
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trip berikutnya — hero card -->
+  <section style="padding-bottom:var(--space-600)">
+    <div class="container">
+      <!-- Kartu putih dengan aksen biru. Sebelumnya blok gelap full-bleed;
+           diubah agar sesuai ketentuan "white cards and light neutral
+           backgrounds" untuk dasbor Trip Saya. Konten & tata letak sama. -->
+      <div class="card" style="overflow:hidden">
+        <div class="grid grid-2" style="gap:var(--space-600);align-items:center;padding:var(--space-600)">
+
+          <div class="stack stack-250">
+            <span class="badge badge--success" style="align-self:flex-start">
+              <span class="badge-dot"></span> Trip berikutnya
+            </span>
+
+            <div class="row" style="gap:var(--space-250);align-items:flex-start">
+              <div data-scene="ocean"
+                   style="width:92px;height:92px;border-radius:var(--radius-lg);overflow:hidden;flex:none"></div>
+              <div class="stack stack-150" style="min-width:0">
+                <h2 class="t-h3">Sailing Komodo: Padar, Pink Beach &amp; Manta Point</h2>
+                <div class="row row-wrap row-300 t-muted">
+                  <span class="row row-100 t-body-sm"><i data-icon="calendar"></i> 12 – 15 Nov 2026</span>
+                  <span class="row row-100 t-body-sm"><i data-icon="pin"></i> Labuan Bajo, NTT</span>
+                  <span class="row row-100 t-body-sm"><i data-icon="users"></i> 6 orang</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row row-wrap row-100" style="margin-top:var(--space-100)">
+              <a class="btn btn--primary" href="itinerary.html">Buka rencana <i data-icon="arrowR"></i></a>
+              <button class="btn btn--secondary" data-toast="Rencana tersimpan offline — siap tanpa sinyal" data-toast-icon="download">
+                <i data-icon="offline"></i> Simpan offline
+              </button>
+            </div>
+          </div>
+
+          <div class="stack stack-250">
+            <span class="t-overline t-muted">Berangkat dalam</span>
+            <div class="countdown">
+              <div class="countdown-cell"><strong>27</strong><span>Hari</span></div>
+              <div class="countdown-cell"><strong>14</strong><span>Jam</span></div>
+              <div class="countdown-cell"><strong>08</strong><span>Menit</span></div>
+            </div>
+
+            <!-- Checklist persiapan — panel Ice Blue -->
+            <div class="stack stack-100"
+                 style="padding:var(--space-200);background:var(--bg-ice);border-radius:var(--radius-md);border:1px solid var(--ocean-100)">
+              <div class="row row-between">
+                <strong class="t-body-sm">Persiapan</strong>
+                <span class="t-caption t-muted">3 dari 5</span>
+              </div>
+              <div class="budget-bar" style="background:var(--ocean-100)">
+                <span style="width:60%;background:var(--ocean-500)"></span>
+              </div>
+              <div class="stack" style="gap:2px;margin-top:4px">
+                <span class="row row-100 t-caption"><i data-icon="check" style="color:var(--success-500)"></i> Tiket pesawat dibeli</span>
+                <span class="row row-100 t-caption"><i data-icon="check" style="color:var(--success-500)"></i> DP kapal ditransfer</span>
+                <span class="row row-100 t-caption"><i data-icon="check" style="color:var(--success-500)"></i> Asuransi perjalanan</span>
+                <span class="row row-100 t-caption t-subtle"><i data-icon="x"></i> Obat anti mabuk laut</span>
+                <span class="row row-100 t-caption t-subtle"><i data-icon="x"></i> Sandal gunung</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Daftar trip -->
+  <section style="padding-bottom:var(--space-1000)">
+    <div class="container">
+
+      <div class="row row-wrap row-between" style="margin-bottom:var(--space-400);gap:var(--space-200)">
+        <div class="tabs" role="tablist">
+          <button class="tab is-active" data-no-toggle>Akan datang <span class="t-caption" style="opacity:.7">1</span></button>
+          <button class="tab" data-no-toggle>Draf <span class="t-caption" style="opacity:.7">2</span></button>
+          <button class="tab" data-no-toggle>Disimpan <span class="t-caption" style="opacity:.7">8</span></button>
+          <button class="tab" data-no-toggle>Selesai <span class="t-caption" style="opacity:.7">4</span></button>
+        </div>
+        <div class="select-wrap">
+          <select class="input" style="height:40px;font-size:var(--fs-body-sm)" aria-label="Urutkan">
+            <option>Terbaru diubah</option>
+            <option>Tanggal keberangkatan</option>
+            <option>Nama A–Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-3">
+
+        <!-- Draf 1 -->
+        <article class="card itin-card">
+          <div class="itin-card-media">
+            <div data-scene="temple" style="width:100%;height:100%"></div>
+            <div class="itin-card-media-top">
+              <span class="badge badge--warning">Draf · 60% selesai</span>
+              <button class="btn-icon btn-icon--sm" data-toast="Menu: ubah nama, duplikat, hapus" aria-label="Opsi">
+                <i data-icon="grip" data-icon-size="16px"></i>
+              </button>
+            </div>
+          </div>
+          <div class="itin-card-body">
+            <h3 class="itin-card-title">Jogja Pelan-pelan: Candi, Pasar Pagi &amp; Senja</h3>
+            <div class="itin-card-meta">
+              <span class="row row-100"><i data-icon="calendar"></i> Belum ada tanggal</span>
+              <span class="row row-100"><i data-icon="route"></i> 6 dari 9 titik</span>
+            </div>
+            <div class="budget-bar" style="height:6px"><span class="bg-seg-4" style="width:60%"></span></div>
+            <div class="itin-card-foot">
+              <span class="t-caption t-muted">Diubah 2 hari lalu</span>
+              <a class="btn btn--secondary btn--sm" href="builder.html#rencana">Lanjutkan</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Draf 2 -->
+        <article class="card itin-card">
+          <div class="itin-card-media">
+            <div data-scene="volcano" style="width:100%;height:100%"></div>
+            <div class="itin-card-media-top">
+              <span class="badge badge--warning">Draf · 25% selesai</span>
+              <button class="btn-icon btn-icon--sm" data-toast="Menu: ubah nama, duplikat, hapus" aria-label="Opsi">
+                <i data-icon="grip" data-icon-size="16px"></i>
+              </button>
+            </div>
+          </div>
+          <div class="itin-card-body">
+            <h3 class="itin-card-title">Bromo – Tumpak Sewu: Dua Sunrise Tiga Hari</h3>
+            <div class="itin-card-meta">
+              <span class="row row-100"><i data-icon="calendar"></i> Jan 2027 (kasar)</span>
+              <span class="row row-100"><i data-icon="route"></i> 2 dari 8 titik</span>
+            </div>
+            <div class="budget-bar" style="height:6px"><span class="bg-seg-4" style="width:25%"></span></div>
+            <div class="itin-card-foot">
+              <span class="t-caption t-muted">Diubah 3 minggu lalu</span>
+              <a class="btn btn--secondary btn--sm" href="builder.html#rencana">Lanjutkan</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Trip selesai -->
+        <article class="card itin-card">
+          <div class="itin-card-media">
+            <div data-scene="lake" style="width:100%;height:100%"></div>
+            <div style="position:absolute;inset:0;background:rgba(15,23,42,.3)"></div>
+            <div class="itin-card-media-top">
+              <span class="badge badge--glass"><i data-icon="check"></i> Selesai</span>
+            </div>
+          </div>
+          <div class="itin-card-body">
+            <h3 class="itin-card-title">Danau Toba: Samosir &amp; Budaya Batak</h3>
+            <div class="itin-card-meta">
+              <span class="row row-100"><i data-icon="calendar"></i> 4 – 7 Agu 2026</span>
+              <span class="row row-100"><i data-icon="users"></i> 4 orang</span>
+            </div>
+            <div class="row row-100">
+              <span class="badge badge--neutral">Belum diulas</span>
+            </div>
+            <div class="itin-card-foot">
+              <span class="t-caption t-muted">Rp 2,10 jt / orang</span>
+              <button class="btn btn--accent btn--sm" data-toast="Form ulasan dibuka" data-toast-icon="star">
+                Tulis ulasan
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Disimpan -->
+        <article class="card itin-card">
+          <div class="itin-card-media">
+            <div data-scene="reef" style="width:100%;height:100%"></div>
+            <div class="itin-card-media-top">
+              <span class="badge badge--glass"><i data-icon="heart"></i> Disimpan</span>
+              <button class="btn-icon btn-icon--sm is-active" data-save aria-label="Hapus dari simpanan">
+                <i data-icon="heartFill" data-icon-size="20px"></i>
+              </button>
+            </div>
+          </div>
+          <div class="itin-card-body">
+            <h3 class="itin-card-title">Raja Ampat 6 Hari: Wayag, Piaynemo &amp; Arborek</h3>
+            <div class="itin-card-meta">
+              <span class="row row-100"><i data-icon="calendar"></i> 6H 5M</span>
+              <span class="rating"><i data-icon="star"></i> 4,9</span>
+            </div>
+            <div class="itin-card-foot">
+              <div class="price"><span class="price-value">Rp 12,5 jt</span><span class="price-note">per orang</span></div>
+              <a class="btn btn--secondary btn--sm" href="itinerary.html">Lihat</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card itin-card">
+          <div class="itin-card-media">
+            <div data-scene="jungle" style="width:100%;height:100%"></div>
+            <div class="itin-card-media-top">
+              <span class="badge badge--glass"><i data-icon="heart"></i> Disimpan</span>
+              <button class="btn-icon btn-icon--sm is-active" data-save aria-label="Hapus dari simpanan">
+                <i data-icon="heartFill" data-icon-size="20px"></i>
+              </button>
+            </div>
+          </div>
+          <div class="itin-card-body">
+            <h3 class="itin-card-title">Bali Utara: Air Terjun, Yoga &amp; Pasar Pagi Munduk</h3>
+            <div class="itin-card-meta">
+              <span class="row row-100"><i data-icon="calendar"></i> 5H 4M</span>
+              <span class="rating"><i data-icon="star"></i> 4,8</span>
+            </div>
+            <div class="itin-card-foot">
+              <div class="price"><span class="price-value">Rp 3,40 jt</span><span class="price-note">per orang</span></div>
+              <a class="btn btn--secondary btn--sm" href="itinerary.html">Lihat</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Slot buat trip baru (Figma: EmptySlot) -->
+        <a class="card" href="builder.html"
+           style="display:grid;place-items:center;border-style:dashed;border-width:2px;background:transparent;min-height:300px;text-align:center;padding:var(--space-400)">
+          <div class="stack stack-150" style="align-items:center">
+            <span class="feature-icon" style="width:60px;height:60px"><i data-icon="plus" data-icon-size="28px"></i></span>
+            <strong class="t-h5">Susun trip baru</strong>
+            <span class="t-body-sm t-muted" style="max-width:200px">Mulai dari nol atau duplikat trip yang sudah ada</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div data-slot="footer"></div>
+<div data-slot="protobar"></div>
+
+<script src="assets/js/scenes.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  /* Kalau datang dari builder, kasih konfirmasi — menutup loop flow B */
+  document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('kelana-new-trip')) {
+      sessionStorage.removeItem('kelana-new-trip');
+      setTimeout(() => Kelana.toast('Rencana disimpan ke Trip Saya', 'check'), 500);
+    }
+  });
+</script>
+</body>
+</html>

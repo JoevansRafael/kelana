@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kelana — Itinerary siap jalan untuk perjalanan di Indonesia</title>
+<meta name="description" content="Kelana menyediakan template itinerary siap pakai, pemandu wisata terverifikasi, dan open trip patungan untuk perjalanan di seluruh Indonesia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+<div data-slot="navbar"></div>
+
+<main>
+
+  <!-- ====================================================================
+       FRAME 01 — Beranda / Hero
+       Figma: Desktop/01 Beranda · Section/Hero
+       Catatan: pencarian & pembuatan itinerary TIDAK di sini — itu tugas
+       menu Jelajah. Beranda murni halaman informasi & inspirasi.
+       ==================================================================== -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <div class="hero-grid">
+
+        <div class="hero-copy">
+          <span class="badge badge--accent" style="align-self:flex-start">
+            <i data-icon="sparkle"></i> 1.240 itinerary · 87 destinasi · 34 provinsi
+          </span>
+
+          <h1 class="t-display t-balance">
+            Rencana jalan-jalan yang <span class="t-mark">beres dalam 5 menit</span>
+          </h1>
+
+          <p class="t-body-lg t-muted" style="max-width:520px">
+            Kelana menyediakan template itinerary harian yang sudah teruji — lengkap dengan jam,
+            rute, dan estimasi biaya. Mau pakai apa adanya, susun sendiri, atau sekalian booking
+            pemandu, semuanya ada di satu tempat.
+          </p>
+
+          <div class="row row-wrap" style="margin-top:var(--space-100)">
+            <a class="btn btn--primary btn--lg" href="explore.html">
+              <i data-icon="search"></i> Jelajahi itinerary
+            </a>
+            <a class="btn btn--secondary btn--lg" href="booking.html">
+              <i data-icon="users"></i> Booking pemandu
+            </a>
+          </div>
+
+          <div class="hero-proof">
+            <div class="avatar-stack" aria-hidden="true">
+              <span class="avatar avatar--sm">RA</span>
+              <span class="avatar avatar--sm avatar--c2">DP</span>
+              <span class="avatar avatar--sm avatar--c3">SW</span>
+              <span class="avatar avatar--sm avatar--c4">YN</span>
+              <span class="avatar avatar--sm avatar--c5">+</span>
+            </div>
+            <p class="t-body-sm t-muted">
+              <strong style="color:var(--text-primary)">24.800+ traveler</strong> sudah jalan pakai
+              itinerary Kelana bulan ini
+            </p>
+          </div>
+        </div>
+
+        <!-- Figma: Hero/Art — kolase 2 card + 2 floating chip -->
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-art-card"><div data-scene="ocean"></div></div>
+          <div class="hero-art-card"><div data-scene="temple"></div></div>
+
+          <div class="hero-art-float hero-art-float--a">
+            <span class="feature-icon" style="width:40px;height:40px;border-radius:12px">
+              <i data-icon="route" data-icon-size="20px"></i>
+            </span>
+            <div class="stack">
+              <strong class="t-body-sm">Hari 2 — Pulau Padar</strong>
+              <span class="t-caption t-muted">05.00 trekking · 07.30 sarapan</span>
+            </div>
+          </div>
+
+          <div class="hero-art-float hero-art-float--b">
+            <span class="feature-icon feature-icon--accent" style="width:40px;height:40px;border-radius:12px">
+              <i data-icon="wallet" data-icon-size="20px"></i>
+            </span>
+            <div class="stack">
+              <strong class="t-body-sm">Rp 4,85 jt / orang</strong>
+              <span class="t-caption t-muted">4 hari, sudah termasuk kapal</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       BAGIAN 1 — Informasi destinasi wisata
+       Figma: Section/Destinations · Card/DestinationInfo
+       ==================================================================== -->
+  <section class="section" id="destinasi">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack stack-150">
+          <p class="t-overline t-accent">Destinasi wisata</p>
+          <h2 class="t-h2 t-balance">Ke mana tujuanmu berikutnya?</h2>
+          <p class="t-body t-muted">
+            Tiap destinasi punya musim terbaik dan kisaran biaya yang berbeda. Ini ringkasannya
+            supaya kamu nggak salah pilih waktu.
+          </p>
+        </div>
+        <a class="btn btn--secondary hide-mobile" href="explore.html">
+          Lihat 87 destinasi <i data-icon="arrowR"></i>
+        </a>
+      </div>
+
+      <div class="grid grid-3">
+
+        <!-- Card/DestinationInfo — Labuan Bajo -->
+        <article class="card card--interactive dest-info-card" style="display:flex;flex-direction:column">
+          <div class="dest-info-media">
+            <div data-scene="ocean"></div>
+            <div class="dest-info-media-badges">
+              <span class="badge badge--glass"><i data-icon="route"></i> 42 itinerary</span>
+            </div>
+          </div>
+          <div class="dest-info-body">
+            <div class="stack" style="gap:2px">
+              <h3 class="t-h4">Labuan Bajo</h3>
+              <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Nusa Tenggara Timur</span>
+            </div>
+            <div class="dest-info-facts">
+              <div class="dest-info-fact">
+                <i data-icon="sun"></i><span><strong>Apr – Okt</strong> · laut tenang, jarak pandang bagus</span>
+              </div>
+              <div class="dest-info-fact">
+                <i data-icon="wallet"></i><span><strong>Rp 3 – 6 jt</strong> per orang untuk 4 hari</span>
+              </div>
+              <div class="dest-info-fact">
+                <i data-icon="camera"></i><span>Pulau Padar, komodo, Pink Beach, pari manta</span>
+              </div>
+            </div>
+            <a class="btn btn--secondary btn--sm mt-auto" href="explore.html">
+              Lihat itinerary <i data-icon="arrowR"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- Card/DestinationInfo — Yogyakarta -->
+        <article class="card card--interactive dest-info-card" style="display:flex;flex-direction:column">
+          <div class="dest-info-media">
+            <div data-scene="temple"></div>
+            <div class="dest-info-media-badges">
+              <span class="badge badge--glass"><i data-icon="route"></i> 66 itinerary</span>
+              <span class="badge badge--glass"><i data-icon="wallet"></i> Ramah budget</span>
+            </div>
+          </div>
+          <div class="dest-info-body">
+            <div class="stack" style="gap:2px">
+              <h3 class="t-h4">Yogyakarta</h3>
+              <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> DI Yogyakarta</span>
+            </div>
+            <div class="dest-info-facts">
+              <div class="dest-info-fact">
+                <i data-icon="sun"></i><span><strong>Sepanjang tahun</strong> · paling nyaman Mei – Sep</span>
+              </div>
+              <div class="dest-info-fact">
+                <i data-icon="wallet"></i><span><strong>Rp 1 – 2,5 jt</strong> per orang untuk 3 hari</span>
+              </div>
+              <div class="dest-info-fact">
+                <i data-icon="camera"></i><span>Borobudur, Prambanan, Malioboro, pantai selatan</span>
+              </div>
+            </div>
+            <a class="btn btn--secondary btn--sm mt-auto" href="explore.html">
+              Lihat itinerary <i data-icon="arrowR"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- Card/DestinationInfo — Raja Ampat -->
+        <article class="card card--interactive dest-info-card" style="display:flex;flex-direction:column">
+          <div class="dest-info-media">
+            <div data-scene="reef"></div>
+            <div class="dest-info-media-badges">
+              <span class="badge badge--glass"><i data-icon="route"></i> 18 itinerary</span>
+            </div>
+          </div>
+          <div class="dest-info-body">
+            <div class="stack" style="gap:2px">
+              <h3 class="t-h4">Raja Ampat</h3>
+              <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Papua Barat Daya</span>
+            </div>
+            <div class="dest-info-facts">
+              <div class="dest-info-fact">
+                <i data-icon="sun"></i><span><strong>Okt – Apr</strong> · ombak paling kecil</span>
+              </div>
+              <div class="dest-info-fact">
+                <i data-icon="wallet"></i><span><strong>Rp 10 – 15 jt</strong> per orang untuk 6 hari</span>
+              </div>
+              <div class="dest-info-fact">
+                <i data-icon="camera"></i><span>Wayag, Piaynemo, Arborek, titik selam kelas dunia</span>
+              </div>
+            </div>
+            <a class="btn btn--secondary btn--sm mt-auto" href="explore.html">
+              Lihat itinerary <i data-icon="arrowR"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- Card/DestinationInfo — Bromo -->
+        <article class="card card--interactive dest-info-card" style="display:flex;flex-direction:column">
+          <div class="dest-info-media">
+            <div data-scene="volcano"></div>
+            <div class="dest-info-media-badges">
+              <span class="badge badge--glass"><i data-icon="route"></i> 51 itinerary</span>
+            </div>
+          </div>
+          <div class="dest-info-body">
+            <div class="stack" style="gap:2px">
+              <h3 class="t-h4">Bromo &amp; Malang</h3>
+              <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Jawa Timur</span>
+            </div>
+            <div class="dest-info-facts">
+              <div class="dest-info-fact">
+                <i data-icon="sun"></i><span><strong>Apr – Okt</strong> · kabut tipis, sunrise jelas</span>
+              </div>
+              <div class="dest-info-fact">
+                <i data-icon="wallet"></i><span><strong>Rp 1,5 – 3 jt</strong> per orang untuk 3 hari</span>
+              </div>
+              <div class="dest-info-fact">
+                <i data-icon="camera"></i><span>Kawah Bromo, Tumpak Sewu, Kawah Ijen</span>
+              </div>
+            </div>
+            <a class="btn btn--secondary btn--sm mt-auto" href="explore.html">
+              Lihat itinerary <i data-icon="arrowR"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- Card/DestinationInfo — Bali -->
+        <article class="card card--interactive dest-info-card" style="display:flex;flex-direction:column">
+          <div class="dest-info-media">
+            <div data-scene="jungle"></div>
+            <div class="dest-info-media-badges">
+              <span class="badge badge--glass"><i data-icon="route"></i> 128 itinerary</span>
+              <span class="badge badge--accent"><i data-icon="sparkle"></i> Paling populer</span>
+            </div>
+          </div>
+          <div class="dest-info-body">
+            <div class="stack" style="gap:2px">
+              <h3 class="t-h4">Bali</h3>
+              <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Bali</span>
+            </div>
+            <div class="dest-info-facts">
+              <div class="dest-info-fact">
+                <i data-icon="sun"></i><span><strong>Apr – Okt</strong> · musim kemarau, ramai Jul – Agu</span>
+              </div>
+              <div class="dest-info-fact">
+                <i data-icon="wallet"></i><span><strong>Rp 2 – 5 jt</strong> per orang untuk 5 hari</span>
+              </div>
+              <div class="dest-info-fact">
+                <i data-icon="camera"></i><span>Ubud, Munduk, Nusa Penida, pantai barat</span>
+              </div>
+            </div>
+            <a class="btn btn--secondary btn--sm mt-auto" href="explore.html">
+              Lihat itinerary <i data-icon="arrowR"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- Card/DestinationInfo — Danau Toba -->
+        <article class="card card--interactive dest-info-card" style="display:flex;flex-direction:column">
+          <div class="dest-info-media">
+            <div data-scene="lake"></div>
+            <div class="dest-info-media-badges">
+              <span class="badge badge--glass"><i data-icon="route"></i> 23 itinerary</span>
+            </div>
+          </div>
+          <div class="dest-info-body">
+            <div class="stack" style="gap:2px">
+              <h3 class="t-h4">Danau Toba</h3>
+              <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Sumatera Utara</span>
+            </div>
+            <div class="dest-info-facts">
+              <div class="dest-info-fact">
+                <i data-icon="sun"></i><span><strong>Mei – Sep</strong> · cerah, air danau tenang</span>
+              </div>
+              <div class="dest-info-fact">
+                <i data-icon="wallet"></i><span><strong>Rp 1,8 – 3 jt</strong> per orang untuk 4 hari</span>
+              </div>
+              <div class="dest-info-fact">
+                <i data-icon="camera"></i><span>Pulau Samosir, Bukit Holbung, budaya Batak</span>
+              </div>
+            </div>
+            <a class="btn btn--secondary btn--sm mt-auto" href="explore.html">
+              Lihat itinerary <i data-icon="arrowR"></i>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       BAGIAN 2 — Itinerary unggulan (template siap pakai)
+       Figma: Section/FeaturedItineraries · Card/Itinerary
+       ==================================================================== -->
+  <section class="section section--alt" id="itinerary-unggulan">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack stack-150">
+          <p class="t-overline t-accent">Itinerary unggulan</p>
+          <h2 class="t-h2 t-balance">Template siap pakai, tinggal jalan</h2>
+          <p class="t-body t-muted">
+            Sudah disusun lengkap per hari dan dipakai ribuan traveler. Pakai apa adanya,
+            atau ubah seperlunya.
+          </p>
+        </div>
+        <div class="tabs" role="tablist">
+          <button class="tab is-active" data-no-toggle>Semua</button>
+          <button class="tab" data-no-toggle>Hemat</button>
+          <button class="tab" data-no-toggle>Alam</button>
+          <button class="tab" data-no-toggle>Budaya</button>
+        </div>
+      </div>
+
+      <div class="grid grid-3">
+
+        <a class="card card--interactive itin-card" href="itinerary.html">
+          <div class="itin-card-media">
+            <div data-scene="ocean" style="width:100%;height:100%"></div>
+            <div class="itin-card-media-top">
+              <span class="badge badge--accent"><i data-icon="sparkle"></i> Paling laris</span>
+              <button class="btn-icon btn-icon--sm" data-save aria-label="Simpan itinerary">
+                <i data-icon="heart" data-icon-size="20px"></i>
+              </button>
+            </div>
+            <div class="itin-card-media-bottom">
+              <span class="badge badge--ink"><i data-icon="pin"></i> Labuan Bajo, NTT</span>
+            </div>
+          </div>
+          <div class="itin-card-body">
+            <h3 class="itin-card-title">Sailing Komodo: Padar, Pink Beach &amp; Manta Point</h3>
+            <div class="itin-card-meta">
+              <span class="row row-100"><i data-icon="calendar"></i> 4 hari 3 malam</span>
+              <span class="row row-100"><i data-icon="route"></i> 11 titik</span>
+            </div>
+            <div class="row row-100">
+              <span class="rating"><i data-icon="star"></i> 4,9</span>
+              <span class="t-caption t-subtle">· dipakai 1.840 kali</span>
+            </div>
+            <div class="itin-card-foot">
+              <div class="price">
+                <span class="price-value">Rp 4,85 jt</span>
+                <span class="price-note">per orang</span>
+              </div>
+              <span class="btn-icon btn-icon--sm"><i data-icon="arrowR" data-icon-size="18px"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card card--interactive itin-card" href="itinerary.html">
+          <div class="itin-card-media">
+            <div data-scene="temple" style="width:100%;height:100%"></div>
+            <div class="itin-card-media-top">
+              <span class="badge badge--glass"><i data-icon="wallet"></i> Ramah budget</span>
+              <button class="btn-icon btn-icon--sm" data-save aria-label="Simpan itinerary">
+                <i data-icon="heart" data-icon-size="20px"></i>
+              </button>
+            </div>
+            <div class="itin-card-media-bottom">
+              <span class="badge badge--ink"><i data-icon="pin"></i> Yogyakarta, DIY</span>
+            </div>
+          </div>
+          <div class="itin-card-body">
+            <h3 class="itin-card-title">Jogja Pelan-pelan: Candi, Pasar Pagi &amp; Senja Parangtritis</h3>
+            <div class="itin-card-meta">
+              <span class="row row-100"><i data-icon="calendar"></i> 3 hari 2 malam</span>
+              <span class="row row-100"><i data-icon="route"></i> 9 titik</span>
+            </div>
+            <div class="row row-100">
+              <span class="rating"><i data-icon="star"></i> 4,8</span>
+              <span class="t-caption t-subtle">· dipakai 3.210 kali</span>
+            </div>
+            <div class="itin-card-foot">
+              <div class="price">
+                <span class="price-value">Rp 1,25 jt</span>
+                <span class="price-note">per orang</span>
+              </div>
+              <span class="btn-icon btn-icon--sm"><i data-icon="arrowR" data-icon-size="18px"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card card--interactive itin-card" href="itinerary.html">
+          <div class="itin-card-media">
+            <div data-scene="volcano" style="width:100%;height:100%"></div>
+            <div class="itin-card-media-top">
+              <span class="badge badge--glass"><i data-icon="sun"></i> Pengejar sunrise</span>
+              <button class="btn-icon btn-icon--sm" data-save aria-label="Simpan itinerary">
+                <i data-icon="heart" data-icon-size="20px"></i>
+              </button>
+            </div>
+            <div class="itin-card-media-bottom">
+              <span class="badge badge--ink"><i data-icon="pin"></i> Bromo &amp; Lumajang</span>
+            </div>
+          </div>
+          <div class="itin-card-body">
+            <h3 class="itin-card-title">Bromo – Tumpak Sewu: Dua Sunrise dalam Tiga Hari</h3>
+            <div class="itin-card-meta">
+              <span class="row row-100"><i data-icon="calendar"></i> 3 hari 2 malam</span>
+              <span class="row row-100"><i data-icon="route"></i> 8 titik</span>
+            </div>
+            <div class="row row-100">
+              <span class="rating"><i data-icon="star"></i> 4,7</span>
+              <span class="t-caption t-subtle">· dipakai 1.460 kali</span>
+            </div>
+            <div class="itin-card-foot">
+              <div class="price">
+                <span class="price-value">Rp 1,85 jt</span>
+                <span class="price-note">per orang</span>
+              </div>
+              <span class="btn-icon btn-icon--sm"><i data-icon="arrowR" data-icon-size="18px"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card card--interactive itin-card" href="itinerary.html">
+          <div class="itin-card-media">
+            <div data-scene="reef" style="width:100%;height:100%"></div>
+            <div class="itin-card-media-top">
+              <span class="badge badge--glass"><i data-icon="compass"></i> Buat penyelam</span>
+              <button class="btn-icon btn-icon--sm" data-save aria-label="Simpan itinerary">
+                <i data-icon="heart" data-icon-size="20px"></i>
+              </button>
+            </div>
+            <div class="itin-card-media-bottom">
+              <span class="badge badge--ink"><i data-icon="pin"></i> Raja Ampat</span>
+            </div>
+          </div>
+          <div class="itin-card-body">
+            <h3 class="itin-card-title">Raja Ampat 6 Hari: Wayag, Piaynemo &amp; Arborek</h3>
+            <div class="itin-card-meta">
+              <span class="row row-100"><i data-icon="calendar"></i> 6 hari 5 malam</span>
+              <span class="row row-100"><i data-icon="route"></i> 14 titik</span>
+            </div>
+            <div class="row row-100">
+              <span class="rating"><i data-icon="star"></i> 4,9</span>
+              <span class="t-caption t-subtle">· dipakai 420 kali</span>
+            </div>
+            <div class="itin-card-foot">
+              <div class="price">
+                <span class="price-value">Rp 12,5 jt</span>
+                <span class="price-note">per orang</span>
+              </div>
+              <span class="btn-icon btn-icon--sm"><i data-icon="arrowR" data-icon-size="18px"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card card--interactive itin-card" href="itinerary.html">
+          <div class="itin-card-media">
+            <div data-scene="jungle" style="width:100%;height:100%"></div>
+            <div class="itin-card-media-top">
+              <span class="badge badge--glass"><i data-icon="bed"></i> Santai</span>
+              <button class="btn-icon btn-icon--sm" data-save aria-label="Simpan itinerary">
+                <i data-icon="heart" data-icon-size="20px"></i>
+              </button>
+            </div>
+            <div class="itin-card-media-bottom">
+              <span class="badge badge--ink"><i data-icon="pin"></i> Bali Utara</span>
+            </div>
+          </div>
+          <div class="itin-card-body">
+            <h3 class="itin-card-title">Bali Utara: Air Terjun, Yoga &amp; Pasar Pagi Munduk</h3>
+            <div class="itin-card-meta">
+              <span class="row row-100"><i data-icon="calendar"></i> 5 hari 4 malam</span>
+              <span class="row row-100"><i data-icon="route"></i> 12 titik</span>
+            </div>
+            <div class="row row-100">
+              <span class="rating"><i data-icon="star"></i> 4,8</span>
+              <span class="t-caption t-subtle">· dipakai 2.070 kali</span>
+            </div>
+            <div class="itin-card-foot">
+              <div class="price">
+                <span class="price-value">Rp 3,40 jt</span>
+                <span class="price-note">per orang</span>
+              </div>
+              <span class="btn-icon btn-icon--sm"><i data-icon="arrowR" data-icon-size="18px"></i></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card card--interactive itin-card" href="itinerary.html">
+          <div class="itin-card-media">
+            <div data-scene="lake" style="width:100%;height:100%"></div>
+            <div class="itin-card-media-top">
+              <span class="badge badge--glass"><i data-icon="globe"></i> Budaya</span>
+              <button class="btn-icon btn-icon--sm" data-save aria-label="Simpan itinerary">
+                <i data-icon="heart" data-icon-size="20px"></i>
+              </button>
+            </div>
+            <div class="itin-card-media-bottom">
+              <span class="badge badge--ink"><i data-icon="pin"></i> Danau Toba</span>
+            </div>
+          </div>
+          <div class="itin-card-body">
+            <h3 class="itin-card-title">Danau Toba: Samosir &amp; Budaya Batak</h3>
+            <div class="itin-card-meta">
+              <span class="row row-100"><i data-icon="calendar"></i> 4 hari 3 malam</span>
+              <span class="row row-100"><i data-icon="route"></i> 10 titik</span>
+            </div>
+            <div class="row row-100">
+              <span class="rating"><i data-icon="star"></i> 4,7</span>
+              <span class="t-caption t-subtle">· dipakai 680 kali</span>
+            </div>
+            <div class="itin-card-foot">
+              <div class="price">
+                <span class="price-value">Rp 2,10 jt</span>
+                <span class="price-note">per orang</span>
+              </div>
+              <span class="btn-icon btn-icon--sm"><i data-icon="arrowR" data-icon-size="18px"></i></span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+      <div class="row" style="justify-content:center;margin-top:var(--space-600)">
+        <a class="btn btn--primary btn--lg" href="explore.html">
+          Jelajahi 1.240 itinerary lainnya <i data-icon="arrowR"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       BAGIAN 3 — About Kelana
+       Figma: Section/About
+       ==================================================================== -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack stack-150">
+          <p class="t-overline t-accent">About Kelana</p>
+          <h2 class="t-h2 t-balance">Rencana yang realistis, bukan daftar keinginan</h2>
+          <p class="t-body t-muted">
+            Masalah itinerary di internet: jadwalnya nggak mungkin dijalani. Kelana menghitung
+            waktu tempuh asli, jam buka, dan jeda istirahat — jadi kamu nggak kehabisan tenaga
+            di hari kedua.
+          </p>
+        </div>
+      </div>
+
+      <!-- Tiga hal yang bisa dilakukan — sekaligus penunjuk arah ke menu lain -->
+      <div class="grid grid-3" style="margin-bottom:var(--space-800)">
+        <a class="feature-card card--interactive" href="explore.html">
+          <span class="feature-icon"><i data-icon="search" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Jelajah</h3>
+          <p class="t-body t-muted">
+            Cari template itinerary yang cocok, atau susun sendiri dari nol pakai penyusun
+            otomatis Kelana.
+          </p>
+          <span class="row row-100 t-body-sm t-brand mt-auto" style="font-weight:700;padding-top:var(--space-150)">
+            Buka Jelajah <i data-icon="arrowR"></i>
+          </span>
+        </a>
+
+        <a class="feature-card card--interactive" href="trips.html">
+          <span class="feature-icon feature-icon--sand"><i data-icon="route" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Trip Saya</h3>
+          <p class="t-body t-muted">
+            Semua rencanamu tersimpan di satu tempat — termasuk draf, checklist persiapan, dan
+            akses offline saat sinyal hilang.
+          </p>
+          <span class="row row-100 t-body-sm t-brand mt-auto" style="font-weight:700;padding-top:var(--space-150)">
+            Buka Trip Saya <i data-icon="arrowR"></i>
+          </span>
+        </a>
+
+        <a class="feature-card card--interactive" href="booking.html">
+          <span class="feature-icon feature-icon--accent"><i data-icon="users" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Booking</h3>
+          <p class="t-body t-muted">
+            Sewa pemandu lokal terverifikasi, atau gabung open trip patungan bareng traveler
+            lain yang tujuannya sama.
+          </p>
+          <span class="row row-100 t-body-sm t-brand mt-auto" style="font-weight:700;padding-top:var(--space-150)">
+            Buka Booking <i data-icon="arrowR"></i>
+          </span>
+        </a>
+      </div>
+
+      <!-- Apa yang bikin Kelana beda -->
+      <div class="card" style="padding:var(--space-800);background:var(--ocean-50);border-color:var(--ocean-100)">
+        <div class="grid grid-2" style="gap:var(--space-800);align-items:center">
+          <div class="stack stack-300">
+            <h3 class="t-h3 t-balance">Apa yang bikin Kelana beda</h3>
+            <p class="t-body t-muted">
+              Kami bukan agen tur dan bukan blog perjalanan. Kelana adalah penyusun rencana
+              harian — kami peduli pada hal membosankan yang justru menentukan: berapa lama
+              perjalanan antar titik, jam berapa tempatnya tutup, dan kapan kamu perlu istirahat.
+            </p>
+            <div class="row row-wrap row-100">
+              <span class="badge badge--neutral"><i data-icon="clock"></i> Waktu tempuh nyata</span>
+              <span class="badge badge--neutral"><i data-icon="wallet"></i> Biaya transparan</span>
+              <span class="badge badge--neutral"><i data-icon="offline"></i> Bisa diakses offline</span>
+              <span class="badge badge--neutral"><i data-icon="shield"></i> Mitra terverifikasi</span>
+            </div>
+
+            <div class="row row-wrap" style="gap:var(--space-600);margin-top:var(--space-200)">
+              <div class="stat">
+                <span class="stat-value">1.240+</span>
+                <span class="stat-label">Itinerary tersusun rapi</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">87</span>
+                <span class="stat-label">Destinasi di 34 provinsi</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">92%</span>
+                <span class="stat-label">Dipakai tanpa diubah banyak</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stack stack-200">
+            <div class="card card--pad" style="box-shadow:var(--shadow-sm)">
+              <div class="row">
+                <span class="feature-icon" style="width:44px;height:44px"><i data-icon="clock" data-icon-size="22px"></i></span>
+                <div class="stack">
+                  <strong class="t-body">Peringatan jadwal mustahil</strong>
+                  <span class="t-body-sm t-muted">"Padar ke Pink Beach butuh 90 menit — jadwalmu cuma 30."</span>
+                </div>
+              </div>
+            </div>
+            <div class="card card--pad" style="box-shadow:var(--shadow-sm)">
+              <div class="row">
+                <span class="feature-icon feature-icon--accent" style="width:44px;height:44px"><i data-icon="wallet" data-icon-size="22px"></i></span>
+                <div class="stack">
+                  <strong class="t-body">Rincian biaya per pos</strong>
+                  <span class="t-body-sm t-muted">Transport, makan, tiket, penginapan — terpisah jelas.</span>
+                </div>
+              </div>
+            </div>
+            <div class="card card--pad" style="box-shadow:var(--shadow-sm)">
+              <div class="row">
+                <span class="feature-icon feature-icon--sand" style="width:44px;height:44px"><i data-icon="users" data-icon-size="22px"></i></span>
+                <div class="stack">
+                  <strong class="t-body">Patungan jadi gampang</strong>
+                  <span class="t-body-sm t-muted">Bagi biaya otomatis, atau gabung trip orang lain.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       BAGIAN 4 — Review orang
+       Figma: Section/Reviews · Card/Testimonial
+       ==================================================================== -->
+  <section class="section section--alt" id="review">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack stack-150">
+          <p class="t-overline t-accent">Review</p>
+          <h2 class="t-h2 t-balance">Sudah dipakai jalan, bukan cuma disimpan</h2>
+        </div>
+      </div>
+
+      <!-- Ringkasan rating -->
+      <div class="card card--pad" style="margin-bottom:var(--space-500)">
+        <div class="row row-wrap row-300">
+          <div class="stack" style="align-items:center;min-width:140px">
+            <span class="t-h1">4,8</span>
+            <span class="rating">
+              <i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i>
+            </span>
+            <span class="t-caption t-muted">9.300 ulasan</span>
+          </div>
+          <span class="stat-divider hide-mobile"></span>
+          <div class="stack stack-100" style="flex:1;min-width:260px">
+            <div class="row row-100"><span class="t-caption" style="width:96px">Akurasi jadwal</span>
+              <div class="budget-bar" style="flex:1;height:8px"><span class="bg-seg-1" style="width:96%"></span></div>
+              <strong class="t-caption">4,9</strong></div>
+            <div class="row row-100"><span class="t-caption" style="width:96px">Nilai uang</span>
+              <div class="budget-bar" style="flex:1;height:8px"><span class="bg-seg-1" style="width:90%"></span></div>
+              <strong class="t-caption">4,6</strong></div>
+            <div class="row row-100"><span class="t-caption" style="width:96px">Pemandu lokal</span>
+              <div class="budget-bar" style="flex:1;height:8px"><span class="bg-seg-1" style="width:98%"></span></div>
+              <strong class="t-caption">5,0</strong></div>
+            <div class="row row-100"><span class="t-caption" style="width:96px">Kemudahan pakai</span>
+              <div class="budget-bar" style="flex:1;height:8px"><span class="bg-seg-1" style="width:94%"></span></div>
+              <strong class="t-caption">4,8</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-3">
+        <article class="card card--pad stack stack-200">
+          <span class="rating">
+            <i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i>
+          </span>
+          <p class="t-body">
+            "Biasanya gue yang kebagian jadi tukang riset tiap trip. Kali ini tinggal share link
+            Kelana ke grup, semua langsung paham jadwalnya."
+          </p>
+          <div class="row" style="margin-top:auto">
+            <span class="avatar">RA</span>
+            <div class="stack">
+              <strong class="t-body-sm">Rizky Adiputra</strong>
+              <span class="t-caption t-muted">Trip Labuan Bajo · Nov 2026</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card--pad stack stack-200">
+          <span class="rating">
+            <i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i>
+          </span>
+          <p class="t-body">
+            "Yang paling kepake itu estimasi waktu tempuhnya. Rencana awal gue kepadetan, dan
+            Kelana langsung ngasih tahu mana yang nggak kejar."
+          </p>
+          <div class="row" style="margin-top:auto">
+            <span class="avatar avatar--c2">DP</span>
+            <div class="stack">
+              <strong class="t-body-sm">Dara Pramesti</strong>
+              <span class="t-caption t-muted">Trip Yogyakarta · Sep 2026</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card--pad stack stack-200">
+          <span class="rating">
+            <i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i>
+          </span>
+          <p class="t-body">
+            "Sinyal di Bromo ilang total, tapi itinerary-nya masih kebuka karena sudah tersimpan
+            offline. Penyelamat banget."
+          </p>
+          <div class="row" style="margin-top:auto">
+            <span class="avatar avatar--c3">SW</span>
+            <div class="stack">
+              <strong class="t-body-sm">Satya Wirawan</strong>
+              <span class="t-caption t-muted">Trip Bromo · Agu 2026</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card--pad stack stack-200">
+          <span class="rating">
+            <i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i>
+          </span>
+          <p class="t-body">
+            "Gabung open trip ke Bromo bareng enam orang yang nggak gue kenal. Biayanya jadi
+            separuh, dan ternyata seru."
+          </p>
+          <div class="row" style="margin-top:auto">
+            <span class="avatar avatar--c4">LP</span>
+            <div class="stack">
+              <strong class="t-body-sm">Laras Puspita</strong>
+              <span class="t-caption t-muted">Open trip Bromo · Jul 2026</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card--pad stack stack-200">
+          <span class="rating">
+            <i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i>
+          </span>
+          <p class="t-body">
+            "Pemandunya dari Kelana orang lokal asli, tahu jalan tikus yang nggak ada di peta.
+            Worth it banget dibanding jalan sendiri."
+          </p>
+          <div class="row" style="margin-top:auto">
+            <span class="avatar avatar--c5">BH</span>
+            <div class="stack">
+              <strong class="t-body-sm">Bagas Hernanda</strong>
+              <span class="t-caption t-muted">Trip Raja Ampat · Okt 2026</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card--pad stack stack-200">
+          <span class="rating">
+            <i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i>
+          </span>
+          <p class="t-body">
+            "Template Jogja-nya gue pakai hampir tanpa ubah. Cuma geser satu aktivitas karena
+            hujan. Hemat waktu riset berhari-hari."
+          </p>
+          <div class="row" style="margin-top:auto">
+            <span class="avatar">MF</span>
+            <div class="stack">
+              <strong class="t-body-sm">Maya Fitriani</strong>
+              <span class="t-caption t-muted">Trip Yogyakarta · Okt 2026</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       CTA penutup
+       ==================================================================== -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="card" style="position:relative;overflow:hidden;border:none;background:var(--ocean-800);padding:var(--space-1000) var(--space-600);text-align:center">
+        <div style="position:absolute;inset:0;opacity:.34">
+          <div data-scene="dawn" style="width:100%;height:100%"></div>
+        </div>
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(15,23,42,.92),rgba(15,23,42,.6))"></div>
+
+        <div class="stack stack-300" style="position:relative;align-items:center;max-width:620px;margin-inline:auto">
+          <h2 class="t-h1 t-balance" style="color:var(--white)">Tujuan berikutnya ke mana?</h2>
+          <p class="t-body-lg" style="color:rgba(226,232,240,.84)">
+            Mulai dari template yang sudah ada, atau susun rencanamu sendiri. Gratis, tanpa
+            perlu daftar dulu.
+          </p>
+          <div class="row row-wrap" style="justify-content:center;margin-top:var(--space-100)">
+            <a class="btn btn--accent btn--lg" href="explore.html">
+              <i data-icon="search"></i> Mulai dari Jelajah
+            </a>
+            <a class="btn btn--on-ink btn--lg" href="booking.html">Lihat open trip patungan</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div data-slot="footer"></div>
+
+<!-- ======================================================================
+     MODAL: Auth
+     Figma: Modal/Auth — state=signup
+     ====================================================================== -->
+<div class="overlay" data-modal="auth" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+  <div class="modal" style="position:relative">
+    <button class="btn-icon btn-icon--sm modal-close" data-modal-close aria-label="Tutup">
+      <i data-icon="x" data-icon-size="18px"></i>
+    </button>
+
+    <div class="stack stack-300">
+      <div class="stack stack-100">
+        <span class="logo-mark" style="margin-bottom:var(--space-100)">
+          <i data-icon="logo" data-icon-size="22px"></i>
+        </span>
+        <h2 class="t-h3" id="auth-title">Simpan rencanamu</h2>
+        <p class="t-body-sm t-muted">
+          Bikin akun biar itinerary-mu bisa diakses dari HP dan dibagikan ke rombongan.
+        </p>
+      </div>
+
+      <div class="stack stack-150">
+        <button class="btn btn--secondary btn--block" data-toast="Demo prototype — alur OAuth belum disambungkan" data-toast-icon="info">
+          <i data-icon="globe"></i> Lanjut dengan Google
+        </button>
+        <div class="row row-100">
+          <hr class="divider" style="flex:1">
+          <span class="t-caption t-subtle">atau</span>
+          <hr class="divider" style="flex:1">
+        </div>
+      </div>
+
+      <form class="stack stack-200" onsubmit="event.preventDefault(); Kelana.closeModal(); Kelana.toast('Akun dibuat — selamat datang di Kelana!','check')">
+        <label class="field">
+          <span class="field-label">Email</span>
+          <input class="input" type="email" placeholder="nama@email.com" required>
+        </label>
+        <label class="field">
+          <span class="field-label">Kata sandi</span>
+          <input class="input" type="password" placeholder="Minimal 8 karakter" required>
+          <span class="field-hint">Gabungkan huruf dan angka biar lebih aman.</span>
+        </label>
+        <button class="btn btn--primary btn--block btn--lg" type="submit">Buat akun</button>
+        <p class="t-caption t-subtle t-center">
+          Dengan mendaftar, kamu setuju pada Syarat Layanan dan Kebijakan Privasi Kelana.
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div data-slot="protobar"></div>
+
+<script src="assets/js/scenes.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

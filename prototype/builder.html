@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Susun Itinerary — Kelana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  /* Figma: Desktop/04–06 Builder */
+  .builder-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: var(--space-500);
+    align-items: start;
+  }
+  .builder-layout > * { min-width: 0; }
+  .builder-aside { position: sticky; top: calc(var(--nav-height) + var(--space-300)); }
+  .interest-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-200); }
+
+  /* Card pilihan besar (Figma: SelectCard / state=default|selected) */
+  .select-card {
+    position: relative;
+    padding: var(--space-250);
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    cursor: pointer;
+    text-align: left;
+    display: flex; flex-direction: column; gap: var(--space-150);
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+  .select-card:hover { border-color: var(--ocean-400); background: var(--ocean-50); }
+  .select-card input { display: none; }
+  .select-card.is-selected,
+  .select-card:has(input:checked) {
+    border-color: var(--ocean-500);
+    background: var(--ocean-50);
+    box-shadow: 0 0 0 3px var(--ocean-50);
+  }
+  .select-card__tick {
+    position: absolute; top: 14px; right: 14px;
+    width: 22px; height: 22px; border-radius: var(--radius-full);
+    background: var(--ocean-500); color: var(--white);
+    display: grid; place-items: center;
+    opacity: 0; transform: scale(.6);
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+  .select-card.is-selected .select-card__tick,
+  .select-card:has(input:checked) .select-card__tick { opacity: 1; transform: scale(1); }
+
+  @media (max-width: 1100px) {
+    .builder-layout { grid-template-columns: 1fr; }
+    .builder-aside { position: static; }
+  }
+  @media (max-width: 640px) {
+    .interest-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div data-slot="navbar"></div>
+
+<main>
+
+  <!-- ====================================================================
+       FRAME 04/05/06 — Builder wizard (3 langkah)
+       Figma: prototype connection antar frame pakai smart animate
+       ==================================================================== -->
+  <section style="background:var(--bg-surface);border-bottom:1px solid var(--border-subtle);padding-block:var(--space-400)">
+    <div class="container">
+      <div class="row row-wrap row-between" style="gap:var(--space-300)">
+        <div class="stack stack-100">
+          <p class="t-overline t-accent">Penyusun itinerary</p>
+          <h1 class="t-h3" id="builder-title">Cerita dulu soal rencanamu</h1>
+        </div>
+
+        <!-- Figma: Stepper -->
+        <div class="stepper" id="stepper">
+          <div class="step is-current" data-step-indicator="1">
+            <span class="step-dot">1</span>
+            <span class="step-label hide-mobile">Dasar</span>
+          </div>
+          <span class="step-line"></span>
+          <div class="step" data-step-indicator="2">
+            <span class="step-dot">2</span>
+            <span class="step-label hide-mobile">Minat</span>
+          </div>
+          <span class="step-line"></span>
+          <div class="step" data-step-indicator="3">
+            <span class="step-dot">3</span>
+            <span class="step-label hide-mobile">Rencana</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+
+      <!-- ================== LANGKAH 1 — Dasar perjalanan ================== -->
+      <div data-step="1">
+        <div class="builder-layout">
+          <div class="stack stack-400">
+
+            <div class="card card--pad stack stack-300">
+              <h2 class="t-h4">Ke mana dan kapan?</h2>
+
+              <div class="grid grid-2" style="gap:var(--space-250)">
+                <label class="field">
+                  <span class="field-label">Tujuan utama</span>
+                  <input class="input" type="text" value="Labuan Bajo, Nusa Tenggara Timur">
+                  <span class="field-hint">Bisa tambah kota kedua nanti.</span>
+                </label>
+
+                <label class="field">
+                  <span class="field-label">Titik keberangkatan</span>
+                  <input class="input" type="text" value="Jakarta (CGK)">
+                  <span class="field-hint">Dipakai buat estimasi tiket pesawat.</span>
+                </label>
+
+                <label class="field">
+                  <span class="field-label">Tanggal pergi</span>
+                  <input class="input" type="date" value="2026-11-12">
+                </label>
+
+                <label class="field">
+                  <span class="field-label">Tanggal pulang</span>
+                  <input class="input" type="date" value="2026-11-15">
+                  <span class="field-hint">4 hari 3 malam</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="card card--pad stack stack-300">
+              <h2 class="t-h4">Jalan sama siapa?</h2>
+              <div class="interest-grid">
+                <label class="select-card">
+                  <input type="radio" name="rombongan">
+                  <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                  <span class="feature-icon" style="width:40px;height:40px;border-radius:12px"><i data-icon="compass" data-icon-size="20px"></i></span>
+                  <strong class="t-body-sm">Sendiri</strong>
+                  <span class="t-caption t-muted">Fleksibel, hemat</span>
+                </label>
+                <label class="select-card is-selected">
+                  <input type="radio" name="rombongan" checked>
+                  <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                  <span class="feature-icon" style="width:40px;height:40px;border-radius:12px"><i data-icon="heart" data-icon-size="20px"></i></span>
+                  <strong class="t-body-sm">Pasangan</strong>
+                  <span class="t-caption t-muted">2 orang</span>
+                </label>
+                <label class="select-card">
+                  <input type="radio" name="rombongan">
+                  <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                  <span class="feature-icon" style="width:40px;height:40px;border-radius:12px"><i data-icon="users" data-icon-size="20px"></i></span>
+                  <strong class="t-body-sm">Rombongan</strong>
+                  <span class="t-caption t-muted">3–12 orang</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="card card--pad stack stack-300">
+              <div class="row row-between">
+                <h2 class="t-h4">Budget per orang</h2>
+                <strong class="t-h5 t-brand" id="builder-budget">Rp 5,00 jt</strong>
+              </div>
+              <input class="range" type="range" min="500000" max="15000000" step="250000" value="5000000"
+                     aria-label="Budget per orang"
+                     oninput="document.getElementById('builder-budget').textContent =
+                       'Rp ' + (this.value/1000000).toLocaleString('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' jt'">
+              <div class="row row-between">
+                <span class="t-caption t-subtle">Rp 500 rb</span>
+                <span class="t-caption t-subtle">Rp 15 jt</span>
+              </div>
+              <p class="t-body-sm t-muted">
+                Belum termasuk tiket pesawat. Kelana bakal nyusun rencana yang pas di angka ini.
+              </p>
+            </div>
+
+            <div class="row row-between row-wrap" style="gap:var(--space-200)">
+              <a class="btn btn--ghost" href="index.html"><i data-icon="chevL"></i> Batal</a>
+              <button class="btn btn--primary btn--lg" data-goto-step="2">
+                Lanjut ke minat <i data-icon="arrowR"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Ringkasan sticky -->
+          <aside class="builder-aside">
+            <div class="card card--pad stack stack-250" style="box-shadow:var(--shadow-md)">
+              <h3 class="t-h5">Ringkasan</h3>
+              <div data-scene="ocean" style="height:130px;border-radius:var(--radius-md);overflow:hidden"></div>
+              <div class="stack stack-100">
+                <div class="row row-between t-body-sm">
+                  <span class="t-muted">Tujuan</span><strong>Labuan Bajo</strong>
+                </div>
+                <div class="row row-between t-body-sm">
+                  <span class="t-muted">Durasi</span><strong>4 hari 3 malam</strong>
+                </div>
+                <div class="row row-between t-body-sm">
+                  <span class="t-muted">Peserta</span><strong>2 orang</strong>
+                </div>
+                <div class="row row-between t-body-sm">
+                  <span class="t-muted">Budget</span><strong>Rp 5,00 jt / orang</strong>
+                </div>
+              </div>
+              <hr class="divider">
+              <p class="t-caption t-muted">
+                <i data-icon="info"></i> Semua masih bisa diubah setelah rencana jadi.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <!-- ================== LANGKAH 2 — Minat & gaya ================== -->
+      <div data-step="2" hidden>
+        <div class="builder-layout">
+          <div class="stack stack-400">
+
+            <div class="card card--pad stack stack-300">
+              <div class="stack stack-100">
+                <h2 class="t-h4">Apa yang bikin kamu semangat?</h2>
+                <p class="t-body-sm t-muted">Pilih minimal 2. Ini yang nentuin aktivitas apa yang masuk rencana.</p>
+              </div>
+
+              <div class="interest-grid">
+                <label class="select-card is-selected">
+                  <input type="checkbox" checked>
+                  <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                  <span class="feature-icon" style="width:40px;height:40px;border-radius:12px"><i data-icon="camera" data-icon-size="20px"></i></span>
+                  <strong class="t-body-sm">Pemandangan alam</strong>
+                  <span class="t-caption t-muted">Bukit, pantai, air terjun</span>
+                </label>
+
+                <label class="select-card is-selected">
+                  <input type="checkbox" checked>
+                  <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                  <span class="feature-icon" style="width:40px;height:40px;border-radius:12px"><i data-icon="compass" data-icon-size="20px"></i></span>
+                  <strong class="t-body-sm">Snorkeling &amp; laut</strong>
+                  <span class="t-caption t-muted">Terumbu, pulau kecil</span>
+                </label>
+
+                <label class="select-card">
+                  <input type="checkbox">
+                  <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                  <span class="feature-icon" style="width:40px;height:40px;border-radius:12px"><i data-icon="food" data-icon-size="20px"></i></span>
+                  <strong class="t-body-sm">Kuliner lokal</strong>
+                  <span class="t-caption t-muted">Warung, pasar malam</span>
+                </label>
+
+                <label class="select-card">
+                  <input type="checkbox">
+                  <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                  <span class="feature-icon" style="width:40px;height:40px;border-radius:12px"><i data-icon="globe" data-icon-size="20px"></i></span>
+                  <strong class="t-body-sm">Budaya &amp; sejarah</strong>
+                  <span class="t-caption t-muted">Kampung adat, museum</span>
+                </label>
+
+                <label class="select-card is-selected">
+                  <input type="checkbox" checked>
+                  <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                  <span class="feature-icon" style="width:40px;height:40px;border-radius:12px"><i data-icon="sun" data-icon-size="20px"></i></span>
+                  <strong class="t-body-sm">Sunrise &amp; sunset</strong>
+                  <span class="t-caption t-muted">Siap bangun subuh</span>
+                </label>
+
+                <label class="select-card">
+                  <input type="checkbox">
+                  <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                  <span class="feature-icon" style="width:40px;height:40px;border-radius:12px"><i data-icon="bed" data-icon-size="20px"></i></span>
+                  <strong class="t-body-sm">Santai &amp; istirahat</strong>
+                  <span class="t-caption t-muted">Nggak mau dikejar waktu</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="card card--pad stack stack-300">
+              <h2 class="t-h4">Seberapa padat jadwalnya?</h2>
+              <div class="stack stack-150">
+                <label class="select-card" style="flex-direction:row;align-items:center">
+                  <input type="radio" name="tempo">
+                  <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                  <span class="feature-icon feature-icon--sand" style="width:44px;height:44px"><i data-icon="bed" data-icon-size="22px"></i></span>
+                  <span class="stack" style="flex:1">
+                    <strong class="t-body-sm">Santai — 2–3 aktivitas sehari</strong>
+                    <span class="t-caption t-muted">Banyak waktu luang, bangun siang boleh</span>
+                  </span>
+                </label>
+
+                <label class="select-card is-selected" style="flex-direction:row;align-items:center">
+                  <input type="radio" name="tempo" checked>
+                  <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                  <span class="feature-icon" style="width:44px;height:44px"><i data-icon="route" data-icon-size="22px"></i></span>
+                  <span class="stack" style="flex:1">
+                    <strong class="t-body-sm">Seimbang — 4–5 aktivitas sehari</strong>
+                    <span class="t-caption t-muted">Cukup padat tapi masih ada jeda</span>
+                  </span>
+                </label>
+
+                <label class="select-card" style="flex-direction:row;align-items:center">
+                  <input type="radio" name="tempo">
+                  <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                  <span class="feature-icon feature-icon--accent" style="width:44px;height:44px"><i data-icon="sparkle" data-icon-size="22px"></i></span>
+                  <span class="stack" style="flex:1">
+                    <strong class="t-body-sm">Padat — 6+ aktivitas sehari</strong>
+                    <span class="t-caption t-muted">Maksimalkan tiap jam, siap capek</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <div class="card card--pad stack stack-200">
+              <h2 class="t-h4">Ada permintaan khusus?</h2>
+              <textarea class="input input--textarea"
+                        placeholder="Contoh: alergi seafood, nggak bisa renang, bawa orang tua, pengin ada waktu salat Jumat…"></textarea>
+              <span class="field-hint">Opsional. Tapi ini sering jadi pembeda rencana yang kepake vs nggak.</span>
+            </div>
+
+            <div class="row row-between row-wrap" style="gap:var(--space-200)">
+              <button class="btn btn--ghost" data-goto-step="1"><i data-icon="chevL"></i> Kembali</button>
+              <button class="btn btn--primary btn--lg" data-goto-step="3">
+                <i data-icon="sparkle"></i> Susun rencana saya
+              </button>
+            </div>
+          </div>
+
+          <aside class="builder-aside">
+            <div class="card card--pad stack stack-250" style="box-shadow:var(--shadow-md)">
+              <h3 class="t-h5">Ringkasan</h3>
+              <div data-scene="ocean" style="height:130px;border-radius:var(--radius-md);overflow:hidden"></div>
+              <div class="stack stack-100">
+                <div class="row row-between t-body-sm"><span class="t-muted">Tujuan</span><strong>Labuan Bajo</strong></div>
+                <div class="row row-between t-body-sm"><span class="t-muted">Durasi</span><strong>4H 3M</strong></div>
+                <div class="row row-between t-body-sm"><span class="t-muted">Tempo</span><strong>Seimbang</strong></div>
+              </div>
+              <hr class="divider">
+              <span class="t-caption t-muted">Minat terpilih</span>
+              <div class="row row-wrap row-100">
+                <span class="badge badge--brand">Alam</span>
+                <span class="badge badge--brand">Snorkeling</span>
+                <span class="badge badge--brand">Sunrise</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <!-- ================== LANGKAH 3 — Day planner ================== -->
+      <div data-step="3" hidden>
+        <div class="builder-layout">
+          <div class="stack stack-400">
+
+            <!-- Banner hasil -->
+            <div class="card card--pad" style="background:var(--ocean-50);border-color:var(--ocean-100)">
+              <div class="row row-wrap" style="gap:var(--space-250)">
+                <span class="feature-icon" style="width:52px;height:52px"><i data-icon="sparkle" data-icon-size="26px"></i></span>
+                <div class="stack stack-100" style="flex:1;min-width:240px">
+                  <strong class="t-body">Rencana 4 hari kamu sudah siap</strong>
+                  <p class="t-body-sm t-muted">
+                    Disusun dari 11 aktivitas yang cocok sama minatmu, dengan estimasi
+                    <strong style="color:var(--text-primary)">Rp 4,85 jt per orang</strong> —
+                    masih di bawah budget.
+                  </p>
+                </div>
+                <button class="btn btn--secondary btn--sm" data-toast="Rencana disusun ulang dengan variasi berbeda" data-toast-icon="sparkle">
+                  <i data-icon="sparkle"></i> Susun ulang
+                </button>
+              </div>
+            </div>
+
+            <!-- Petunjuk interaksi -->
+            <div class="row row-100 t-body-sm t-muted" style="padding:var(--space-150) var(--space-200);background:var(--bg-surface-alt);border-radius:var(--radius-md)">
+              <i data-icon="grip" data-icon-size="18px"></i>
+              <span><strong style="color:var(--text-primary)">Coba tarik kartu aktivitas</strong> buat tukar urutan — jam-nya ikut dihitung ulang otomatis.</span>
+            </div>
+
+            <!-- Tab hari -->
+            <div class="tabs" role="tablist" style="align-self:flex-start">
+              <button class="tab" data-no-toggle>Hari 1</button>
+              <button class="tab is-active" data-no-toggle>Hari 2</button>
+              <button class="tab" data-no-toggle>Hari 3</button>
+              <button class="tab" data-no-toggle>Hari 4</button>
+            </div>
+
+            <!-- Day planner: Figma = frame dengan auto-layout vertical, item draggable -->
+            <section class="day-group">
+              <header class="day-head">
+                <span class="day-chip"><span>Hari</span><strong>2</strong></span>
+                <div class="stack" style="flex:1">
+                  <h3 class="t-h5">Padar, Pink Beach &amp; Komodo</h3>
+                  <span class="t-caption t-muted">Kam, 13 Nov · 4 aktivitas · 11 jam 30 menit</span>
+                </div>
+                <button class="btn-icon btn-icon--sm" data-toast="Menu hari: duplikat, kosongkan, kunci" aria-label="Opsi hari">
+                  <i data-icon="grip" data-icon-size="16px"></i>
+                </button>
+              </header>
+
+              <div class="timeline" data-sortable>
+
+                <article class="activity" data-draggable data-duration="210">
+                  <span class="drag-handle" aria-label="Geser untuk ubah urutan"><i data-icon="grip" data-icon-size="16px"></i></span>
+                  <span class="activity-time">07.30</span>
+                  <div class="activity-thumb"><div data-scene="dawn" style="width:100%;height:100%"></div></div>
+                  <div class="activity-body">
+                    <strong class="t-body">Trekking sunrise Pulau Padar</strong>
+                    <p class="t-body-sm t-muted">800 anak tangga, 45 menit naik. Berangkat gelap biar sepi.</p>
+                    <div class="activity-tags">
+                      <span class="badge badge--accent">Wajib</span>
+                      <span class="badge badge--neutral"><i data-icon="clock"></i> 3,5 jam</span>
+                      <span class="badge badge--neutral"><i data-icon="wallet"></i> Rp 0</span>
+                    </div>
+                  </div>
+                  <div class="stack stack-100" style="justify-content:center">
+                    <button class="btn-icon btn-icon--sm" data-toast="Aktivitas dihapus dari Hari 2" data-toast-icon="trash" aria-label="Hapus">
+                      <i data-icon="trash" data-icon-size="15px"></i>
+                    </button>
+                  </div>
+                </article>
+
+                <article class="activity" data-draggable data-duration="120">
+                  <span class="drag-handle" aria-label="Geser untuk ubah urutan"><i data-icon="grip" data-icon-size="16px"></i></span>
+                  <span class="activity-time">11.00</span>
+                  <div class="activity-thumb"><div data-scene="sand" style="width:100%;height:100%"></div></div>
+                  <div class="activity-body">
+                    <strong class="t-body">Pink Beach — snorkeling &amp; sarapan</strong>
+                    <p class="t-body-sm t-muted">Terumbu dangkal dekat pantai, aman buat pemula.</p>
+                    <div class="activity-tags">
+                      <span class="badge badge--neutral"><i data-icon="clock"></i> 2 jam</span>
+                      <span class="badge badge--neutral"><i data-icon="food"></i> Makan termasuk</span>
+                    </div>
+                  </div>
+                  <div class="stack stack-100" style="justify-content:center">
+                    <button class="btn-icon btn-icon--sm" data-toast="Aktivitas dihapus dari Hari 2" data-toast-icon="trash" aria-label="Hapus">
+                      <i data-icon="trash" data-icon-size="15px"></i>
+                    </button>
+                  </div>
+                </article>
+
+                <article class="activity" data-draggable data-duration="150">
+                  <span class="drag-handle" aria-label="Geser untuk ubah urutan"><i data-icon="grip" data-icon-size="16px"></i></span>
+                  <span class="activity-time">13.00</span>
+                  <div class="activity-thumb"><div data-scene="jungle" style="width:100%;height:100%"></div></div>
+                  <div class="activity-body">
+                    <strong class="t-body">Pulau Komodo — trekking ditemani ranger</strong>
+                    <p class="t-body-sm t-muted">Rute pendek 1,5 km. Tiket taman nasional sudah termasuk.</p>
+                    <div class="activity-tags">
+                      <span class="badge badge--brand"><i data-icon="shield"></i> Ranger wajib</span>
+                      <span class="badge badge--neutral"><i data-icon="wallet"></i> Rp 320 rb</span>
+                    </div>
+                  </div>
+                  <div class="stack stack-100" style="justify-content:center">
+                    <button class="btn-icon btn-icon--sm" data-toast="Aktivitas dihapus dari Hari 2" data-toast-icon="trash" aria-label="Hapus">
+                      <i data-icon="trash" data-icon-size="15px"></i>
+                    </button>
+                  </div>
+                </article>
+
+                <article class="activity" data-draggable data-duration="90">
+                  <span class="drag-handle" aria-label="Geser untuk ubah urutan"><i data-icon="grip" data-icon-size="16px"></i></span>
+                  <span class="activity-time">15.30</span>
+                  <div class="activity-thumb"><div data-scene="reef" style="width:100%;height:100%"></div></div>
+                  <div class="activity-body">
+                    <strong class="t-body">Manta Point — berenang bareng pari manta</strong>
+                    <p class="t-body-sm t-muted">Arus lebih tenang jam ini. Peluang lihat manta ±70%.</p>
+                    <div class="activity-tags">
+                      <span class="badge badge--info"><i data-icon="info"></i> Tergantung cuaca</span>
+                      <span class="badge badge--neutral"><i data-icon="clock"></i> 1,5 jam</span>
+                    </div>
+                  </div>
+                  <div class="stack stack-100" style="justify-content:center">
+                    <button class="btn-icon btn-icon--sm" data-toast="Aktivitas dihapus dari Hari 2" data-toast-icon="trash" aria-label="Hapus">
+                      <i data-icon="trash" data-icon-size="15px"></i>
+                    </button>
+                  </div>
+                </article>
+
+                <!-- Slot tambah aktivitas (Figma: AddSlot / state=empty) -->
+                <button class="activity" data-modal-open="add-activity" data-no-toggle
+                        style="border-style:dashed;background:transparent;cursor:pointer;justify-content:center;align-items:center;color:var(--text-brand);font-weight:700">
+                  <i data-icon="plus" data-icon-size="18px"></i> Tambah aktivitas ke Hari 2
+                </button>
+              </div>
+            </section>
+
+            <!-- Peringatan jadwal (fitur pembeda) -->
+            <div class="card card--pad stack stack-150" style="background:var(--warning-50);border-color:var(--warning-100)">
+              <div class="row row-100">
+                <i data-icon="info" data-icon-size="20px" style="color:var(--warning-700)"></i>
+                <strong class="t-body-sm">Satu hal yang perlu kamu cek</strong>
+              </div>
+              <p class="t-body-sm" style="color:var(--warning-700)">
+                Perpindahan Pink Beach ke Pulau Komodo butuh sekitar 75 menit berlayar, tapi jadwalmu
+                cuma menyisakan 0 menit. Kelana saranin geser Manta Point ke Hari 3.
+              </p>
+              <div class="row row-100">
+                <button class="btn btn--primary btn--sm" data-toast="Manta Point dipindah ke Hari 3 — konflik beres" data-toast-icon="check">
+                  Terapkan saran
+                </button>
+                <button class="btn btn--ghost btn--sm" data-toast="Peringatan diabaikan" data-toast-icon="info">
+                  Biarkan saja
+                </button>
+              </div>
+            </div>
+
+            <div class="row row-between row-wrap" style="gap:var(--space-200)">
+              <button class="btn btn--ghost" data-goto-step="2"><i data-icon="chevL"></i> Ubah preferensi</button>
+              <div class="row row-wrap row-100">
+                <button class="btn btn--secondary" data-toast="Draf disimpan — bisa dilanjut nanti" data-toast-icon="download">
+                  Simpan draf
+                </button>
+                <a class="btn btn--accent btn--lg" href="trips.html"
+                   onclick="sessionStorage.setItem('kelana-new-trip','1')">
+                  <i data-icon="check"></i> Selesai &amp; simpan rencana
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar: biaya hidup + aksi -->
+          <aside class="builder-aside">
+            <div class="card card--pad stack stack-250" style="box-shadow:var(--shadow-md)">
+              <div class="row row-between">
+                <h3 class="t-h5">Estimasi biaya</h3>
+                <span class="badge badge--success">Di bawah budget</span>
+              </div>
+
+              <div class="stack stack-100">
+                <div class="row row-between" style="align-items:flex-end">
+                  <span class="t-caption t-muted">Total per orang</span>
+                  <strong class="t-h4">Rp 4,85 jt</strong>
+                </div>
+                <div class="budget-bar" aria-hidden="true">
+                  <span class="bg-seg-1" style="width:43%"></span>
+                  <span class="bg-seg-2" style="width:19%"></span>
+                  <span class="bg-seg-3" style="width:16%"></span>
+                  <span class="bg-seg-4" style="width:13%"></span>
+                  <span class="bg-seg-5" style="width:9%"></span>
+                </div>
+                <span class="t-caption t-subtle">Budget kamu Rp 5,00 jt — sisa Rp 150 rb</span>
+              </div>
+
+              <hr class="divider">
+
+              <div class="stack">
+                <div class="budget-row"><span class="budget-key bg-seg-1"></span><span style="flex:1">Kapal &amp; kru</span><strong>2,09 jt</strong></div>
+                <div class="budget-row"><span class="budget-key bg-seg-2"></span><span style="flex:1">Tiket &amp; ranger</span><strong>920 rb</strong></div>
+                <div class="budget-row"><span class="budget-key bg-seg-3"></span><span style="flex:1">Makan</span><strong>780 rb</strong></div>
+                <div class="budget-row"><span class="budget-key bg-seg-4"></span><span style="flex:1">Penginapan</span><strong>630 rb</strong></div>
+                <div class="budget-row"><span class="budget-key bg-seg-5"></span><span style="flex:1">Lain-lain</span><strong>435 rb</strong></div>
+              </div>
+
+              <hr class="divider">
+
+              <div class="stack stack-100">
+                <button class="btn btn--secondary btn--sm btn--block" data-toast="Link undangan rombongan disalin" data-toast-icon="share">
+                  <i data-icon="users"></i> Undang rombongan
+                </button>
+                <button class="btn btn--secondary btn--sm btn--block" data-toast="Rencana tersimpan untuk akses offline" data-toast-icon="download">
+                  <i data-icon="offline"></i> Simpan offline
+                </button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div data-slot="footer"></div>
+
+<!-- ======================================================================
+     MODAL: Tambah aktivitas
+     Figma: Modal/AddActivity
+     ====================================================================== -->
+<div class="overlay" data-modal="add-activity" role="dialog" aria-modal="true" aria-labelledby="add-title">
+  <div class="modal modal--wide" style="position:relative">
+    <button class="btn-icon btn-icon--sm modal-close" data-modal-close aria-label="Tutup">
+      <i data-icon="x" data-icon-size="18px"></i>
+    </button>
+
+    <div class="stack stack-300">
+      <div class="stack stack-100">
+        <h2 class="t-h3" id="add-title">Tambah aktivitas</h2>
+        <p class="t-body-sm t-muted">Disaring otomatis buat yang masih masuk jadwal Hari 2.</p>
+      </div>
+
+      <label class="field">
+        <input class="input" type="text" placeholder="Cari tempat, aktivitas, atau restoran…">
+      </label>
+
+      <div class="row row-wrap row-100">
+        <span class="chip is-selected">Dekat rute hari ini</span>
+        <span class="chip">Masih muat di jadwal</span>
+        <span class="chip">Gratis</span>
+        <span class="chip">Kuliner</span>
+      </div>
+
+      <div class="stack stack-150">
+        <article class="card card--pad row" style="gap:var(--space-200)">
+          <div data-scene="sunset" style="width:68px;height:68px;border-radius:var(--radius-md);overflow:hidden;flex:none"></div>
+          <div class="stack" style="flex:1">
+            <strong class="t-body-sm">Pulau Kalong — koloni kelelawar saat senja</strong>
+            <span class="t-caption t-muted">17.30 · 1 jam · gratis · 20 menit dari Manta Point</span>
+          </div>
+          <button class="btn btn--primary btn--sm" data-modal-close
+                  onclick="Kelana.toast('Pulau Kalong ditambahkan ke Hari 2','check')">
+            <i data-icon="plus"></i> Tambah
+          </button>
+        </article>
+
+        <article class="card card--pad row" style="gap:var(--space-200)">
+          <div data-scene="reef" style="width:68px;height:68px;border-radius:var(--radius-md);overflow:hidden;flex:none"></div>
+          <div class="stack" style="flex:1">
+            <strong class="t-body-sm">Taka Makassar — gosong pasir tengah laut</strong>
+            <span class="t-caption t-muted">14.00 · 1,5 jam · Rp 0 · searah rute kapal</span>
+          </div>
+          <button class="btn btn--primary btn--sm" data-modal-close
+                  onclick="Kelana.toast('Taka Makassar ditambahkan ke Hari 2','check')">
+            <i data-icon="plus"></i> Tambah
+          </button>
+        </article>
+
+        <article class="card card--pad row" style="gap:var(--space-200);opacity:.6">
+          <div data-scene="jungle" style="width:68px;height:68px;border-radius:var(--radius-md);overflow:hidden;flex:none"></div>
+          <div class="stack" style="flex:1">
+            <strong class="t-body-sm">Pulau Rinca — trekking alternatif</strong>
+            <span class="t-caption t-muted">Nggak muat — butuh 3 jam, sisa waktumu 1,5 jam</span>
+          </div>
+          <button class="btn btn--secondary btn--sm" disabled>Nggak muat</button>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div data-slot="protobar"></div>
+
+<script src="assets/js/scenes.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+/* Navigasi antar langkah builder.
+   Di Figma, ini diwakili 3 frame terpisah yang disambung prototype connection. */
+(function () {
+  const TITLES = {
+    1: 'Cerita dulu soal rencanamu',
+    2: 'Apa yang kamu cari dari trip ini?',
+    3: 'Rencana kamu — geser sesuka hati'
+  };
+
+  function goStep(n) {
+    document.querySelectorAll('[data-step]').forEach((p) => {
+      p.hidden = p.dataset.step !== String(n);
+    });
+
+    document.querySelectorAll('[data-step-indicator]').forEach((el) => {
+      const i = Number(el.dataset.stepIndicator);
+      el.classList.toggle('is-current', i === n);
+      el.classList.toggle('is-done', i < n);
+      const dot = el.querySelector('.step-dot');
+      dot.innerHTML = i < n ? Kelana.icon('check') : String(i);
+      const svg = dot.firstElementChild;
+      if (svg && svg.tagName === 'svg') { svg.style.width = '14px'; svg.style.height = '14px'; }
+    });
+
+    document.getElementById('builder-title').textContent = TITLES[n];
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (n === 3) {
+      setTimeout(() => Kelana.toast('Rencana 4 hari tersusun — Rp 4,85 jt per orang', 'sparkle'), 420);
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-goto-step]');
+    if (btn) { e.preventDefault(); goStep(Number(btn.dataset.gotoStep)); }
+
+    /* Select-card: radio perlu dibersihkan manual supaya state visual konsisten */
+    const card = e.target.closest('.select-card');
+    if (card) {
+      const input = card.querySelector('input');
+      if (!input) return;
+      if (input.type === 'radio') {
+        document.querySelectorAll(`.select-card:has(input[name="${input.name}"])`)
+          .forEach((c) => c.classList.remove('is-selected'));
+        card.classList.add('is-selected');
+      } else {
+        setTimeout(() => card.classList.toggle('is-selected', input.checked), 0);
+      }
+    }
+  });
+
+  /* Mulai langsung di langkah 3 kalau dibuka dengan #rencana */
+  if (location.hash === '#rencana') {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(() => goStep(3), 60));
+  }
+})();
+</script>
+</body>
+</html>

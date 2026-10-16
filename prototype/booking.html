@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Booking — Pemandu Wisata &amp; Open Trip Patungan | Kelana</title>
+<meta name="description" content="Sewa pemandu wisata lokal terverifikasi, atau gabung open trip patungan bareng traveler lain yang tujuannya sama.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  /* ======================================================================
+     Figma: Desktop/08 Booking
+     ====================================================================== */
+
+  /* Kartu open trip: media | isi | panel patungan.
+     Panel patungan sengaja dipisah di kolom sendiri karena itu inti
+     keputusan pengguna — berapa yang sudah gabung dan berapa harganya. */
+  .trip-card {
+    display: grid;
+    grid-template-columns: 236px minmax(0, 1fr) 290px;
+    align-items: stretch;
+  }
+  .trip-card-media { position: relative; min-height: 220px; overflow: hidden; }
+  .trip-card-media > div { position: absolute; inset: 0; }
+  .trip-card-main { padding: var(--space-300); display: flex; flex-direction: column; gap: var(--space-200); }
+  .trip-card-side {
+    padding: var(--space-300);
+    border-left: 1px solid var(--border-subtle);
+    background: var(--cloud-100);
+    display: flex; flex-direction: column; gap: var(--space-200);
+  }
+
+  @media (max-width: 1180px) {
+    .trip-card { grid-template-columns: 200px minmax(0, 1fr); }
+    .trip-card-side {
+      grid-column: 1 / -1;
+      border-left: none;
+      border-top: 1px solid var(--border-subtle);
+    }
+  }
+  @media (max-width: 720px) {
+    .trip-card { grid-template-columns: 1fr; }
+    .trip-card-media { min-height: 0; aspect-ratio: 16 / 10; }
+  }
+
+  /* Baris filter sticky di atas hasil */
+  .booking-filter {
+    display: flex; align-items: center; gap: var(--space-100);
+    flex-wrap: wrap;
+    padding: var(--space-200);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+  }
+  .booking-filter .select-wrap { flex: 1 1 170px; min-width: 0; }
+</style>
+</head>
+<body>
+
+<div data-slot="navbar"></div>
+
+<main>
+
+  <!-- ====================================================================
+       FRAME 08 — Booking
+       Dua layanan dalam satu halaman, dipisah tab:
+       (1) sewa pemandu wisata, (2) gabung open trip patungan
+       ==================================================================== -->
+  <section style="padding-block:var(--space-600) var(--space-400)">
+    <div class="container">
+      <div class="stack stack-150" style="max-width:720px">
+        <p class="t-overline t-accent">Booking</p>
+        <h1 class="t-h1 t-balance">Jalan bareng orang yang tahu jalannya</h1>
+        <p class="t-body-lg t-muted">
+          Sewa pemandu lokal untuk tripmu sendiri, atau gabung open trip yang sudah jalan —
+          biaya dibagi rata sama traveler lain yang tujuannya sama.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-bottom:var(--space-1000)">
+    <div class="container">
+
+      <!-- Tab pemisah dua layanan -->
+      <div class="tabs" data-tab-group="booking" role="tablist" style="margin-bottom:var(--space-500)">
+        <button class="tab is-active" data-tab-target="guide" data-no-toggle>
+          <i data-icon="users"></i> Pemandu wisata
+        </button>
+        <button class="tab" data-tab-target="trip" data-no-toggle>
+          <i data-icon="sparkle"></i> Open trip patungan
+        </button>
+      </div>
+
+      <div data-tab-scope="booking">
+
+        <!-- ============================================================
+             PANEL 1 — Pemandu wisata
+             ============================================================ -->
+        <div data-tab-panel="guide" class="stack stack-400">
+
+          <div class="booking-filter">
+            <div class="select-wrap">
+              <select class="input" style="height:44px;font-size:var(--fs-body-sm)" aria-label="Destinasi">
+                <option>Semua destinasi</option>
+                <option selected>Labuan Bajo, NTT</option>
+                <option>Yogyakarta</option>
+                <option>Bali</option>
+                <option>Raja Ampat</option>
+                <option>Bromo &amp; Malang</option>
+              </select>
+            </div>
+            <div class="select-wrap">
+              <select class="input" style="height:44px;font-size:var(--fs-body-sm)" aria-label="Spesialisasi">
+                <option>Semua spesialisasi</option>
+                <option>Snorkeling &amp; diving</option>
+                <option>Trekking</option>
+                <option>Budaya &amp; sejarah</option>
+                <option>Fotografi</option>
+              </select>
+            </div>
+            <div class="select-wrap">
+              <select class="input" style="height:44px;font-size:var(--fs-body-sm)" aria-label="Bahasa">
+                <option>Semua bahasa</option>
+                <option>Indonesia</option>
+                <option>Inggris</option>
+                <option>Jepang</option>
+              </select>
+            </div>
+            <button class="btn btn--primary" data-toast="Filter diterapkan — 34 pemandu tersedia" data-toast-icon="filter">
+              <i data-icon="search"></i> Cari pemandu
+            </button>
+          </div>
+
+          <div class="row row-between row-wrap" style="gap:var(--space-200)">
+            <p class="t-body t-muted">
+              <strong style="color:var(--text-primary)">34 pemandu</strong> terverifikasi ·
+              diurutkan dari rating tertinggi
+            </p>
+            <span class="badge badge--success"><i data-icon="shield"></i> Semua pemandu sudah dicek identitas &amp; sertifikasi</span>
+          </div>
+
+          <div class="grid grid-3">
+
+            <!-- Card/Guide — Yanto -->
+            <article class="card guide-card">
+              <div class="guide-card-head">
+                <div class="guide-photo">
+                  <span class="guide-photo-initials">YN</span>
+                </div>
+                <div class="stack stack-100" style="flex:1;min-width:0">
+                  <div class="stack" style="gap:2px">
+                    <div class="row row-100">
+                      <strong class="t-h5">Yanto Nugraha</strong>
+                      <i data-icon="shield" data-icon-size="16px" style="color:var(--success-500)" title="Terverifikasi"></i>
+                    </div>
+                    <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Labuan Bajo, NTT</span>
+                  </div>
+                  <div class="row row-100">
+                    <span class="rating"><i data-icon="star"></i> 4,9</span>
+                    <span class="t-caption t-subtle">· 284 trip</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="guide-card-body">
+                <div class="row row-wrap row-100">
+                  <span class="badge badge--brand">Sailing</span>
+                  <span class="badge badge--brand">Komodo</span>
+                  <span class="badge badge--brand">Free diving</span>
+                </div>
+                <div class="fact-row"><i data-icon="chat"></i> Indonesia, Inggris</div>
+                <div class="fact-row"><i data-icon="clock"></i> 12 tahun memandu</div>
+                <p class="t-body-sm t-muted">
+                  "Saya lahir di Labuan Bajo. Kalau laut sedang tinggi, saya punya rute cadangan
+                  yang tetap bagus."
+                </p>
+              </div>
+
+              <div class="guide-card-foot">
+                <div class="price">
+                  <span class="price-value">Rp 650 rb</span>
+                  <span class="price-note">per hari</span>
+                </div>
+                <button class="btn btn--primary btn--sm" data-modal-open="guide">Lihat profil</button>
+              </div>
+            </article>
+
+            <!-- Card/Guide — Komang -->
+            <article class="card guide-card">
+              <div class="guide-card-head">
+                <div class="guide-photo">
+                  <span class="guide-photo-initials" style="background:linear-gradient(145deg,var(--orange-400),var(--orange-700))">KA</span>
+                </div>
+                <div class="stack stack-100" style="flex:1;min-width:0">
+                  <div class="stack" style="gap:2px">
+                    <div class="row row-100">
+                      <strong class="t-h5">Komang Astika</strong>
+                      <i data-icon="shield" data-icon-size="16px" style="color:var(--success-500)" title="Terverifikasi"></i>
+                    </div>
+                    <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Ubud, Bali</span>
+                  </div>
+                  <div class="row row-100">
+                    <span class="rating"><i data-icon="star"></i> 4,8</span>
+                    <span class="t-caption t-subtle">· 412 trip</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="guide-card-body">
+                <div class="row row-wrap row-100">
+                  <span class="badge badge--brand">Budaya</span>
+                  <span class="badge badge--brand">Upacara adat</span>
+                  <span class="badge badge--brand">Kuliner</span>
+                </div>
+                <div class="fact-row"><i data-icon="chat"></i> Indonesia, Inggris, Jepang</div>
+                <div class="fact-row"><i data-icon="clock"></i> 8 tahun memandu</div>
+                <p class="t-body-sm t-muted">
+                  "Saya bisa atur jadwal kalau kamu mau lihat upacara desa yang tidak ada di
+                  kalender wisata."
+                </p>
+              </div>
+
+              <div class="guide-card-foot">
+                <div class="price">
+                  <span class="price-value">Rp 500 rb</span>
+                  <span class="price-note">per hari</span>
+                </div>
+                <button class="btn btn--primary btn--sm" data-modal-open="guide">Lihat profil</button>
+              </div>
+            </article>
+
+            <!-- Card/Guide — Sri -->
+            <article class="card guide-card">
+              <div class="guide-card-head">
+                <div class="guide-photo">
+                  <span class="guide-photo-initials" style="background:linear-gradient(145deg,var(--ocean-300),var(--ocean-600))">SH</span>
+                </div>
+                <div class="stack stack-100" style="flex:1;min-width:0">
+                  <div class="stack" style="gap:2px">
+                    <div class="row row-100">
+                      <strong class="t-h5">Sri Handayani</strong>
+                      <i data-icon="shield" data-icon-size="16px" style="color:var(--success-500)" title="Terverifikasi"></i>
+                    </div>
+                    <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Yogyakarta, DIY</span>
+                  </div>
+                  <div class="row row-100">
+                    <span class="rating"><i data-icon="star"></i> 4,9</span>
+                    <span class="t-caption t-subtle">· 521 trip</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="guide-card-body">
+                <div class="row row-wrap row-100">
+                  <span class="badge badge--brand">Candi</span>
+                  <span class="badge badge--brand">Sejarah</span>
+                  <span class="badge badge--brand">Batik</span>
+                </div>
+                <div class="fact-row"><i data-icon="chat"></i> Indonesia, Inggris</div>
+                <div class="fact-row"><i data-icon="clock"></i> 6 tahun memandu</div>
+                <p class="t-body-sm t-muted">
+                  "Lulusan arkeologi UGM. Kalau kamu suka cerita di balik reliefnya, saya cocok
+                  jadi pemandumu."
+                </p>
+              </div>
+
+              <div class="guide-card-foot">
+                <div class="price">
+                  <span class="price-value">Rp 400 rb</span>
+                  <span class="price-note">per hari</span>
+                </div>
+                <button class="btn btn--primary btn--sm" data-modal-open="guide">Lihat profil</button>
+              </div>
+            </article>
+
+            <!-- Card/Guide — Markus -->
+            <article class="card guide-card">
+              <div class="guide-card-head">
+                <div class="guide-photo">
+                  <span class="guide-photo-initials" style="background:linear-gradient(145deg,var(--ocean-500),var(--ocean-900))">MS</span>
+                </div>
+                <div class="stack stack-100" style="flex:1;min-width:0">
+                  <div class="stack" style="gap:2px">
+                    <div class="row row-100">
+                      <strong class="t-h5">Markus Sauyai</strong>
+                      <i data-icon="shield" data-icon-size="16px" style="color:var(--success-500)" title="Terverifikasi"></i>
+                    </div>
+                    <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Waisai, Raja Ampat</span>
+                  </div>
+                  <div class="row row-100">
+                    <span class="rating"><i data-icon="star"></i> 5,0</span>
+                    <span class="t-caption t-subtle">· 176 trip</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="guide-card-body">
+                <div class="row row-wrap row-100">
+                  <span class="badge badge--brand">Diving</span>
+                  <span class="badge badge--brand">Birdwatching</span>
+                  <span class="badge badge--accent">Dive master</span>
+                </div>
+                <div class="fact-row"><i data-icon="chat"></i> Indonesia, Inggris</div>
+                <div class="fact-row"><i data-icon="clock"></i> 15 tahun memandu</div>
+                <p class="t-body-sm t-muted">
+                  "Saya tahu jam terbaik tiap titik selam di Dampier Strait, tergantung arus
+                  hari itu."
+                </p>
+              </div>
+
+              <div class="guide-card-foot">
+                <div class="price">
+                  <span class="price-value">Rp 900 rb</span>
+                  <span class="price-note">per hari</span>
+                </div>
+                <button class="btn btn--primary btn--sm" data-modal-open="guide">Lihat profil</button>
+              </div>
+            </article>
+
+            <!-- Card/Guide — Bayu -->
+            <article class="card guide-card">
+              <div class="guide-card-head">
+                <div class="guide-photo">
+                  <span class="guide-photo-initials" style="background:linear-gradient(145deg,var(--slate-500),var(--navy-900))">BP</span>
+                </div>
+                <div class="stack stack-100" style="flex:1;min-width:0">
+                  <div class="stack" style="gap:2px">
+                    <div class="row row-100">
+                      <strong class="t-h5">Bayu Prasetyo</strong>
+                      <i data-icon="shield" data-icon-size="16px" style="color:var(--success-500)" title="Terverifikasi"></i>
+                    </div>
+                    <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Malang, Jawa Timur</span>
+                  </div>
+                  <div class="row row-100">
+                    <span class="rating"><i data-icon="star"></i> 4,8</span>
+                    <span class="t-caption t-subtle">· 690 trip</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="guide-card-body">
+                <div class="row row-wrap row-100">
+                  <span class="badge badge--brand">Trekking</span>
+                  <span class="badge badge--brand">Sunrise</span>
+                  <span class="badge badge--brand">Fotografi</span>
+                </div>
+                <div class="fact-row"><i data-icon="chat"></i> Indonesia, Inggris</div>
+                <div class="fact-row"><i data-icon="clock"></i> 9 tahun memandu</div>
+                <p class="t-body-sm t-muted">
+                  "Saya bawa tripod cadangan dan tahu spot foto Bromo yang tidak kena rombongan
+                  jeep."
+                </p>
+              </div>
+
+              <div class="guide-card-foot">
+                <div class="price">
+                  <span class="price-value">Rp 450 rb</span>
+                  <span class="price-note">per hari</span>
+                </div>
+                <button class="btn btn--primary btn--sm" data-modal-open="guide">Lihat profil</button>
+              </div>
+            </article>
+
+            <!-- Card/Guide — Togar, state=penuh -->
+            <article class="card guide-card">
+              <div class="guide-card-head">
+                <div class="guide-photo">
+                  <span class="guide-photo-initials" style="background:linear-gradient(145deg,var(--orange-300),var(--orange-600))">TS</span>
+                </div>
+                <div class="stack stack-100" style="flex:1;min-width:0">
+                  <div class="stack" style="gap:2px">
+                    <div class="row row-100">
+                      <strong class="t-h5">Togar Simanjuntak</strong>
+                      <i data-icon="shield" data-icon-size="16px" style="color:var(--success-500)" title="Terverifikasi"></i>
+                    </div>
+                    <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Samosir, Sumatera Utara</span>
+                  </div>
+                  <div class="row row-100">
+                    <span class="rating"><i data-icon="star"></i> 4,7</span>
+                    <span class="t-caption t-subtle">· 198 trip</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="guide-card-body">
+                <div class="row row-wrap row-100">
+                  <span class="badge badge--brand">Budaya Batak</span>
+                  <span class="badge badge--brand">Danau</span>
+                  <span class="badge badge--warning">Penuh sampai Jan</span>
+                </div>
+                <div class="fact-row"><i data-icon="chat"></i> Indonesia, Inggris, Batak</div>
+                <div class="fact-row"><i data-icon="clock"></i> 7 tahun memandu</div>
+                <p class="t-body-sm t-muted">
+                  "Keluarga saya dari Tomok. Saya bisa bawa kamu ke rumah adat yang masih
+                  ditinggali, bukan museum."
+                </p>
+              </div>
+
+              <div class="guide-card-foot">
+                <div class="price">
+                  <span class="price-value">Rp 380 rb</span>
+                  <span class="price-note">per hari</span>
+                </div>
+                <button class="btn btn--secondary btn--sm" data-toast="Kamu masuk daftar tunggu Togar — dikabari kalau ada slot" data-toast-icon="clock">
+                  Daftar tunggu
+                </button>
+              </div>
+            </article>
+
+          </div>
+
+          <div class="row" style="justify-content:center;margin-top:var(--space-300)">
+            <button class="btn btn--secondary btn--lg" data-toast="Memuat 12 pemandu berikutnya" data-toast-icon="users">
+              Lihat 28 pemandu lainnya
+            </button>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             PANEL 2 — Open trip patungan
+             ============================================================ -->
+        <div data-tab-panel="trip" hidden class="stack stack-400">
+
+          <!-- Penjelasan mekanisme patungan -->
+          <div class="card card--pad" style="background:var(--ocean-50);border-color:var(--ocean-100)">
+            <div class="row row-wrap" style="gap:var(--space-300)">
+              <span class="feature-icon" style="width:52px;height:52px;flex:none">
+                <i data-icon="users" data-icon-size="26px"></i>
+              </span>
+              <div class="stack stack-100" style="flex:1;min-width:260px">
+                <strong class="t-h5">Cara kerja patungan</strong>
+                <p class="t-body-sm t-muted">
+                  Satu trip dibuka untuk umum. Biaya tetap — kapal, pemandu, jeep — dibagi rata
+                  ke semua peserta. Makin banyak yang gabung, makin murah per orangnya.
+                  Kalau kuota minimum tidak tercapai sampai tenggat, uangmu kembali penuh.
+                </p>
+              </div>
+              <div class="row row-wrap row-100" style="flex:none">
+                <span class="badge badge--success"><i data-icon="shield"></i> Jaminan uang kembali</span>
+                <span class="badge badge--neutral"><i data-icon="users"></i> Peserta terverifikasi</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="booking-filter">
+            <div class="select-wrap">
+              <select class="input" style="height:44px;font-size:var(--fs-body-sm)" aria-label="Tujuan">
+                <option>Semua tujuan</option>
+                <option>Labuan Bajo</option>
+                <option>Bromo &amp; Malang</option>
+                <option>Raja Ampat</option>
+                <option>Yogyakarta</option>
+              </select>
+            </div>
+            <div class="select-wrap">
+              <select class="input" style="height:44px;font-size:var(--fs-body-sm)" aria-label="Bulan">
+                <option>Kapan saja</option>
+                <option selected>Desember 2026</option>
+                <option>Januari 2027</option>
+              </select>
+            </div>
+            <div class="select-wrap">
+              <select class="input" style="height:44px;font-size:var(--fs-body-sm)" aria-label="Status kuota">
+                <option>Semua status</option>
+                <option>Masih banyak slot</option>
+                <option>Hampir penuh</option>
+              </select>
+            </div>
+            <button class="btn btn--primary" data-toast="Filter diterapkan — 18 open trip ditemukan" data-toast-icon="filter">
+              <i data-icon="search"></i> Cari open trip
+            </button>
+          </div>
+
+          <div class="row row-between row-wrap" style="gap:var(--space-200)">
+            <p class="t-body t-muted">
+              <strong style="color:var(--text-primary)">18 open trip</strong> sedang buka ·
+              diurutkan dari tenggat terdekat
+            </p>
+            <a class="btn btn--secondary btn--sm" href="trips.html">
+              <i data-icon="plus"></i> Buka tripku jadi open trip
+            </a>
+          </div>
+
+          <!-- ======== Open Trip 1 — hampir penuh ======== -->
+          <article class="card trip-card">
+            <div class="trip-card-media">
+              <div data-scene="ocean"></div>
+              <span class="badge badge--accent" style="position:absolute;top:12px;left:12px">
+                <i data-icon="sparkle"></i> Hampir penuh
+              </span>
+            </div>
+
+            <div class="trip-card-main">
+              <div class="stack stack-100">
+                <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Labuan Bajo, Nusa Tenggara Timur</span>
+                <h2 class="t-h4">Sailing Komodo: Padar, Pink Beach &amp; Manta Point</h2>
+              </div>
+
+              <div class="row row-wrap row-100">
+                <span class="badge badge--neutral"><i data-icon="calendar"></i> 14 – 17 Des 2026</span>
+                <span class="badge badge--neutral"><i data-icon="clock"></i> 4H 3M</span>
+                <span class="badge badge--neutral"><i data-icon="route"></i> 11 titik</span>
+                <span class="badge badge--warning"><i data-icon="clock"></i> Tutup 7 Des</span>
+              </div>
+
+              <p class="t-body-sm t-muted">
+                Tiga malam di atas kapal phinisi, satu malam di darat. Urutan pulau disusun mengikuti arus, jadi sampai di Padar sebelum rombongan besar datang.
+              </p>
+
+              <div class="row row-100">
+                <span class="avatar avatar--sm avatar--c2">YN</span>
+                <div class="stack" style="gap:0">
+                  <strong class="t-body-sm">Dipandu Yanto Nugraha</strong>
+                  <span class="t-caption t-muted">4,9 · 284 trip · 12 tahun di Komodo</span>
+                </div>
+              </div>
+
+              <div class="stack stack-100 mt-auto">
+                <span class="t-caption t-muted">Sudah gabung</span>
+                <div class="row row-100">
+                  <div class="avatar-stack">
+                    <span class="avatar avatar--sm">RA</span>
+                    <span class="avatar avatar--sm avatar--c2">DP</span>
+                    <span class="avatar avatar--sm avatar--c3">SW</span>
+                    <span class="avatar avatar--sm avatar--c4">LP</span>
+                    <span class="avatar avatar--sm avatar--c5">BH</span>
+                  </div>
+                  <span class="t-body-sm t-muted">5 dari 8 kursi terisi</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="trip-card-side">
+              <div class="slot-meter">
+                <div class="row row-between">
+                  <strong class="t-body-sm">Kuota peserta</strong>
+                  <span class="t-caption t-brand" style="font-weight:700">5 / 8</span>
+                </div>
+                <div class="slot-bar" aria-label="5 dari 8 kursi terisi">
+                  <span style="width:62.5%"></span>
+                </div>
+                <span class="t-caption t-subtle">Sisa 3 kursi · minimum 4 sudah tercapai</span>
+              </div>
+
+              <div class="stack stack-100">
+                <span class="t-caption t-muted" style="font-weight:700;text-transform:uppercase;letter-spacing:.07em">
+                  Harga per orang
+                </span>
+                <div class="tier-list">
+                  <div class="tier is-reached">
+                    <span class="tier-label">4 orang</span>
+                    <span class="tier-price">Rp 4,85 jt</span>
+                  </div>
+                  <div class="tier is-active">
+                    <span class="tier-label">5 orang · sekarang</span>
+                    <span class="tier-price">Rp 3,90 jt</span>
+                  </div>
+                  <div class="tier">
+                    <span class="tier-label">8 orang · penuh</span>
+                    <span class="tier-price">Rp 3,10 jt</span>
+                  </div>
+                </div>
+                <p class="t-caption t-subtle">
+                  Kalau kuota penuh, selisihnya dikembalikan ke semua peserta.
+                </p>
+              </div>
+
+              <div class="stack stack-100">
+                <button class="btn btn--primary btn--block" data-modal-open="join">
+                  Gabung trip ini
+                </button>
+                <a class="btn btn--secondary btn--sm btn--block" href="itinerary.html">
+                  Lihat rencana harian
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- ======== Open Trip 2 ======== -->
+          <article class="card trip-card">
+            <div class="trip-card-media">
+              <div data-scene="volcano"></div>
+              <span class="badge badge--glass" style="position:absolute;top:12px;left:12px">
+                <i data-icon="sun"></i> Sunrise
+              </span>
+            </div>
+
+            <div class="trip-card-main">
+              <div class="stack stack-100">
+                <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Bromo &amp; Lumajang, Jawa Timur</span>
+                <h2 class="t-h4">Bromo – Tumpak Sewu: Dua Sunrise dalam Tiga Hari</h2>
+              </div>
+
+              <div class="row row-wrap row-100">
+                <span class="badge badge--neutral"><i data-icon="calendar"></i> 20 – 22 Des 2026</span>
+                <span class="badge badge--neutral"><i data-icon="clock"></i> 3H 2M</span>
+                <span class="badge badge--neutral"><i data-icon="route"></i> 8 titik</span>
+                <span class="badge badge--neutral"><i data-icon="clock"></i> Tutup 15 Des</span>
+              </div>
+
+              <p class="t-body-sm t-muted">
+                Dua sunrise dalam tiga hari: kawah Bromo dan air terjun Tumpak Sewu. Jeep sharing, berangkat pukul 02.30 dari Malang.
+              </p>
+
+              <div class="row row-100">
+                <span class="avatar avatar--sm avatar--c5">BP</span>
+                <div class="stack" style="gap:0">
+                  <strong class="t-body-sm">Dipandu Bayu Prasetyo</strong>
+                  <span class="t-caption t-muted">4,8 · 690 trip · spesialis fotografi</span>
+                </div>
+              </div>
+
+              <div class="stack stack-100 mt-auto">
+                <span class="t-caption t-muted">Sudah gabung</span>
+                <div class="row row-100">
+                  <div class="avatar-stack">
+                    <span class="avatar avatar--sm avatar--c3">AN</span>
+                    <span class="avatar avatar--sm">FR</span>
+                    <span class="avatar avatar--sm avatar--c2">GP</span>
+                    <span class="avatar avatar--sm avatar--c4">HW</span>
+                  </div>
+                  <span class="t-body-sm t-muted">4 dari 6 kursi terisi</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="trip-card-side">
+              <div class="slot-meter">
+                <div class="row row-between">
+                  <strong class="t-body-sm">Kuota peserta</strong>
+                  <span class="t-caption t-brand" style="font-weight:700">4 / 6</span>
+                </div>
+                <div class="slot-bar" aria-label="4 dari 6 kursi terisi">
+                  <span style="width:66.6%"></span>
+                </div>
+                <span class="t-caption t-subtle">Sisa 2 kursi · jeep sharing</span>
+              </div>
+
+              <div class="stack stack-100">
+                <span class="t-caption t-muted" style="font-weight:700;text-transform:uppercase;letter-spacing:.07em">
+                  Harga per orang
+                </span>
+                <div class="tier-list">
+                  <div class="tier is-reached">
+                    <span class="tier-label">3 orang</span>
+                    <span class="tier-price">Rp 1,85 jt</span>
+                  </div>
+                  <div class="tier is-active">
+                    <span class="tier-label">4 orang · sekarang</span>
+                    <span class="tier-price">Rp 1,40 jt</span>
+                  </div>
+                  <div class="tier">
+                    <span class="tier-label">6 orang · penuh</span>
+                    <span class="tier-price">Rp 1,10 jt</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="stack stack-100">
+                <button class="btn btn--primary btn--block" data-modal-open="join">
+                  Gabung trip ini
+                </button>
+                <a class="btn btn--secondary btn--sm btn--block" href="itinerary.html">
+                  Lihat rencana harian
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- ======== Open Trip 3 — baru dibuka ======== -->
+          <article class="card trip-card">
+            <div class="trip-card-media">
+              <div data-scene="reef"></div>
+              <span class="badge badge--glass" style="position:absolute;top:12px;left:12px">
+                <i data-icon="compass"></i> Baru dibuka
+              </span>
+            </div>
+
+            <div class="trip-card-main">
+              <div class="stack stack-100">
+                <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Raja Ampat, Papua Barat Daya</span>
+                <h2 class="t-h4">Raja Ampat 6 Hari: Wayag, Piaynemo &amp; Arborek</h2>
+              </div>
+
+              <div class="row row-wrap row-100">
+                <span class="badge badge--neutral"><i data-icon="calendar"></i> 8 – 13 Jan 2027</span>
+                <span class="badge badge--neutral"><i data-icon="clock"></i> 6H 5M</span>
+                <span class="badge badge--warning">Perlu sertifikasi diving</span>
+              </div>
+
+              <p class="t-body-sm t-muted">
+                Enam hari menyusuri Dampier Strait. Titik selam disesuaikan arus harian, dengan satu hari istirahat sebelum penerbangan pulang.
+              </p>
+
+              <div class="row row-100">
+                <span class="avatar avatar--sm avatar--c3">MS</span>
+                <div class="stack" style="gap:0">
+                  <strong class="t-body-sm">Dipandu Markus Sauyai</strong>
+                  <span class="t-caption t-muted">5,0 · 176 trip · dive master</span>
+                </div>
+              </div>
+
+              <div class="stack stack-100 mt-auto">
+                <span class="t-caption t-muted">Sudah gabung</span>
+                <div class="row row-100">
+                  <div class="avatar-stack">
+                    <span class="avatar avatar--sm avatar--c4">KD</span>
+                    <span class="avatar avatar--sm avatar--c5">NR</span>
+                  </div>
+                  <span class="t-body-sm t-muted">2 dari 8 kursi terisi</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="trip-card-side">
+              <div class="slot-meter">
+                <div class="row row-between">
+                  <strong class="t-body-sm">Kuota peserta</strong>
+                  <span class="t-caption t-accent" style="font-weight:700">2 / 8</span>
+                </div>
+                <div class="slot-bar" aria-label="2 dari 8 kursi terisi">
+                  <span class="is-warm" style="width:25%"></span>
+                </div>
+                <span class="t-caption t-subtle">Minimum 4 orang · tenggat 20 Des</span>
+              </div>
+
+              <div class="stack stack-100">
+                <span class="t-caption t-muted" style="font-weight:700;text-transform:uppercase;letter-spacing:.07em">
+                  Harga per orang
+                </span>
+                <div class="tier-list">
+                  <div class="tier is-active">
+                    <span class="tier-label">2 orang · sekarang</span>
+                    <span class="tier-price">Rp 14,2 jt</span>
+                  </div>
+                  <div class="tier">
+                    <span class="tier-label">4 orang · minimum</span>
+                    <span class="tier-price">Rp 12,5 jt</span>
+                  </div>
+                  <div class="tier">
+                    <span class="tier-label">8 orang · penuh</span>
+                    <span class="tier-price">Rp 9,80 jt</span>
+                  </div>
+                </div>
+                <p class="t-caption t-subtle">
+                  Belum mencapai minimum. Uang dikembalikan penuh kalau gagal jalan.
+                </p>
+              </div>
+
+              <div class="stack stack-100">
+                <button class="btn btn--primary btn--block" data-modal-open="join">
+                  Gabung trip ini
+                </button>
+                <a class="btn btn--secondary btn--sm btn--block" href="itinerary.html">
+                  Lihat rencana harian
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- ======== Open Trip 4 — state penuh ======== -->
+          <article class="card trip-card" style="opacity:.72">
+            <div class="trip-card-media">
+              <div data-scene="temple"></div>
+              <div style="position:absolute;inset:0;background:rgba(15,23,42,.28)"></div>
+              <span class="badge badge--ink" style="position:absolute;top:12px;left:12px">
+                <i data-icon="check"></i> Kuota penuh
+              </span>
+            </div>
+
+            <div class="trip-card-main">
+              <div class="stack stack-100">
+                <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Yogyakarta, DIY</span>
+                <h2 class="t-h4">Jogja Pelan-pelan: Candi, Pasar Pagi &amp; Senja</h2>
+              </div>
+
+              <div class="row row-wrap row-100">
+                <span class="badge badge--neutral"><i data-icon="calendar"></i> 2 – 4 Jan 2027</span>
+                <span class="badge badge--neutral"><i data-icon="clock"></i> 3H 2M</span>
+                <span class="badge badge--success"><i data-icon="check"></i> Pasti jalan</span>
+              </div>
+
+              <p class="t-body-sm t-muted">
+                Candi pagi, pasar siang, senja di pantai selatan. Semua perpindahan pakai transportasi umum dan jalan kaki.
+              </p>
+
+              <div class="row row-100">
+                <span class="avatar avatar--sm">SH</span>
+                <div class="stack" style="gap:0">
+                  <strong class="t-body-sm">Dipandu Sri Handayani</strong>
+                  <span class="t-caption t-muted">4,9 · 521 trip · lulusan arkeologi</span>
+                </div>
+              </div>
+
+              <div class="stack stack-100 mt-auto">
+                <span class="t-caption t-muted">Sudah gabung</span>
+                <div class="row row-100">
+                  <div class="avatar-stack">
+                    <span class="avatar avatar--sm avatar--c2">TW</span>
+                    <span class="avatar avatar--sm avatar--c3">IS</span>
+                    <span class="avatar avatar--sm">PA</span>
+                    <span class="avatar avatar--sm avatar--c4">RM</span>
+                    <span class="avatar avatar--sm avatar--c5">+4</span>
+                  </div>
+                  <span class="t-body-sm t-muted">8 dari 8 kursi terisi</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="trip-card-side">
+              <div class="slot-meter">
+                <div class="row row-between">
+                  <strong class="t-body-sm">Kuota peserta</strong>
+                  <span class="t-caption" style="font-weight:700;color:var(--success-500)">8 / 8</span>
+                </div>
+                <div class="slot-bar" aria-label="8 dari 8 kursi terisi">
+                  <span class="is-full" style="width:100%"></span>
+                </div>
+                <span class="t-caption t-subtle">Harga terbaik tercapai</span>
+              </div>
+
+              <div class="stack stack-100">
+                <span class="t-caption t-muted" style="font-weight:700;text-transform:uppercase;letter-spacing:.07em">
+                  Harga per orang
+                </span>
+                <div class="tier-list">
+                  <div class="tier is-active">
+                    <span class="tier-label">8 orang · penuh</span>
+                    <span class="tier-price">Rp 890 rb</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="stack stack-100">
+                <button class="btn btn--secondary btn--block" data-toast="Kamu masuk daftar tunggu — dikabari kalau ada yang batal" data-toast-icon="clock">
+                  Masuk daftar tunggu
+                </button>
+                <a class="btn btn--ghost btn--sm btn--block" href="itinerary.html">
+                  Lihat rencana harian
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <div class="row" style="justify-content:center;margin-top:var(--space-300)">
+            <button class="btn btn--secondary btn--lg" data-toast="Memuat 14 open trip berikutnya" data-toast-icon="users">
+              Lihat 14 open trip lainnya
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div data-slot="footer"></div>
+
+<!-- ======================================================================
+     MODAL: Profil pemandu
+     Figma: Modal/GuideProfile
+     ====================================================================== -->
+<div class="overlay" data-modal="guide" role="dialog" aria-modal="true" aria-labelledby="guide-title">
+  <div class="modal modal--wide" style="position:relative">
+    <button class="btn-icon btn-icon--sm modal-close" data-modal-close aria-label="Tutup">
+      <i data-icon="x" data-icon-size="18px"></i>
+    </button>
+
+    <div class="stack stack-300">
+      <div class="row row-wrap" style="gap:var(--space-250)">
+        <div class="guide-photo" style="width:88px;height:88px">
+          <span class="guide-photo-initials" style="font-size:var(--fs-h3)">YN</span>
+        </div>
+        <div class="stack stack-100" style="flex:1;min-width:200px">
+          <div class="row row-100">
+            <h2 class="t-h3" id="guide-title">Yanto Nugraha</h2>
+            <span class="badge badge--success"><i data-icon="shield"></i> Terverifikasi</span>
+          </div>
+          <span class="t-body-sm t-muted row row-100"><i data-icon="pin"></i> Labuan Bajo, Nusa Tenggara Timur</span>
+          <div class="row row-100">
+            <span class="rating"><i data-icon="star"></i> 4,9</span>
+            <span class="t-caption t-subtle">· 284 trip · 12 tahun memandu</span>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="stack stack-150">
+        <strong class="t-body">Tentang saya</strong>
+        <p class="t-body-sm t-muted">
+          Saya lahir dan besar di Labuan Bajo. Mulai jadi kru kapal umur 17, sekarang memandu
+          trip sailing ke Taman Nasional Komodo. Kalau laut sedang tinggi, saya punya rute
+          cadangan ke Pulau Kalong yang tetap bagus dan jauh lebih aman.
+        </p>
+      </div>
+
+      <div class="grid grid-2" style="gap:var(--space-200)">
+        <div class="card card--pad stack stack-100" style="gap:6px">
+          <span class="t-caption t-muted">Spesialisasi</span>
+          <div class="row row-wrap row-100">
+            <span class="badge badge--brand">Sailing</span>
+            <span class="badge badge--brand">Komodo</span>
+            <span class="badge badge--brand">Free diving</span>
+          </div>
+        </div>
+        <div class="card card--pad stack stack-100" style="gap:6px">
+          <span class="t-caption t-muted">Bahasa</span>
+          <strong class="t-body-sm">Indonesia, Inggris</strong>
+        </div>
+        <div class="card card--pad stack stack-100" style="gap:6px">
+          <span class="t-caption t-muted">Sertifikasi</span>
+          <strong class="t-body-sm">Pemandu Wisata Alam · BNSP</strong>
+        </div>
+        <div class="card card--pad stack stack-100" style="gap:6px">
+          <span class="t-caption t-muted">Respons</span>
+          <strong class="t-body-sm">Rata-rata di bawah 2 jam</strong>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="stack stack-150">
+        <strong class="t-body">Ulasan terbaru</strong>
+        <div class="card card--pad stack stack-100">
+          <div class="row row-100">
+            <span class="avatar avatar--sm">RA</span>
+            <strong class="t-body-sm">Rizky Adiputra</strong>
+            <span class="rating" style="margin-left:auto"><i data-icon="star"></i> 5,0</span>
+          </div>
+          <p class="t-body-sm t-muted">
+            "Pak Yanto tahu jam terbaik ke Padar supaya nggak kena rombongan. Itu saja sudah
+            bikin tripnya beda."
+          </p>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="row row-wrap row-between" style="gap:var(--space-200)">
+        <div class="price">
+          <span class="price-value t-h4">Rp 650 rb</span>
+          <span class="price-note">per hari · maksimal 8 orang</span>
+        </div>
+        <div class="row row-100">
+          <button class="btn btn--secondary" data-toast="Chat dibuka dengan Yanto" data-toast-icon="chat">
+            <i data-icon="chat"></i> Tanya dulu
+          </button>
+          <button class="btn btn--accent btn--lg" data-modal-close
+                  onclick="Kelana.toast('Permintaan booking dikirim ke Yanto — tunggu konfirmasi','check')">
+            Booking pemandu
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================================
+     MODAL: Gabung open trip
+     Figma: Modal/JoinOpenTrip
+     ====================================================================== -->
+<div class="overlay" data-modal="join" role="dialog" aria-modal="true" aria-labelledby="join-title">
+  <div class="modal" style="position:relative">
+    <button class="btn-icon btn-icon--sm modal-close" data-modal-close aria-label="Tutup">
+      <i data-icon="x" data-icon-size="18px"></i>
+    </button>
+
+    <div class="stack stack-300">
+      <div class="stack stack-100">
+        <span class="feature-icon feature-icon--accent" style="margin-bottom:var(--space-100)">
+          <i data-icon="users" data-icon-size="28px"></i>
+        </span>
+        <h2 class="t-h3" id="join-title">Gabung open trip</h2>
+        <p class="t-body-sm t-muted">
+          Sailing Komodo · 14 – 17 Des 2026 · dipandu Yanto Nugraha
+        </p>
+      </div>
+
+      <div class="card card--pad stack stack-150" style="background:var(--bg-surface-alt);border:none">
+        <div class="row row-between t-body-sm">
+          <span class="t-muted">Harga saat ini (5 peserta)</span>
+          <strong>Rp 3.900.000</strong>
+        </div>
+        <div class="row row-between t-body-sm">
+          <span class="t-muted">Biaya layanan Kelana</span>
+          <strong>Rp 117.000</strong>
+        </div>
+        <hr class="divider">
+        <div class="row row-between">
+          <strong class="t-body">Bayar sekarang</strong>
+          <strong class="t-h5">Rp 4.017.000</strong>
+        </div>
+      </div>
+
+      <div class="card card--pad stack stack-100" style="background:var(--success-50);border-color:var(--success-100)">
+        <div class="row row-100">
+          <i data-icon="shield" data-icon-size="18px" style="color:var(--success-500)"></i>
+          <strong class="t-body-sm">Dua jaminan untukmu</strong>
+        </div>
+        <p class="t-caption" style="color:var(--success-700)">
+          <strong>Satu:</strong> kalau kuota minimum tidak tercapai sampai 7 Des, uangmu kembali
+          penuh. <strong>Dua:</strong> kalau kuota jadi penuh 8 orang, selisih
+          Rp 800.000 dikembalikan ke rekeningmu.
+        </p>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" checked>
+        <span class="check-box"><i data-icon="check"></i></span>
+        <span class="t-body-sm">Saya setuju jalan bareng peserta lain yang belum saya kenal</span>
+      </label>
+
+      <div class="stack stack-100">
+        <button class="btn btn--accent btn--block btn--lg" data-modal-close
+                onclick="Kelana.toast('Kamu bergabung! Kursi 6 dari 8 — grup chat sudah dibuka','check')">
+          Gabung &amp; bayar
+        </button>
+        <button class="btn btn--ghost btn--block btn--sm" data-modal-close>Nanti dulu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div data-slot="protobar"></div>
+
+<script src="assets/js/scenes.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

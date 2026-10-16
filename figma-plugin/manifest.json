@@ -1,0 +1,12 @@
+{
+  "name": "Kelana Design System Builder",
+  "id": "kelana-design-system-builder",
+  "api": "1.0.0",
+  "editorType": ["figma"],
+  "main": "code.js",
+  "ui": "ui.html",
+  "networkAccess": {
+    "allowedDomains": ["none"],
+    "reasoning": "Plugin membangun layer secara lokal. Tidak mengirim atau mengambil data apa pun."
+  }
+}

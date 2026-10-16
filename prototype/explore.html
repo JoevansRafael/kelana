@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jelajah Itinerary — Kelana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+<div data-slot="navbar"></div>
+
+<!-- ======================================================================
+     FRAME 02 — Explore / Hasil pencarian
+     Figma: Desktop/02 Explore · FilterPanel + Card/Itinerary (list)
+     ====================================================================== -->
+<main>
+
+  <!-- Search bar ringkas yang sticky di bawah navbar -->
+  <section style="background:var(--bg-surface);border-bottom:1px solid var(--border-subtle);padding-block:var(--space-250);position:sticky;top:var(--nav-height);z-index:var(--z-sticky)">
+    <div class="container">
+      <form class="searchbar" style="box-shadow:var(--shadow-sm);border-radius:var(--radius-lg);padding:var(--space-100)"
+            onsubmit="event.preventDefault(); Kelana.toast('Pencarian diperbarui — 1.240 itinerary cocok','search')">
+        <label class="searchbar-cell">
+          <span class="searchbar-label">Tujuan</span>
+          <input class="searchbar-value" type="text" value="Labuan Bajo, NTT">
+        </label>
+        <label class="searchbar-cell">
+          <span class="searchbar-label">Tanggal</span>
+          <input class="searchbar-value" type="text" value="12 – 15 Nov 2026">
+        </label>
+        <label class="searchbar-cell">
+          <span class="searchbar-label">Rombongan</span>
+          <input class="searchbar-value" type="text" value="2 orang">
+        </label>
+        <button class="btn btn--primary" type="submit" aria-label="Cari">
+          <i data-icon="search" data-icon-size="22px"></i>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       Dua cara pakai Jelajah: ambil template, atau susun sendiri.
+       Ditaruh paling atas supaya pengguna langsung tahu pilihannya —
+       Builder bukan menu terpisah, dia bagian dari Jelajah.
+       Figma: Section/ExploreModes · Card/Mode
+       ==================================================================== -->
+  <section style="padding-block:var(--space-500) 0">
+    <div class="container">
+      <div class="grid grid-2">
+
+        <div class="card card--pad" style="background:var(--ocean-50);border-color:var(--ocean-100);display:flex;gap:var(--space-250);align-items:flex-start">
+          <span class="feature-icon" style="flex:none"><i data-icon="search" data-icon-size="28px"></i></span>
+          <div class="stack stack-150" style="flex:1">
+            <div class="stack" style="gap:2px">
+              <h2 class="t-h4">Ambil yang sudah ada</h2>
+              <p class="t-body-sm t-muted">
+                1.240 template harian yang sudah dipakai dan diulas traveler lain. Tinggal pilih,
+                lalu ubah seperlunya.
+              </p>
+            </div>
+            <span class="badge badge--brand" style="align-self:flex-start">
+              <span class="badge-dot"></span> Kamu sedang di sini
+            </span>
+          </div>
+        </div>
+
+        <a class="card card--pad card--interactive" href="builder.html"
+           style="display:flex;gap:var(--space-250);align-items:flex-start">
+          <span class="feature-icon feature-icon--accent" style="flex:none"><i data-icon="sparkle" data-icon-size="28px"></i></span>
+          <div class="stack stack-150" style="flex:1">
+            <div class="stack" style="gap:2px">
+              <h2 class="t-h4">Susun sendiri dari nol</h2>
+              <p class="t-body-sm t-muted">
+                Ceritakan tujuan, tanggal, dan minatmu. Kelana menyusun rencana harian lengkap
+                dalam tiga langkah.
+              </p>
+            </div>
+            <span class="row row-100 t-body-sm t-accent" style="font-weight:700">
+              Buka penyusun itinerary <i data-icon="arrowR"></i>
+            </span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+
+      <!-- Breadcrumb + judul hasil -->
+      <div class="stack stack-150" style="margin-bottom:var(--space-500)">
+        <nav class="row row-100 t-caption t-subtle" aria-label="Breadcrumb">
+          <a href="index.html" style="color:var(--text-brand);font-weight:600">Beranda</a>
+          <i data-icon="chevR" data-icon-size="12px"></i>
+          <span>Jelajah</span>
+          <i data-icon="chevR" data-icon-size="12px"></i>
+          <span style="color:var(--text-primary);font-weight:600">Labuan Bajo</span>
+        </nav>
+        <h1 class="t-h2">Itinerary Labuan Bajo &amp; sekitarnya</h1>
+        <p class="t-body t-muted">
+          <strong style="color:var(--text-primary)">42 itinerary</strong> cocok dengan filtermu ·
+          diurutkan dari paling sering dipakai
+        </p>
+      </div>
+
+      <div class="explore-layout">
+
+        <!-- ================= Sidebar filter ================= -->
+        <aside class="filter-panel" aria-label="Filter hasil">
+          <div class="row row-between">
+            <h2 class="t-h5">Filter</h2>
+            <button class="btn btn--ghost btn--sm" data-toast="Semua filter direset" data-toast-icon="info">Reset</button>
+          </div>
+
+          <!-- Durasi -->
+          <div class="filter-group">
+            <h3 class="filter-title">Durasi perjalanan</h3>
+            <div class="row row-wrap row-100">
+              <label class="chip"><input type="checkbox"> 1–2 hari</label>
+              <label class="chip is-selected"><input type="checkbox" checked> 3–4 hari</label>
+              <label class="chip"><input type="checkbox"> 5–7 hari</label>
+              <label class="chip"><input type="checkbox"> 7 hari+</label>
+            </div>
+          </div>
+
+          <!-- Budget -->
+          <div class="filter-group">
+            <h3 class="filter-title">Budget per orang</h3>
+            <input class="range" type="range" min="500000" max="15000000" step="250000" value="6000000"
+                   aria-label="Budget maksimal"
+                   oninput="document.getElementById('budget-out').textContent =
+                     'Rp ' + (this.value/1000000).toLocaleString('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' jt'">
+            <div class="row row-between">
+              <span class="t-caption t-subtle">Rp 500 rb</span>
+              <strong class="t-body-sm t-brand" id="budget-out">Rp 6,00 jt</strong>
+              <span class="t-caption t-subtle">Rp 15 jt</span>
+            </div>
+          </div>
+
+          <!-- Gaya perjalanan -->
+          <div class="filter-group">
+            <h3 class="filter-title">Gaya perjalanan</h3>
+            <label class="check">
+              <input type="checkbox" checked>
+              <span class="check-box"><i data-icon="check"></i></span>
+              Santai
+              <span class="check-count">18</span>
+            </label>
+            <label class="check">
+              <input type="checkbox">
+              <span class="check-box"><i data-icon="check"></i></span>
+              Padat &amp; efisien
+              <span class="check-count">12</span>
+            </label>
+            <label class="check">
+              <input type="checkbox" checked>
+              <span class="check-box"><i data-icon="check"></i></span>
+              Petualangan
+              <span class="check-count">9</span>
+            </label>
+            <label class="check">
+              <input type="checkbox">
+              <span class="check-box"><i data-icon="check"></i></span>
+              Ramah keluarga
+              <span class="check-count">7</span>
+            </label>
+            <label class="check">
+              <input type="checkbox">
+              <span class="check-box"><i data-icon="check"></i></span>
+              Solo traveler
+              <span class="check-count">14</span>
+            </label>
+          </div>
+
+          <!-- Minat -->
+          <div class="filter-group">
+            <h3 class="filter-title">Minat</h3>
+            <div class="row row-wrap row-100">
+              <label class="chip is-selected"><input type="checkbox" checked><i data-icon="camera"></i> Alam</label>
+              <label class="chip"><input type="checkbox"><i data-icon="food"></i> Kuliner</label>
+              <label class="chip"><input type="checkbox"><i data-icon="globe"></i> Budaya</label>
+              <label class="chip"><input type="checkbox"><i data-icon="compass"></i> Diving</label>
+              <label class="chip"><input type="checkbox"><i data-icon="sun"></i> Sunrise</label>
+            </div>
+          </div>
+
+          <!-- Tingkat fisik -->
+          <div class="filter-group">
+            <h3 class="filter-title">Tingkat kebugaran</h3>
+            <div class="select-wrap">
+              <select class="input" aria-label="Tingkat kebugaran">
+                <option>Semua tingkat</option>
+                <option selected>Ringan – sedang</option>
+                <option>Berat (perlu trekking)</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn btn--primary btn--block" data-toast="Filter diterapkan — 42 hasil" data-toast-icon="filter">
+            Terapkan filter
+          </button>
+        </aside>
+
+        <!-- ================= Hasil ================= -->
+        <div class="stack stack-300">
+
+          <!-- Toolbar: sort + view toggle -->
+          <div class="row row-wrap row-between" style="gap:var(--space-200)">
+            <div class="row row-wrap row-100">
+              <span class="badge badge--brand">3–4 hari <i data-icon="x" data-icon-size="12px"></i></span>
+              <span class="badge badge--brand">Alam <i data-icon="x" data-icon-size="12px"></i></span>
+              <span class="badge badge--brand">Santai <i data-icon="x" data-icon-size="12px"></i></span>
+            </div>
+            <div class="explore-toolbar">
+              <div class="select-wrap">
+                <select class="input" style="height:40px;font-size:var(--fs-body-sm)" aria-label="Urutkan">
+                  <option>Paling sering dipakai</option>
+                  <option>Harga terendah</option>
+                  <option>Rating tertinggi</option>
+                  <option>Durasi terpendek</option>
+                </select>
+              </div>
+              <div class="tabs">
+                <button class="tab is-active" data-no-toggle>Daftar</button>
+                <button class="tab" data-no-toggle>Peta</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Peta ringkas (kolaps di atas hasil) -->
+          <div class="map" style="height:200px">
+            <svg viewBox="0 0 1000 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="1000" height="220" fill="#DCEAF7"/>
+              <g fill="#C3DAEE">
+                <path d="M0 150 q120 -40 240 -10 t260 -24 t280 18 t220 -8 v94 H0 Z"/>
+              </g>
+              <g fill="#A7C8E4">
+                <ellipse cx="180" cy="96" rx="92" ry="40"/>
+                <ellipse cx="470" cy="128" rx="130" ry="50"/>
+                <ellipse cx="760" cy="84" rx="104" ry="38"/>
+              </g>
+              <g stroke="#35A8FF" stroke-width="3" stroke-dasharray="9 8" fill="none" opacity="0.8">
+                <path d="M180 96 Q320 40 470 128 T760 84"/>
+              </g>
+              <g stroke="#FFFFFF" stroke-width="2" opacity="0.5">
+                <path d="M0 40 h1000M0 110 h1000M0 180 h1000M200 0 v220M500 0 v220M800 0 v220"/>
+              </g>
+            </svg>
+            <div class="map-pin" style="left:18%;top:46%">
+              <span class="map-pin-bubble">Pulau Padar</span><span class="map-pin-tail"></span>
+            </div>
+            <div class="map-pin" style="left:47%;top:62%">
+              <span class="map-pin-bubble map-pin-bubble--accent">Pink Beach</span><span class="map-pin-tail map-pin-tail--accent"></span>
+            </div>
+            <div class="map-pin" style="left:76%;top:40%">
+              <span class="map-pin-bubble">Manta Point</span><span class="map-pin-tail"></span>
+            </div>
+            <button class="btn btn--secondary btn--sm map-overlay-btn" data-toast="Tampilan peta penuh — belum dibuat di prototype" data-toast-icon="info">
+              <i data-icon="pin"></i> Buka peta penuh
+            </button>
+          </div>
+
+          <!-- ======== Hasil: Card/Itinerary varian horizontal ======== -->
+
+          <a class="card card--interactive result-card" href="itinerary.html">
+            <div class="result-card-media">
+              <div data-scene="ocean" style="position:absolute;inset:0"></div>
+              <span class="badge badge--accent" style="position:absolute;top:12px;left:12px">
+                <i data-icon="sparkle"></i> Paling laris
+              </span>
+            </div>
+            <div class="stack stack-150" style="padding:var(--space-300)">
+              <div class="row row-between" style="align-items:flex-start">
+                <div class="stack stack-100">
+                  <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Labuan Bajo, Nusa Tenggara Timur</span>
+                  <h2 class="t-h4">Sailing Komodo: Padar, Pink Beach &amp; Manta Point</h2>
+                </div>
+                <button class="btn-icon" data-save aria-label="Simpan">
+                  <i data-icon="heart" data-icon-size="20px"></i>
+                </button>
+              </div>
+
+              <p class="t-body-sm t-muted">
+                Tiga hari di atas kapal phinisi, satu malam di darat. Dirancang supaya kamu nggak
+                kena antrean trekking Padar pagi dan tetap kebagian snorkeling saat air paling jernih.
+              </p>
+
+              <div class="row row-wrap row-100">
+                <span class="badge badge--neutral"><i data-icon="calendar"></i> 4H 3M</span>
+                <span class="badge badge--neutral"><i data-icon="route"></i> 11 titik</span>
+                <span class="badge badge--neutral"><i data-icon="users"></i> Min. 4 orang</span>
+                <span class="badge badge--brand">Butuh kapal</span>
+              </div>
+
+              <div class="itin-card-foot">
+                <div class="row row-300">
+                  <div class="price">
+                    <span class="price-value">Rp 4,85 jt</span>
+                    <span class="price-note">per orang</span>
+                  </div>
+                  <div class="stack">
+                    <span class="rating"><i data-icon="star"></i> 4,9</span>
+                    <span class="t-caption t-subtle">412 ulasan</span>
+                  </div>
+                </div>
+                <span class="btn btn--secondary btn--sm">Lihat rencana harian <i data-icon="arrowR"></i></span>
+              </div>
+            </div>
+          </a>
+
+          <a class="card card--interactive result-card" href="itinerary.html">
+            <div class="result-card-media">
+              <div data-scene="reef" style="position:absolute;inset:0"></div>
+              <span class="badge badge--glass" style="position:absolute;top:12px;left:12px">
+                <i data-icon="compass"></i> Buat penyelam
+              </span>
+            </div>
+            <div class="stack stack-150" style="padding:var(--space-300)">
+              <div class="row row-between" style="align-items:flex-start">
+                <div class="stack stack-100">
+                  <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Labuan Bajo &amp; Taman Nasional Komodo</span>
+                  <h2 class="t-h4">Komodo Dive Trip: 8 Titik Selam dalam 4 Hari</h2>
+                </div>
+                <button class="btn-icon" data-save aria-label="Simpan">
+                  <i data-icon="heart" data-icon-size="20px"></i>
+                </button>
+              </div>
+
+              <p class="t-body-sm t-muted">
+                Urutan titik selam disesuaikan arus pasang-surut harian. Termasuk hari istirahat
+                sebelum penerbangan — aturan 24 jam sebelum naik pesawat.
+              </p>
+
+              <div class="row row-wrap row-100">
+                <span class="badge badge--neutral"><i data-icon="calendar"></i> 4H 3M</span>
+                <span class="badge badge--neutral"><i data-icon="route"></i> 8 titik selam</span>
+                <span class="badge badge--warning">Perlu sertifikasi</span>
+              </div>
+
+              <div class="itin-card-foot">
+                <div class="row row-300">
+                  <div class="price">
+                    <span class="price-value">Rp 8,20 jt</span>
+                    <span class="price-note">per orang</span>
+                  </div>
+                  <div class="stack">
+                    <span class="rating"><i data-icon="star"></i> 4,9</span>
+                    <span class="t-caption t-subtle">196 ulasan</span>
+                  </div>
+                </div>
+                <span class="btn btn--secondary btn--sm">Lihat rencana harian <i data-icon="arrowR"></i></span>
+              </div>
+            </div>
+          </a>
+
+          <a class="card card--interactive result-card" href="itinerary.html">
+            <div class="result-card-media">
+              <div data-scene="sand" style="position:absolute;inset:0"></div>
+              <span class="badge badge--glass" style="position:absolute;top:12px;left:12px">
+                <i data-icon="wallet"></i> Ramah budget
+              </span>
+            </div>
+            <div class="stack stack-150" style="padding:var(--space-300)">
+              <div class="row row-between" style="align-items:flex-start">
+                <div class="stack stack-100">
+                  <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Labuan Bajo, Nusa Tenggara Timur</span>
+                  <h2 class="t-h4">Komodo Hemat: Open Trip Sharing 3 Hari</h2>
+                </div>
+                <button class="btn-icon" data-save aria-label="Simpan">
+                  <i data-icon="heart" data-icon-size="20px"></i>
+                </button>
+              </div>
+
+              <p class="t-body-sm t-muted">
+                Versi paling terjangkau: kapal sharing, penginapan di kota, dan jadwal yang tetap
+                kebagian tiga pulau utama.
+              </p>
+
+              <div class="row row-wrap row-100">
+                <span class="badge badge--neutral"><i data-icon="calendar"></i> 3H 2M</span>
+                <span class="badge badge--neutral"><i data-icon="route"></i> 7 titik</span>
+                <span class="badge badge--success">Open trip</span>
+              </div>
+
+              <div class="itin-card-foot">
+                <div class="row row-300">
+                  <div class="price">
+                    <span class="price-value">Rp 2,15 jt</span>
+                    <span class="price-note">per orang</span>
+                  </div>
+                  <div class="stack">
+                    <span class="rating"><i data-icon="star"></i> 4,6</span>
+                    <span class="t-caption t-subtle">834 ulasan</span>
+                  </div>
+                </div>
+                <span class="btn btn--secondary btn--sm">Lihat rencana harian <i data-icon="arrowR"></i></span>
+              </div>
+            </div>
+          </a>
+
+          <a class="card card--interactive result-card" href="itinerary.html">
+            <div class="result-card-media">
+              <div data-scene="sunset" style="position:absolute;inset:0"></div>
+              <span class="badge badge--glass" style="position:absolute;top:12px;left:12px">
+                <i data-icon="food"></i> Fokus kuliner
+              </span>
+            </div>
+            <div class="stack stack-150" style="padding:var(--space-300)">
+              <div class="row row-between" style="align-items:flex-start">
+                <div class="stack stack-100">
+                  <span class="t-caption t-muted row row-100"><i data-icon="pin"></i> Labuan Bajo kota</span>
+                  <h2 class="t-h4">Darat Saja: Kuliner, Bukit Senja &amp; Kampung Adat</h2>
+                </div>
+                <button class="btn-icon" data-save aria-label="Simpan">
+                  <i data-icon="heart" data-icon-size="20px"></i>
+                </button>
+              </div>
+
+              <p class="t-body-sm t-muted">
+                Buat yang nggak kuat naik kapal. Semua aktivitas di darat, dengan dua sunset point
+                dan pasar malam ikan bakar.
+              </p>
+
+              <div class="row row-wrap row-100">
+                <span class="badge badge--neutral"><i data-icon="calendar"></i> 3H 2M</span>
+                <span class="badge badge--neutral"><i data-icon="route"></i> 10 titik</span>
+                <span class="badge badge--success">Tanpa kapal</span>
+              </div>
+
+              <div class="itin-card-foot">
+                <div class="row row-300">
+                  <div class="price">
+                    <span class="price-value">Rp 1,70 jt</span>
+                    <span class="price-note">per orang</span>
+                  </div>
+                  <div class="stack">
+                    <span class="rating"><i data-icon="star"></i> 4,7</span>
+                    <span class="t-caption t-subtle">241 ulasan</span>
+                  </div>
+                </div>
+                <span class="btn btn--secondary btn--sm">Lihat rencana harian <i data-icon="arrowR"></i></span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Loading state (Figma: Card/Itinerary state=loading) -->
+          <div class="card result-card" aria-hidden="true">
+            <div class="skeleton result-card-media" style="border-radius:0"></div>
+            <div class="stack stack-150" style="padding:var(--space-300)">
+              <div class="skeleton" style="height:12px;width:40%"></div>
+              <div class="skeleton" style="height:22px;width:75%"></div>
+              <div class="skeleton" style="height:12px;width:100%"></div>
+              <div class="skeleton" style="height:12px;width:88%"></div>
+              <div class="row row-100" style="margin-top:auto">
+                <div class="skeleton" style="height:26px;width:84px;border-radius:999px"></div>
+                <div class="skeleton" style="height:26px;width:84px;border-radius:999px"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paginasi -->
+          <div class="row" style="justify-content:center;margin-top:var(--space-300);gap:var(--space-100)">
+            <button class="btn-icon btn-icon--sm" aria-label="Sebelumnya" disabled><i data-icon="chevL" data-icon-size="16px"></i></button>
+            <button class="btn btn--primary btn--sm" style="width:38px;padding:0" data-no-toggle>1</button>
+            <button class="btn btn--ghost btn--sm" style="width:38px;padding:0">2</button>
+            <button class="btn btn--ghost btn--sm" style="width:38px;padding:0">3</button>
+            <span class="t-body-sm t-subtle" style="padding-inline:6px">…</span>
+            <button class="btn btn--ghost btn--sm" style="width:38px;padding:0">9</button>
+            <button class="btn-icon btn-icon--sm" aria-label="Selanjutnya"><i data-icon="chevR" data-icon-size="16px"></i></button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Empty state — referensi desain, ditampilkan sebagai contoh -->
+  <section class="section section--alt section--tight">
+    <div class="container">
+      <p class="t-overline t-accent" style="margin-bottom:var(--space-300)">Referensi state · empty result</p>
+      <div class="card card--pad t-center stack stack-200" style="align-items:center;padding-block:var(--space-800)">
+        <span class="feature-icon feature-icon--sand" style="width:72px;height:72px">
+          <i data-icon="compass" data-icon-size="34px"></i>
+        </span>
+        <h2 class="t-h3">Belum ada yang cocok</h2>
+        <p class="t-body t-muted" style="max-width:420px">
+          Filter kamu agak terlalu sempit. Coba lebarkan rentang budget atau hilangkan satu minat.
+        </p>
+        <div class="row row-100" style="margin-top:var(--space-100)">
+          <button class="btn btn--primary" data-toast="Filter dilebarkan" data-toast-icon="filter">Lebarkan filter</button>
+          <a class="btn btn--secondary" href="builder.html">Susun sendiri saja</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div data-slot="footer"></div>
+<div data-slot="protobar"></div>
+
+<script src="assets/js/scenes.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

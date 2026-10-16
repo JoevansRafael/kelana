@@ -1,0 +1,256 @@
+{
+  "$metadata": {
+    "tokenSetOrder": ["primitive", "semantic", "typography", "layout"]
+  },
+  "$themes": [
+    {
+      "id": "kelana-light",
+      "name": "Kelana Light",
+      "selectedTokenSets": {
+        "primitive": "source",
+        "semantic": "enabled",
+        "typography": "enabled",
+        "layout": "enabled"
+      }
+    }
+  ],
+  "primitive": {
+    "color": {
+      "ocean": {
+        "50":  { "value": "#EAF5FF", "type": "color", "description": "Ice Blue — panel pencarian, kartu terpilih" },
+        "100": { "value": "#D3EBFF", "type": "color" },
+        "200": { "value": "#ABD9FF", "type": "color" },
+        "300": { "value": "#7FC6FF", "type": "color" },
+        "400": { "value": "#55B5FF", "type": "color" },
+        "500": { "value": "#35A8FF", "type": "color", "description": "Ocean Blue — warna interaksi utama Kelana" },
+        "600": { "value": "#1E8FE6", "type": "color", "description": "Hover tombol primer" },
+        "700": { "value": "#1574BF", "type": "color", "description": "Biru untuk teks & tautan — kontras 4,9:1 di putih" },
+        "800": { "value": "#115A94", "type": "color" },
+        "900": { "value": "#0D4470", "type": "color" }
+      },
+      "kelana-blue": {
+        "50":  { "value": "#EDF4FB", "type": "color" },
+        "100": { "value": "#D9E8F6", "type": "color" },
+        "200": { "value": "#B4CFEA", "type": "color" },
+        "300": { "value": "#8BB3DC", "type": "color" },
+        "400": { "value": "#629BCF", "type": "color" },
+        "500": { "value": "#4087C4", "type": "color", "description": "Kelana Blue — biru sekunder, nada tenang & profesional" },
+        "600": { "value": "#336FA4", "type": "color", "description": "Teks tombol sekunder — kontras 5,3:1 di putih" },
+        "700": { "value": "#285884", "type": "color" },
+        "800": { "value": "#1E4263", "type": "color" },
+        "900": { "value": "#152F47", "type": "color" }
+      },
+      "orange": {
+        "50":  { "value": "#FFF2EC", "type": "color" },
+        "100": { "value": "#FFE1D4", "type": "color" },
+        "200": { "value": "#FFC1A5", "type": "color" },
+        "300": { "value": "#FF9E76", "type": "color" },
+        "400": { "value": "#FF854C", "type": "color" },
+        "500": { "value": "#FF6B24", "type": "color", "description": "Sunset Orange — aksen brand. Maksimal satu per layar." },
+        "600": { "value": "#E65411", "type": "color", "description": "Oranye untuk teks — kontras 4,6:1 di putih" },
+        "700": { "value": "#BC410A", "type": "color" }
+      },
+      "neutral": {
+        "white":     { "value": "#FFFFFF", "type": "color", "description": "Pure White — permukaan konten" },
+        "cloud-100": { "value": "#F8FAFC", "type": "color", "description": "Cloud White — latar halaman" },
+        "cloud-200": { "value": "#F1F5F9", "type": "color", "description": "Seksi alternatif" }
+      },
+      "slate": {
+        "100": { "value": "#E8EEF4", "type": "color", "description": "Border halus" },
+        "200": { "value": "#E2E8F0", "type": "color", "description": "Border & pemisah standar" },
+        "300": { "value": "#CBD5E1", "type": "color" },
+        "400": { "value": "#94A3B8", "type": "color", "description": "Teks tersier" },
+        "500": { "value": "#64748B", "type": "color", "description": "Slate Gray — deskripsi & metadata" }
+      },
+      "navy": {
+        "500": { "value": "#475569", "type": "color" },
+        "700": { "value": "#1E293B", "type": "color" },
+        "900": { "value": "#0F172A", "type": "color", "description": "Midnight Navy — judul & teks utama" }
+      },
+      "success": {
+        "50":  { "value": "#ECFDF3", "type": "color" },
+        "100": { "value": "#C8EED8", "type": "color" },
+        "500": { "value": "#16A34A", "type": "color" },
+        "700": { "value": "#15803D", "type": "color" }
+      },
+      "warning": {
+        "50":  { "value": "#FFF8EB", "type": "color" },
+        "100": { "value": "#FBE3B6", "type": "color" },
+        "500": { "value": "#F59E0B", "type": "color" },
+        "700": { "value": "#A16207", "type": "color" }
+      },
+      "error": {
+        "50":  { "value": "#FEF2F2", "type": "color" },
+        "500": { "value": "#DC2626", "type": "color" }
+      },
+      "info": {
+        "50":  { "value": "#EFF6FF", "type": "color" },
+        "500": { "value": "#2563EB", "type": "color" }
+      }
+    }
+  },
+  "semantic": {
+    "bg": {
+      "canvas":      { "value": "{primitive.color.neutral.cloud-100}", "type": "color" },
+      "surface":     { "value": "{primitive.color.neutral.white}", "type": "color" },
+      "surface-alt": { "value": "{primitive.color.neutral.cloud-200}", "type": "color" },
+      "inverse":     { "value": "{primitive.color.navy.900}", "type": "color" },
+      "ice":         { "value": "{primitive.color.ocean.50}", "type": "color" },
+      "brand":       { "value": "{primitive.color.ocean.500}", "type": "color" },
+      "brand-soft":  { "value": "{primitive.color.ocean.50}", "type": "color" },
+      "brand-alt":   { "value": "{primitive.color.kelana-blue.500}", "type": "color" },
+      "accent":      { "value": "{primitive.color.orange.500}", "type": "color" },
+      "accent-soft": { "value": "{primitive.color.orange.50}", "type": "color" }
+    },
+    "text": {
+      "primary":    { "value": "{primitive.color.navy.900}", "type": "color" },
+      "secondary":  { "value": "{primitive.color.slate.500}", "type": "color" },
+      "tertiary":   { "value": "{primitive.color.slate.400}", "type": "color" },
+      "on-brand":   { "value": "{primitive.color.neutral.white}", "type": "color" },
+      "brand":      { "value": "{primitive.color.ocean.700}", "type": "color" },
+      "brand-alt":  { "value": "{primitive.color.kelana-blue.600}", "type": "color" },
+      "accent":     { "value": "{primitive.color.orange.600}", "type": "color" }
+    },
+    "border": {
+      "subtle":    { "value": "{primitive.color.slate.100}", "type": "color" },
+      "default":   { "value": "{primitive.color.slate.200}", "type": "color" },
+      "strong":    { "value": "{primitive.color.slate.300}", "type": "color" },
+      "brand":     { "value": "{primitive.color.ocean.500}", "type": "color" },
+      "brand-alt": { "value": "{primitive.color.kelana-blue.500}", "type": "color" }
+    },
+    "control": {
+      "bg":           { "value": "{primitive.color.neutral.white}", "type": "color" },
+      "border":       { "value": "{primitive.color.slate.200}", "type": "color" },
+      "border-focus": { "value": "{primitive.color.ocean.500}", "type": "color" },
+      "bg-selected":  { "value": "{primitive.color.ocean.50}", "type": "color" },
+      "accent":       { "value": "{primitive.color.kelana-blue.500}", "type": "color" }
+    },
+    "button": {
+      "primary-bg":        { "value": "{primitive.color.ocean.500}", "type": "color" },
+      "primary-bg-hover":  { "value": "{primitive.color.ocean.600}", "type": "color" },
+      "primary-text":      { "value": "{primitive.color.neutral.white}", "type": "color" },
+      "secondary-text":    { "value": "{primitive.color.kelana-blue.500}", "type": "color" },
+      "secondary-border":  { "value": "{primitive.color.kelana-blue.500}", "type": "color" },
+      "secondary-bg-hover":{ "value": "{primitive.color.ocean.50}", "type": "color" },
+      "accent-bg":         { "value": "{primitive.color.orange.500}", "type": "color" },
+      "accent-bg-hover":   { "value": "{primitive.color.orange.600}", "type": "color" }
+    },
+    "disabled": {
+      "bg":     { "value": "{primitive.color.neutral.cloud-200}", "type": "color" },
+      "text":   { "value": "{primitive.color.slate.400}", "type": "color" },
+      "border": { "value": "{primitive.color.slate.200}", "type": "color" }
+    },
+    "shadow": {
+      "xs": { "value": { "x": "0", "y": "1",  "blur": "2",  "spread": "0", "color": "rgba(15,23,42,0.04)" }, "type": "boxShadow" },
+      "sm": { "value": { "x": "0", "y": "1",  "blur": "3",  "spread": "0", "color": "rgba(15,23,42,0.06)" }, "type": "boxShadow" },
+      "md": { "value": { "x": "0", "y": "4",  "blur": "12", "spread": "0", "color": "rgba(15,23,42,0.07)" }, "type": "boxShadow" },
+      "lg": { "value": { "x": "0", "y": "10", "blur": "24", "spread": "0", "color": "rgba(15,23,42,0.08)" }, "type": "boxShadow" },
+      "xl": { "value": { "x": "0", "y": "20", "blur": "44", "spread": "0", "color": "rgba(15,23,42,0.12)" }, "type": "boxShadow" },
+      "brand":  { "value": { "x": "0", "y": "4", "blur": "12", "spread": "0", "color": "rgba(53,168,255,0.24)" }, "type": "boxShadow" },
+      "accent": { "value": { "x": "0", "y": "4", "blur": "12", "spread": "0", "color": "rgba(255,107,36,0.24)" }, "type": "boxShadow" }
+    }
+  },
+  "typography": {
+    "family": {
+      "sans": { "value": "Plus Jakarta Sans", "type": "fontFamilies" }
+    },
+    "weight": {
+      "regular":   { "value": "Regular", "type": "fontWeights" },
+      "medium":    { "value": "Medium", "type": "fontWeights" },
+      "semibold":  { "value": "SemiBold", "type": "fontWeights" },
+      "bold":      { "value": "Bold", "type": "fontWeights" },
+      "extrabold": { "value": "ExtraBold", "type": "fontWeights" }
+    },
+    "text": {
+      "display": {
+        "value": { "fontFamily": "{typography.family.sans}", "fontWeight": "{typography.weight.extrabold}", "fontSize": "60", "lineHeight": "64", "letterSpacing": "-3%" },
+        "type": "typography"
+      },
+      "h1": {
+        "value": { "fontFamily": "{typography.family.sans}", "fontWeight": "{typography.weight.extrabold}", "fontSize": "48", "lineHeight": "56", "letterSpacing": "-2.5%" },
+        "type": "typography"
+      },
+      "h2": {
+        "value": { "fontFamily": "{typography.family.sans}", "fontWeight": "{typography.weight.bold}", "fontSize": "36", "lineHeight": "44", "letterSpacing": "-2%" },
+        "type": "typography"
+      },
+      "h3": {
+        "value": { "fontFamily": "{typography.family.sans}", "fontWeight": "{typography.weight.bold}", "fontSize": "28", "lineHeight": "36", "letterSpacing": "-1.5%" },
+        "type": "typography"
+      },
+      "h4": {
+        "value": { "fontFamily": "{typography.family.sans}", "fontWeight": "{typography.weight.bold}", "fontSize": "22", "lineHeight": "30", "letterSpacing": "-1%" },
+        "type": "typography"
+      },
+      "h5": {
+        "value": { "fontFamily": "{typography.family.sans}", "fontWeight": "{typography.weight.semibold}", "fontSize": "18", "lineHeight": "26", "letterSpacing": "0%" },
+        "type": "typography"
+      },
+      "body-lg": {
+        "value": { "fontFamily": "{typography.family.sans}", "fontWeight": "{typography.weight.regular}", "fontSize": "18", "lineHeight": "28", "letterSpacing": "0%" },
+        "type": "typography"
+      },
+      "body": {
+        "value": { "fontFamily": "{typography.family.sans}", "fontWeight": "{typography.weight.regular}", "fontSize": "16", "lineHeight": "26", "letterSpacing": "0%" },
+        "type": "typography"
+      },
+      "body-sm": {
+        "value": { "fontFamily": "{typography.family.sans}", "fontWeight": "{typography.weight.regular}", "fontSize": "14", "lineHeight": "22", "letterSpacing": "0%" },
+        "type": "typography"
+      },
+      "caption": {
+        "value": { "fontFamily": "{typography.family.sans}", "fontWeight": "{typography.weight.regular}", "fontSize": "12", "lineHeight": "18", "letterSpacing": "0%" },
+        "type": "typography"
+      },
+      "overline": {
+        "value": { "fontFamily": "{typography.family.sans}", "fontWeight": "{typography.weight.bold}", "fontSize": "12", "lineHeight": "16", "letterSpacing": "10%", "textCase": "uppercase" },
+        "type": "typography"
+      },
+      "button": {
+        "value": { "fontFamily": "{typography.family.sans}", "fontWeight": "{typography.weight.bold}", "fontSize": "14", "lineHeight": "20", "letterSpacing": "-1%" },
+        "type": "typography"
+      }
+    }
+  },
+  "layout": {
+    "space": {
+      "25":   { "value": "2", "type": "spacing" },
+      "50":   { "value": "4", "type": "spacing" },
+      "100":  { "value": "8", "type": "spacing" },
+      "150":  { "value": "12", "type": "spacing" },
+      "200":  { "value": "16", "type": "spacing" },
+      "250":  { "value": "20", "type": "spacing" },
+      "300":  { "value": "24", "type": "spacing" },
+      "400":  { "value": "32", "type": "spacing" },
+      "500":  { "value": "40", "type": "spacing" },
+      "600":  { "value": "48", "type": "spacing" },
+      "800":  { "value": "64", "type": "spacing" },
+      "1000": { "value": "80", "type": "spacing" },
+      "1200": { "value": "96", "type": "spacing" },
+      "1600": { "value": "128", "type": "spacing" }
+    },
+    "radius": {
+      "xs":   { "value": "6", "type": "borderRadius" },
+      "sm":   { "value": "8", "type": "borderRadius" },
+      "md":   { "value": "12", "type": "borderRadius" },
+      "lg":   { "value": "16", "type": "borderRadius" },
+      "xl":   { "value": "24", "type": "borderRadius" },
+      "2xl":  { "value": "32", "type": "borderRadius" },
+      "full": { "value": "999", "type": "borderRadius" }
+    },
+    "size": {
+      "btn-sm":     { "value": "38", "type": "sizing" },
+      "btn-md":     { "value": "48", "type": "sizing" },
+      "btn-lg":     { "value": "56", "type": "sizing" },
+      "input":      { "value": "52", "type": "sizing" },
+      "icon":       { "value": "24", "type": "sizing" },
+      "nav-height": { "value": "76", "type": "sizing" },
+      "container":  { "value": "1280", "type": "sizing" }
+    },
+    "border-width": {
+      "thin":    { "value": "1", "type": "borderWidth" },
+      "default": { "value": "1.5", "type": "borderWidth" },
+      "thick":   { "value": "2", "type": "borderWidth" }
+    }
+  }
+}

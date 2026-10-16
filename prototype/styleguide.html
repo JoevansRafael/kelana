@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design System — Kelana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: var(--space-150); }
+  .swatch { border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-subtle); background: var(--white); }
+  .swatch-chip { height: 72px; }
+  .swatch-meta { padding: 8px 10px; display: flex; flex-direction: column; gap: 1px; }
+  .swatch-name { font-size: 11px; font-weight: 700; }
+  .swatch-hex { font-size: 10px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; text-transform: uppercase; }
+
+  .spec-table { width: 100%; border-collapse: collapse; font-size: var(--fs-body-sm); }
+  .spec-table th, .spec-table td { text-align: left; padding: 11px var(--space-150); border-bottom: 1px solid var(--border-subtle); }
+  .spec-table th { font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: .07em; color: var(--text-tertiary); font-weight: 700; }
+  .spec-table code { font-size: 12px; background: var(--cloud-200); padding: 2px 6px; border-radius: 5px; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+
+  .ds-section { scroll-margin-top: calc(var(--nav-height) + 20px); }
+  .ds-demo {
+    padding: var(--space-400);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    display: flex; flex-wrap: wrap; gap: var(--space-200); align-items: center;
+    /* Beberapa komponen (Stepper, SearchBar) memang lebih lebar dari layar mobile.
+       Di halaman design system, scroll lebih jujur daripada memaksa komponen menyusut. */
+    overflow-x: auto;
+  }
+  .ds-demo--stack { flex-direction: column; align-items: stretch; }
+  .ds-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-tertiary); width: 100%; }
+
+  .ds-nav {
+    position: sticky; top: calc(var(--nav-height) + var(--space-300));
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .ds-nav a {
+    padding: 7px var(--space-150); border-radius: var(--radius-sm);
+    font-size: var(--fs-body-sm); font-weight: 600; color: var(--text-secondary);
+  }
+  .ds-nav a:hover { background: var(--slate-100); color: var(--text-primary); }
+  .ds-layout { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: var(--space-600); align-items: start; }
+  .ds-layout > * { min-width: 0; }
+  /* Tabel spesifikasi tidak bisa menyusut di bawah min-content — beri scroll sendiri */
+  .spec-table { min-width: 420px; }
+  .table-scroll { overflow-x: auto; }
+  @media (max-width: 900px) { .ds-layout { grid-template-columns: 1fr; } .ds-nav { position: static; flex-direction: row; flex-wrap: wrap; } }
+</style>
+</head>
+<body>
+
+<div data-slot="navbar"></div>
+
+<main>
+  <section style="padding-block:var(--space-600) var(--space-400)">
+    <div class="container">
+      <div class="stack stack-150" style="max-width:720px">
+        <p class="t-overline t-accent">Design system v1.0</p>
+        <h1 class="t-h1 t-balance">Kelana Design System</h1>
+        <p class="t-body-lg t-muted">
+          Semua token dan komponen di halaman ini punya pasangan 1:1 di Figma. Nama di sini
+          (<code style="font-size:13px">color/ocean/500</code>) adalah nama yang dipakai sebagai
+          Figma Variable — jadi handoff ke engineering nggak perlu penerjemahan.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-bottom:var(--space-1000)">
+    <div class="container">
+      <div class="ds-layout">
+
+        <nav class="ds-nav" aria-label="Navigasi design system">
+          <a href="#warna">Warna</a>
+          <a href="#tipografi">Tipografi</a>
+          <a href="#spacing">Spacing &amp; radius</a>
+          <a href="#elevasi">Elevasi</a>
+          <a href="#tombol">Tombol</a>
+          <a href="#form">Form</a>
+          <a href="#badge">Badge &amp; chip</a>
+          <a href="#kartu">Kartu</a>
+          <a href="#navigasi">Navigasi</a>
+          <a href="#feedback">Feedback</a>
+          <a href="#ikon">Ikon</a>
+          <a href="#grid">Grid</a>
+        </nav>
+
+        <div class="stack stack-600">
+
+          <!-- ============ WARNA ============ -->
+          <section class="ds-section stack stack-300" id="warna">
+            <div class="stack stack-100">
+              <h2 class="t-h2">Warna</h2>
+              <p class="t-body t-muted" style="max-width:660px">
+                Dua biru resmi bekerja berpasangan: <strong>Ocean Blue</strong> untuk interaksi
+                yang perlu energi, <strong>Kelana Blue</strong> untuk komponen yang perlu nada
+                lebih tenang. <strong>Sunset Orange</strong> dipakai hemat sebagai penanda brand.
+                Netralnya sejuk (Cloud White, Slate) supaya foto destinasi tetap jadi yang
+                paling menonjol di halaman.
+              </p>
+            </div>
+
+            <div class="stack stack-200">
+              <span class="ds-label">palet resmi — dipakai sebagai acuan brand</span>
+              <div class="swatch-grid">
+                <div class="swatch"><div class="swatch-chip" style="background:#35A8FF"></div><div class="swatch-meta"><span class="swatch-name">Ocean Blue</span><span class="swatch-hex">#35A8FF</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#4087C4"></div><div class="swatch-meta"><span class="swatch-name">Kelana Blue</span><span class="swatch-hex">#4087C4</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#FF6B24"></div><div class="swatch-meta"><span class="swatch-name">Sunset Orange</span><span class="swatch-hex">#FF6B24</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#0F172A"></div><div class="swatch-meta"><span class="swatch-name">Midnight Navy</span><span class="swatch-hex">#0F172A</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#FFFFFF"></div><div class="swatch-meta"><span class="swatch-name">Pure White</span><span class="swatch-hex">#FFFFFF</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#F8FAFC"></div><div class="swatch-meta"><span class="swatch-name">Cloud White</span><span class="swatch-hex">#F8FAFC</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#EAF5FF"></div><div class="swatch-meta"><span class="swatch-name">Ice Blue</span><span class="swatch-hex">#EAF5FF</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#64748B"></div><div class="swatch-meta"><span class="swatch-name">Slate Gray</span><span class="swatch-hex">#64748B</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#E2E8F0"></div><div class="swatch-meta"><span class="swatch-name">Border</span><span class="swatch-hex">#E2E8F0</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#16A34A"></div><div class="swatch-meta"><span class="swatch-name">Success</span><span class="swatch-hex">#16A34A</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#F59E0B"></div><div class="swatch-meta"><span class="swatch-name">Warning</span><span class="swatch-hex">#F59E0B</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#DC2626"></div><div class="swatch-meta"><span class="swatch-name">Error</span><span class="swatch-hex">#DC2626</span></div></div>
+              </div>
+              <p class="t-caption t-subtle">
+                Token CSS: <code>--kelana-blue</code>, <code>--kelana-blue-secondary</code>,
+                <code>--kelana-orange</code>, dan seterusnya.
+              </p>
+            </div>
+
+            <div class="stack stack-200">
+              <span class="ds-label">color/ocean — biru utama, interaksi</span>
+              <div class="swatch-grid">
+                <div class="swatch"><div class="swatch-chip" style="background:#EAF5FF"></div><div class="swatch-meta"><span class="swatch-name">ocean/50</span><span class="swatch-hex">#EAF5FF</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#D3EBFF"></div><div class="swatch-meta"><span class="swatch-name">ocean/100</span><span class="swatch-hex">#D3EBFF</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#ABD9FF"></div><div class="swatch-meta"><span class="swatch-name">ocean/200</span><span class="swatch-hex">#ABD9FF</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#7FC6FF"></div><div class="swatch-meta"><span class="swatch-name">ocean/300</span><span class="swatch-hex">#7FC6FF</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#55B5FF"></div><div class="swatch-meta"><span class="swatch-name">ocean/400</span><span class="swatch-hex">#55B5FF</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#35A8FF"></div><div class="swatch-meta"><span class="swatch-name">ocean/500 ★</span><span class="swatch-hex">#35A8FF</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#1E8FE6"></div><div class="swatch-meta"><span class="swatch-name">ocean/600</span><span class="swatch-hex">#1E8FE6</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#1574BF"></div><div class="swatch-meta"><span class="swatch-name">ocean/700</span><span class="swatch-hex">#1574BF</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#115A94"></div><div class="swatch-meta"><span class="swatch-name">ocean/800</span><span class="swatch-hex">#115A94</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#0D4470"></div><div class="swatch-meta"><span class="swatch-name">ocean/900</span><span class="swatch-hex">#0D4470</span></div></div>
+              </div>
+            </div>
+
+            <div class="stack stack-200">
+              <span class="ds-label">color/kelana-blue — biru sekunder, nada tenang</span>
+              <div class="swatch-grid">
+                <div class="swatch"><div class="swatch-chip" style="background:#EDF4FB"></div><div class="swatch-meta"><span class="swatch-name">kblue/50</span><span class="swatch-hex">#EDF4FB</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#D9E8F6"></div><div class="swatch-meta"><span class="swatch-name">kblue/100</span><span class="swatch-hex">#D9E8F6</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#B4CFEA"></div><div class="swatch-meta"><span class="swatch-name">kblue/200</span><span class="swatch-hex">#B4CFEA</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#8BB3DC"></div><div class="swatch-meta"><span class="swatch-name">kblue/300</span><span class="swatch-hex">#8BB3DC</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#629BCF"></div><div class="swatch-meta"><span class="swatch-name">kblue/400</span><span class="swatch-hex">#629BCF</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#4087C4"></div><div class="swatch-meta"><span class="swatch-name">kblue/500 ★</span><span class="swatch-hex">#4087C4</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#336FA4"></div><div class="swatch-meta"><span class="swatch-name">kblue/600</span><span class="swatch-hex">#336FA4</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#285884"></div><div class="swatch-meta"><span class="swatch-name">kblue/700</span><span class="swatch-hex">#285884</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#1E4263"></div><div class="swatch-meta"><span class="swatch-name">kblue/800</span><span class="swatch-hex">#1E4263</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#152F47"></div><div class="swatch-meta"><span class="swatch-name">kblue/900</span><span class="swatch-hex">#152F47</span></div></div>
+              </div>
+            </div>
+
+            <div class="stack stack-200">
+              <span class="ds-label">color/orange — aksen brand, dipakai hemat</span>
+              <div class="swatch-grid">
+                <div class="swatch"><div class="swatch-chip" style="background:#FFF2EC"></div><div class="swatch-meta"><span class="swatch-name">orange/50</span><span class="swatch-hex">#FFF2EC</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#FFE1D4"></div><div class="swatch-meta"><span class="swatch-name">orange/100</span><span class="swatch-hex">#FFE1D4</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#FFC1A5"></div><div class="swatch-meta"><span class="swatch-name">orange/200</span><span class="swatch-hex">#FFC1A5</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#FF9E76"></div><div class="swatch-meta"><span class="swatch-name">orange/300</span><span class="swatch-hex">#FF9E76</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#FF854C"></div><div class="swatch-meta"><span class="swatch-name">orange/400</span><span class="swatch-hex">#FF854C</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#FF6B24"></div><div class="swatch-meta"><span class="swatch-name">orange/500 ★</span><span class="swatch-hex">#FF6B24</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#E65411"></div><div class="swatch-meta"><span class="swatch-name">orange/600</span><span class="swatch-hex">#E65411</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#BC410A"></div><div class="swatch-meta"><span class="swatch-name">orange/700</span><span class="swatch-hex">#BC410A</span></div></div>
+              </div>
+            </div>
+
+            <div class="stack stack-200">
+              <span class="ds-label">netral — latar, border, teks</span>
+              <div class="swatch-grid">
+                <div class="swatch"><div class="swatch-chip" style="background:#FFFFFF"></div><div class="swatch-meta"><span class="swatch-name">netral/white</span><span class="swatch-hex">#FFFFFF</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#F8FAFC"></div><div class="swatch-meta"><span class="swatch-name">netral/cloud-100 ★</span><span class="swatch-hex">#F8FAFC</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#F1F5F9"></div><div class="swatch-meta"><span class="swatch-name">netral/cloud-200</span><span class="swatch-hex">#F1F5F9</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#E8EEF4"></div><div class="swatch-meta"><span class="swatch-name">netral/slate-100</span><span class="swatch-hex">#E8EEF4</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#E2E8F0"></div><div class="swatch-meta"><span class="swatch-name">netral/slate-200 ★</span><span class="swatch-hex">#E2E8F0</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#CBD5E1"></div><div class="swatch-meta"><span class="swatch-name">netral/slate-300</span><span class="swatch-hex">#CBD5E1</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#94A3B8"></div><div class="swatch-meta"><span class="swatch-name">netral/slate-400</span><span class="swatch-hex">#94A3B8</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#64748B"></div><div class="swatch-meta"><span class="swatch-name">netral/slate-500 ★</span><span class="swatch-hex">#64748B</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#1E293B"></div><div class="swatch-meta"><span class="swatch-name">netral/navy-700</span><span class="swatch-hex">#1E293B</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#0F172A"></div><div class="swatch-meta"><span class="swatch-name">netral/navy-900 ★</span><span class="swatch-hex">#0F172A</span></div></div>
+              </div>
+            </div>
+
+            <div class="stack stack-200">
+              <span class="ds-label">semantik — hanya untuk umpan balik status</span>
+              <div class="swatch-grid">
+                <div class="swatch"><div class="swatch-chip" style="background:#16A34A"></div><div class="swatch-meta"><span class="swatch-name">status/success-500</span><span class="swatch-hex">#16A34A</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#F59E0B"></div><div class="swatch-meta"><span class="swatch-name">status/warning-500</span><span class="swatch-hex">#F59E0B</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#DC2626"></div><div class="swatch-meta"><span class="swatch-name">status/error-500</span><span class="swatch-hex">#DC2626</span></div></div>
+                <div class="swatch"><div class="swatch-chip" style="background:#2563EB"></div><div class="swatch-meta"><span class="swatch-name">status/info-500</span><span class="swatch-hex">#2563EB</span></div></div>
+              </div>
+            </div>
+
+            <div class="grid grid-2" style="gap:var(--space-200)">
+              <div class="card card--pad stack stack-150">
+                <strong class="t-body-sm row row-100"><i data-icon="compass"></i> Kapan pakai biru yang mana</strong>
+                <div class="table-scroll"><table class="spec-table">
+                  <thead><tr><th>Peran</th><th>Warna</th></tr></thead>
+                  <tbody>
+                    <tr><td>Tombol primer, fokus, progres</td><td><code>ocean/500</code></td></tr>
+                    <tr><td>Teks &amp; tautan biru</td><td><code>ocean/700</code></td></tr>
+                    <tr><td>Chip terpilih, tab aktif, pin peta</td><td><code>kblue/500</code></td></tr>
+                    <tr><td>Teks tombol sekunder</td><td><code>kblue/600</code></td></tr>
+                    <tr><td>Panel pencarian, kartu terpilih</td><td><code>ocean/50</code> (Ice Blue)</td></tr>
+                    <tr><td>Aksen logo, badge unggulan</td><td><code>orange/500</code></td></tr>
+                  </tbody>
+                </table></div>
+              </div>
+
+              <div class="card card--pad stack stack-150" style="background:var(--bg-ice);border-color:var(--ocean-100)">
+                <strong class="t-body-sm row row-100"><i data-icon="shield"></i> Kontras terukur (WCAG)</strong>
+                <div class="table-scroll"><table class="spec-table">
+                  <thead><tr><th>Kombinasi</th><th>Rasio</th><th>AA</th></tr></thead>
+                  <tbody>
+                    <tr><td>Navy 900 di putih</td><td>17,4:1</td><td>lolos</td></tr>
+                    <tr><td>Slate 500 di putih</td><td>4,8:1</td><td>lolos</td></tr>
+                    <tr><td>Ocean 700 di putih</td><td>4,9:1</td><td>lolos</td></tr>
+                    <tr><td>Kelana Blue 600 di putih</td><td>5,3:1</td><td>lolos</td></tr>
+                    <tr><td>Orange 600 di putih</td><td>4,6:1</td><td>lolos</td></tr>
+                    <tr><td>Putih di Ocean 500</td><td>2,6:1</td><td><strong>tidak</strong></td></tr>
+                  </tbody>
+                </table></div>
+                <p class="t-caption t-muted">
+                  Teks putih di atas Ocean Blue tidak memenuhi AA untuk teks 14px bold. Warna ini
+                  tetap dipakai pada tombol primer sesuai ketentuan brand. Untuk kepatuhan penuh,
+                  ganti <code>--btn-primary-bg</code> ke <code>var(--ocean-700)</code> — satu baris,
+                  tanpa mengubah apa pun yang lain.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ TIPOGRAFI ============ -->
+          <section class="ds-section stack stack-300" id="tipografi">
+            <div class="stack stack-100">
+              <h2 class="t-h2">Tipografi</h2>
+              <p class="t-body t-muted" style="max-width:640px">
+                Plus Jakarta Sans — dirancang oleh Tokotype di Jakarta. Dipilih bukan cuma karena
+                bentuknya bersih dan punya bobot 800 yang tegas, tapi karena brand lokal pantas
+                pakai typeface lokal. Itu cerita yang bisa dipakai saat pitch.
+              </p>
+            </div>
+
+            <div class="card card--pad stack stack-300">
+              <div><p class="t-overline t-subtle">text/display · 60/64 · 800 · -3%</p><p class="t-display">Kelana</p></div>
+              <hr class="divider">
+              <div><p class="t-overline t-subtle">text/h1 · 48/56 · 800 · -2,5%</p><p class="t-h1">Rencana jalan-jalan yang beres</p></div>
+              <hr class="divider">
+              <div><p class="t-overline t-subtle">text/h2 · 36/44 · 700 · -2%</p><p class="t-h2">Destinasi populer</p></div>
+              <hr class="divider">
+              <div><p class="t-overline t-subtle">text/h3 · 28/36 · 700</p><p class="t-h3">Rencana harian</p></div>
+              <hr class="divider">
+              <div><p class="t-overline t-subtle">text/h4 · 22/30 · 700</p><p class="t-h4">Trekking sunrise Pulau Padar</p></div>
+              <hr class="divider">
+              <div><p class="t-overline t-subtle">text/h5 · 18/26 · 600</p><p class="t-h5">Pink Beach — snorkeling</p></div>
+              <hr class="divider">
+              <div><p class="t-overline t-subtle">text/body-lg · 18/28 · 400</p><p class="t-body-lg">Tiga malam di atas kapal phinisi, satu malam di darat sebelum terbang.</p></div>
+              <hr class="divider">
+              <div><p class="t-overline t-subtle">text/body · 16/26 · 400</p><p class="t-body">Urutan pulau disusun berdasarkan arah arus dan jam kedatangan kapal lain.</p></div>
+              <hr class="divider">
+              <div><p class="t-overline t-subtle">text/body-sm · 14/22 · 400</p><p class="t-body-sm">Dijemput kru di area kedatangan bandara.</p></div>
+              <hr class="divider">
+              <div><p class="t-overline t-subtle">text/caption · 12/18 · 400</p><p class="t-caption">4 hari 3 malam · 11 titik kunjungan</p></div>
+              <hr class="divider">
+              <div><p class="t-overline t-subtle">text/overline · 12/16 · 700 · +10% · UPPER</p><p class="t-overline">Destinasi populer</p></div>
+            </div>
+          </section>
+
+          <!-- ============ SPACING ============ -->
+          <section class="ds-section stack stack-300" id="spacing">
+            <div class="stack stack-100">
+              <h2 class="t-h2">Spacing &amp; radius</h2>
+              <p class="t-body t-muted">Skala 4pt. Nama token mengikuti ukuran × 100 / 8 agar mudah diingat.</p>
+            </div>
+
+            <div class="grid grid-2">
+              <div class="card card--pad">
+                <div class="table-scroll"><table class="spec-table">
+                  <thead><tr><th>Token</th><th>Nilai</th><th>Pakai untuk</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>space/100</code></td><td>8px</td><td>Jarak ikon–teks</td></tr>
+                    <tr><td><code>space/150</code></td><td>12px</td><td>Antar item dalam kartu</td></tr>
+                    <tr><td><code>space/200</code></td><td>16px</td><td>Padding kartu kecil</td></tr>
+                    <tr><td><code>space/300</code></td><td>24px</td><td>Padding kartu, gap grid</td></tr>
+                    <tr><td><code>space/400</code></td><td>32px</td><td>Antar blok</td></tr>
+                    <tr><td><code>space/600</code></td><td>48px</td><td>Antar sub-seksi</td></tr>
+                    <tr><td><code>space/1200</code></td><td>96px</td><td>Padding seksi desktop</td></tr>
+                  </tbody>
+                </table></div>
+              </div>
+
+              <div class="card card--pad stack stack-200">
+                <span class="ds-label">radius</span>
+                <div class="row row-wrap" style="gap:var(--space-200)">
+                  <div class="stack stack-100" style="align-items:center">
+                    <div style="width:72px;height:72px;background:var(--ocean-100);border-radius:var(--radius-sm)"></div>
+                    <span class="t-caption">sm · 8</span>
+                  </div>
+                  <div class="stack stack-100" style="align-items:center">
+                    <div style="width:72px;height:72px;background:var(--ocean-100);border-radius:var(--radius-md)"></div>
+                    <span class="t-caption">md · 12</span>
+                  </div>
+                  <div class="stack stack-100" style="align-items:center">
+                    <div style="width:72px;height:72px;background:var(--ocean-100);border-radius:var(--radius-lg)"></div>
+                    <span class="t-caption">lg · 16</span>
+                  </div>
+                  <div class="stack stack-100" style="align-items:center">
+                    <div style="width:72px;height:72px;background:var(--ocean-100);border-radius:var(--radius-xl)"></div>
+                    <span class="t-caption">xl · 24</span>
+                  </div>
+                  <div class="stack stack-100" style="align-items:center">
+                    <div style="width:72px;height:72px;background:var(--ocean-100);border-radius:var(--radius-full)"></div>
+                    <span class="t-caption">full</span>
+                  </div>
+                </div>
+                <p class="t-body-sm t-muted">
+                  Kartu pakai <code>xl</code>, tombol selalu <code>full</code> — bentuk pil ini
+                  jadi penanda visual Kelana yang paling cepat dikenali.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ ELEVASI ============ -->
+          <section class="ds-section stack stack-300" id="elevasi">
+            <div class="stack stack-100">
+              <h2 class="t-h2">Elevasi</h2>
+              <p class="t-body t-muted">
+                Shadow memakai tint <code>navy/900</code> dengan opasitas rendah — bukan hitam
+                murni, supaya menyatu dengan latar Cloud White. Sengaja dibuat halus: kedalaman
+                utama datang dari border, bukan bayangan.
+              </p>
+            </div>
+            <div class="ds-demo" style="gap:var(--space-400);background:var(--cloud-200)">
+              <div class="stack stack-100" style="align-items:center">
+                <div style="width:104px;height:72px;background:var(--white);border-radius:var(--radius-md);box-shadow:var(--shadow-xs)"></div>
+                <span class="t-caption">xs</span>
+              </div>
+              <div class="stack stack-100" style="align-items:center">
+                <div style="width:104px;height:72px;background:var(--white);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)"></div>
+                <span class="t-caption">sm</span>
+              </div>
+              <div class="stack stack-100" style="align-items:center">
+                <div style="width:104px;height:72px;background:var(--white);border-radius:var(--radius-md);box-shadow:var(--shadow-md)"></div>
+                <span class="t-caption">md</span>
+              </div>
+              <div class="stack stack-100" style="align-items:center">
+                <div style="width:104px;height:72px;background:var(--white);border-radius:var(--radius-md);box-shadow:var(--shadow-lg)"></div>
+                <span class="t-caption">lg</span>
+              </div>
+              <div class="stack stack-100" style="align-items:center">
+                <div style="width:104px;height:72px;background:var(--white);border-radius:var(--radius-md);box-shadow:var(--shadow-xl)"></div>
+                <span class="t-caption">xl</span>
+              </div>
+              <div class="stack stack-100" style="align-items:center">
+                <div style="width:104px;height:72px;background:var(--ocean-500);border-radius:var(--radius-md);box-shadow:var(--shadow-brand)"></div>
+                <span class="t-caption">brand</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ TOMBOL ============ -->
+          <section class="ds-section stack stack-300" id="tombol">
+            <div class="stack stack-100">
+              <h2 class="t-h2">Tombol</h2>
+              <p class="t-body t-muted">
+                Figma: <code>Button</code> dengan properti <code>variant</code>, <code>size</code>,
+                <code>icon</code>, <code>state</code>. Aturan penting: satu layar maksimal satu
+                tombol <code>accent</code> — itu jatah aksi paling penting.
+              </p>
+            </div>
+
+            <div class="ds-demo">
+              <span class="ds-label">variant</span>
+              <button class="btn btn--primary">Primary</button>
+              <button class="btn btn--accent">Accent</button>
+              <button class="btn btn--secondary">Secondary</button>
+              <button class="btn btn--ghost">Ghost</button>
+              <button class="btn btn--primary" disabled>Disabled</button>
+            </div>
+
+            <div class="ds-demo">
+              <span class="ds-label">size</span>
+              <button class="btn btn--primary btn--sm">Small · 38px</button>
+              <button class="btn btn--primary">Medium · 48px</button>
+              <button class="btn btn--primary btn--lg">Large · 56px</button>
+            </div>
+
+            <div class="ds-demo">
+              <span class="ds-label">dengan ikon &amp; icon-only</span>
+              <button class="btn btn--primary"><i data-icon="sparkle"></i> Susun rencana</button>
+              <button class="btn btn--secondary">Lihat semua <i data-icon="arrowR"></i></button>
+              <button class="btn-icon"><i data-icon="heart" data-icon-size="20px"></i></button>
+              <button class="btn-icon is-active"><i data-icon="heartFill" data-icon-size="20px"></i></button>
+              <button class="btn-icon btn-icon--sm"><i data-icon="share" data-icon-size="17px"></i></button>
+            </div>
+
+            <div class="ds-demo" style="background:var(--ocean-800)">
+              <span class="ds-label" style="color:rgba(255,255,255,.6)">variant on-ink — untuk latar gelap</span>
+              <button class="btn btn--accent">Accent</button>
+              <button class="btn btn--on-ink">On ink</button>
+            </div>
+          </section>
+
+          <!-- ============ FORM ============ -->
+          <section class="ds-section stack stack-300" id="form">
+            <h2 class="t-h2">Form</h2>
+
+            <div class="grid grid-2">
+              <div class="ds-demo ds-demo--stack">
+                <span class="ds-label">input states</span>
+                <label class="field">
+                  <span class="field-label">Default</span>
+                  <input class="input" placeholder="Labuan Bajo, Yogyakarta…">
+                </label>
+                <label class="field">
+                  <span class="field-label">Terisi + hint</span>
+                  <input class="input" value="Labuan Bajo, NTT">
+                  <span class="field-hint">Bisa tambah kota kedua nanti.</span>
+                </label>
+                <label class="field">
+                  <span class="field-label">Error</span>
+                  <input class="input has-error" value="32 Februari 2026">
+                  <span class="field-error">Tanggal tidak valid.</span>
+                </label>
+                <label class="field">
+                  <span class="field-label">Select</span>
+                  <div class="select-wrap">
+                    <select class="input"><option>2 orang</option><option>4 orang</option></select>
+                  </div>
+                </label>
+              </div>
+
+              <div class="ds-demo ds-demo--stack">
+                <span class="ds-label">checkbox, chip, slider</span>
+                <label class="check">
+                  <input type="checkbox" checked><span class="check-box"><i data-icon="check"></i></span>
+                  Santai <span class="check-count">18</span>
+                </label>
+                <label class="check">
+                  <input type="checkbox"><span class="check-box"><i data-icon="check"></i></span>
+                  Padat &amp; efisien <span class="check-count">12</span>
+                </label>
+                <hr class="divider">
+                <div class="row row-wrap row-100">
+                  <span class="chip is-selected">Terpilih</span>
+                  <span class="chip">Default</span>
+                  <span class="chip"><i data-icon="food"></i> Dengan ikon</span>
+                </div>
+                <hr class="divider">
+                <input class="range" type="range" min="0" max="100" value="42" aria-label="Contoh slider">
+                <span class="t-caption t-subtle">Range slider — thumb 22px, track 6px</span>
+              </div>
+            </div>
+
+            <div class="ds-demo ds-demo--stack">
+              <span class="ds-label">SearchBar — composite component</span>
+              <div class="searchbar" style="box-shadow:var(--shadow-sm)">
+                <label class="searchbar-cell">
+                  <span class="searchbar-label">Mau ke mana</span>
+                  <input class="searchbar-value" value="Labuan Bajo">
+                </label>
+                <label class="searchbar-cell">
+                  <span class="searchbar-label">Tanggal</span>
+                  <input class="searchbar-value" value="12 – 15 Nov">
+                </label>
+                <label class="searchbar-cell">
+                  <span class="searchbar-label">Rombongan</span>
+                  <input class="searchbar-value" value="2 orang">
+                </label>
+                <button class="btn btn--primary"><i data-icon="search" data-icon-size="22px"></i></button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ BADGE ============ -->
+          <section class="ds-section stack stack-300" id="badge">
+            <div class="stack stack-100">
+              <h2 class="t-h2">Badge &amp; chip</h2>
+              <p class="t-body t-muted">
+                Badge menyampaikan status, bukan aksi — selalu non-interaktif. Varian
+                <code>glass</code> dan <code>ink</code> khusus dipakai di atas foto.
+              </p>
+            </div>
+
+            <div class="ds-demo">
+              <span class="ds-label">tone</span>
+              <span class="badge badge--brand"><i data-icon="route"></i> Brand</span>
+              <span class="badge badge--accent"><i data-icon="sparkle"></i> Accent</span>
+              <span class="badge badge--neutral"><i data-icon="calendar"></i> Neutral</span>
+              <span class="badge badge--success"><span class="badge-dot"></span> Success</span>
+              <span class="badge badge--warning"><i data-icon="info"></i> Warning</span>
+              <span class="badge badge--info"><i data-icon="info"></i> Info</span>
+            </div>
+
+            <div class="ds-demo" style="position:relative;overflow:hidden;padding:var(--space-500)">
+              <div data-scene="ocean" style="position:absolute;inset:0"></div>
+              <span class="ds-label" style="position:relative;color:var(--white);text-shadow:0 1px 3px rgba(0,0,0,.4)">di atas foto</span>
+              <span class="badge badge--glass" style="position:relative"><i data-icon="sparkle"></i> Glass</span>
+              <span class="badge badge--ink" style="position:relative"><i data-icon="pin"></i> Ink</span>
+            </div>
+
+            <div class="ds-demo">
+              <span class="ds-label">rating &amp; avatar</span>
+              <span class="rating"><i data-icon="star"></i> 4,9</span>
+              <span class="avatar avatar--sm">RA</span>
+              <span class="avatar">DP</span>
+              <span class="avatar avatar--lg avatar--c2">SW</span>
+              <span class="avatar-stack">
+                <span class="avatar avatar--sm">RA</span>
+                <span class="avatar avatar--sm avatar--c2">DP</span>
+                <span class="avatar avatar--sm avatar--c3">SW</span>
+                <span class="avatar avatar--sm avatar--c5">+9</span>
+              </span>
+            </div>
+          </section>
+
+          <!-- ============ KARTU ============ -->
+          <section class="ds-section stack stack-300" id="kartu">
+            <div class="stack stack-100">
+              <h2 class="t-h2">Kartu</h2>
+              <p class="t-body t-muted">
+                Tiga tipe kartu utama. <code>Card/Itinerary</code> adalah komponen paling sering
+                dipakai di seluruh produk — pastikan jadi component dengan properti lengkap di Figma.
+              </p>
+            </div>
+
+            <div class="grid grid-3">
+              <div class="stack stack-150">
+                <span class="ds-label">Card/Itinerary</span>
+                <article class="card card--interactive itin-card">
+                  <div class="itin-card-media">
+                    <div data-scene="ocean" style="width:100%;height:100%"></div>
+                    <div class="itin-card-media-top">
+                      <span class="badge badge--glass"><i data-icon="sparkle"></i> Paling laris</span>
+                      <button class="btn-icon btn-icon--sm" data-save aria-label="Simpan"><i data-icon="heart" data-icon-size="20px"></i></button>
+                    </div>
+                    <div class="itin-card-media-bottom">
+                      <span class="badge badge--ink"><i data-icon="pin"></i> Labuan Bajo</span>
+                    </div>
+                  </div>
+                  <div class="itin-card-body">
+                    <h3 class="itin-card-title">Sailing Komodo: Padar &amp; Pink Beach</h3>
+                    <div class="itin-card-meta">
+                      <span class="row row-100"><i data-icon="calendar"></i> 4H 3M</span>
+                      <span class="rating"><i data-icon="star"></i> 4,9</span>
+                    </div>
+                    <div class="itin-card-foot">
+                      <div class="price"><span class="price-value">Rp 4,85 jt</span><span class="price-note">per orang</span></div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+              <div class="stack stack-150">
+                <span class="ds-label">Card/Destination</span>
+                <div class="dest-card">
+                  <div data-scene="temple" style="position:absolute;inset:0"></div>
+                  <div class="dest-card-body">
+                    <h3 class="t-h5">Yogyakarta</h3>
+                    <p class="t-caption" style="opacity:.82">DI Yogyakarta · 66 itinerary</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="stack stack-150">
+                <span class="ds-label">Card/Feature</span>
+                <article class="feature-card">
+                  <span class="feature-card__num">2</span>
+                  <span class="feature-icon feature-icon--accent"><i data-icon="route" data-icon-size="28px"></i></span>
+                  <h3 class="t-h4">Terima rencana per hari</h3>
+                  <p class="t-body t-muted">Urutan yang masuk akal secara jarak dan jam buka.</p>
+                </article>
+              </div>
+            </div>
+
+            <div class="stack stack-150">
+              <span class="ds-label">ActivityRow — dipakai di timeline &amp; builder</span>
+              <div class="timeline" style="background:var(--bg-surface);padding:var(--space-300) var(--space-300) var(--space-300) var(--space-600);border-radius:var(--radius-lg);border:1px solid var(--border-subtle)">
+                <article class="activity">
+                  <span class="drag-handle"><i data-icon="grip" data-icon-size="16px"></i></span>
+                  <span class="activity-time">05.00</span>
+                  <div class="activity-thumb"><div data-scene="dawn" style="width:100%;height:100%"></div></div>
+                  <div class="activity-body">
+                    <strong class="t-body">Trekking sunrise Pulau Padar</strong>
+                    <p class="t-body-sm t-muted">800 anak tangga, 45 menit naik.</p>
+                    <div class="activity-tags">
+                      <span class="badge badge--accent">Wajib</span>
+                      <span class="badge badge--neutral"><i data-icon="clock"></i> 2 jam</span>
+                    </div>
+                  </div>
+                </article>
+                <article class="activity activity--transit">
+                  <span class="activity-time" style="color:var(--text-tertiary)">07.00</span>
+                  <span class="row row-100 t-body-sm t-muted"><i data-icon="car"></i> Berlayar ke Pink Beach · 75 menit</span>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ NAVIGASI ============ -->
+          <section class="ds-section stack stack-300" id="navigasi">
+            <h2 class="t-h2">Navigasi</h2>
+
+            <div class="ds-demo">
+              <span class="ds-label">Tabs</span>
+              <div class="tabs">
+                <button class="tab is-active" data-no-toggle>Jadwal</button>
+                <button class="tab" data-no-toggle>Biaya</button>
+                <button class="tab" data-no-toggle>Tips</button>
+              </div>
+            </div>
+
+            <div class="ds-demo">
+              <span class="ds-label">Stepper</span>
+              <div class="stepper">
+                <div class="step is-done"><span class="step-dot"><i data-icon="check" data-icon-size="14px"></i></span><span class="step-label">Dasar</span></div>
+                <span class="step-line"></span>
+                <div class="step is-current"><span class="step-dot">2</span><span class="step-label">Minat</span></div>
+                <span class="step-line"></span>
+                <div class="step"><span class="step-dot">3</span><span class="step-label">Rencana</span></div>
+              </div>
+            </div>
+
+            <div class="ds-demo">
+              <span class="ds-label">Paginasi</span>
+              <button class="btn-icon btn-icon--sm" disabled><i data-icon="chevL" data-icon-size="16px"></i></button>
+              <button class="btn btn--primary btn--sm" style="width:38px;padding:0" data-no-toggle>1</button>
+              <button class="btn btn--ghost btn--sm" style="width:38px;padding:0">2</button>
+              <button class="btn btn--ghost btn--sm" style="width:38px;padding:0">3</button>
+              <button class="btn-icon btn-icon--sm"><i data-icon="chevR" data-icon-size="16px"></i></button>
+            </div>
+
+            <div class="ds-demo ds-demo--stack">
+              <span class="ds-label">MapPin</span>
+              <div class="map" style="height:180px">
+                <svg viewBox="0 0 700 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                  <rect width="700" height="180" fill="#DCEAF7"/>
+                  <g fill="#B6D4EC"><ellipse cx="180" cy="70" rx="90" ry="38"/><ellipse cx="480" cy="120" rx="110" ry="44"/></g>
+                  <path d="M160 90 Q300 30 480 110" stroke="#35A8FF" stroke-width="3" stroke-dasharray="9 8" fill="none"/>
+                </svg>
+                <div class="map-pin" style="left:23%;top:50%"><span class="map-pin-bubble">Pulau Padar</span><span class="map-pin-tail"></span></div>
+                <div class="map-pin" style="left:68%;top:66%"><span class="map-pin-bubble map-pin-bubble--accent">Pink Beach</span><span class="map-pin-tail map-pin-tail--accent"></span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ FEEDBACK ============ -->
+          <section class="ds-section stack stack-300" id="feedback">
+            <h2 class="t-h2">Feedback &amp; state</h2>
+
+            <div class="ds-demo">
+              <span class="ds-label">Toast — klik untuk melihat animasi</span>
+              <button class="btn btn--secondary" data-toast="Disimpan ke Trip Saya" data-toast-icon="heart">Toast sukses</button>
+              <button class="btn btn--secondary" data-toast="Urutan hari diperbarui" data-toast-icon="clock">Toast info</button>
+            </div>
+
+            <div class="ds-demo">
+              <span class="ds-label">Modal</span>
+              <button class="btn btn--secondary" data-modal-open="demo">Buka modal</button>
+            </div>
+
+            <div class="grid grid-2">
+              <div class="ds-demo ds-demo--stack">
+                <span class="ds-label">Skeleton loading</span>
+                <div class="skeleton" style="height:140px;border-radius:var(--radius-md)"></div>
+                <div class="skeleton" style="height:14px;width:70%"></div>
+                <div class="skeleton" style="height:14px;width:45%"></div>
+              </div>
+
+              <div class="ds-demo ds-demo--stack" style="text-align:center;align-items:center">
+                <span class="ds-label" style="text-align:left">Empty state</span>
+                <span class="feature-icon feature-icon--sand" style="width:60px;height:60px"><i data-icon="compass" data-icon-size="28px"></i></span>
+                <strong class="t-h5">Belum ada yang cocok</strong>
+                <p class="t-body-sm t-muted">Coba lebarkan rentang budget.</p>
+                <button class="btn btn--primary btn--sm">Lebarkan filter</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ IKON ============ -->
+          <section class="ds-section stack stack-300" id="ikon">
+            <div class="stack stack-100">
+              <h2 class="t-h2">Ikon</h2>
+              <p class="t-body t-muted">
+                Grid 24px, stroke 1,8px, ujung membulat. Dibuat khusus untuk Kelana supaya bebas
+                dari ketergantungan lisensi pihak ketiga.
+              </p>
+            </div>
+            <div class="card card--pad">
+              <div id="icon-gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:var(--space-200)"></div>
+            </div>
+          </section>
+
+          <!-- ============ GRID ============ -->
+          <section class="ds-section stack stack-300" id="grid">
+            <div class="stack stack-100">
+              <h2 class="t-h2">Grid &amp; breakpoint</h2>
+              <p class="t-body t-muted">Setel ini sebagai Layout Grid di tiap frame Figma.</p>
+            </div>
+            <div class="card card--pad">
+              <div class="table-scroll"><table class="spec-table">
+                <thead>
+                  <tr><th>Frame</th><th>Lebar</th><th>Kolom</th><th>Margin</th><th>Gutter</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>Desktop</strong></td><td>1440px</td><td>12</td><td>80px</td><td>24px</td></tr>
+                  <tr><td><strong>Laptop</strong></td><td>1280px</td><td>12</td><td>40px</td><td>24px</td></tr>
+                  <tr><td><strong>Tablet</strong></td><td>768px</td><td>8</td><td>32px</td><td>20px</td></tr>
+                  <tr><td><strong>Mobile</strong></td><td>390px</td><td>4</td><td>20px</td><td>16px</td></tr>
+                </tbody>
+              </table></div>
+              <p class="t-body-sm t-muted" style="margin-top:var(--space-200)">
+                Lebar konten maksimal <code>1280px</code> dan selalu di tengah. Di atas 1440px,
+                yang melebar hanya area putih di tepi — bukan kontennya, supaya baris teks tetap
+                nyaman dibaca.
+              </p>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal demo -->
+<div class="overlay" data-modal="demo" role="dialog" aria-modal="true" aria-labelledby="demo-title">
+  <div class="modal" style="position:relative">
+    <button class="btn-icon btn-icon--sm modal-close" data-modal-close aria-label="Tutup">
+      <i data-icon="x" data-icon-size="18px"></i>
+    </button>
+    <div class="stack stack-250">
+      <span class="feature-icon"><i data-icon="info" data-icon-size="28px"></i></span>
+      <h2 class="t-h3" id="demo-title">Modal · Figma: Modal/Base</h2>
+      <p class="t-body t-muted">
+        Radius <code>2xl</code> (32px), padding <code>space/500</code> (40px), shadow
+        <code>xl</code>. Overlay <code>navy/900</code> opasitas 55% + blur 6px. Lebar maksimal
+        460px, varian lebar 680px.
+      </p>
+      <div class="row row-100">
+        <button class="btn btn--primary" data-modal-close>Mengerti</button>
+        <button class="btn btn--ghost" data-modal-close>Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div data-slot="footer"></div>
+<div data-slot="protobar"></div>
+
+<script src="assets/js/scenes.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+/* Galeri ikon dibangun dari sumber yang sama dengan komponen — nggak bisa basi */
+document.addEventListener('DOMContentLoaded', () => {
+  const names = ['search','pin','calendar','users','star','heart','heartFill','share','clock',
+    'chevR','chevL','chevD','arrowR','plus','check','x','menu','sparkle','compass','route',
+    'wallet','filter','grip','car','plane','food','bed','camera','shield','globe','download',
+    'edit','trash','offline','sun','info','chat','logo'];
+
+  document.getElementById('icon-gallery').innerHTML = names.map((n) => `
+    <div style="display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px;
+                border:1px solid var(--border-subtle);border-radius:var(--radius-md);background:var(--cloud-100)">
+      <span style="color:var(--ocean-600);display:inline-flex">${Kelana.icon(n).replace('<svg', '<svg style="width:24px;height:24px"')}</span>
+      <span style="font-size:10px;color:var(--text-tertiary);text-align:center;word-break:break-word">${n}</span>
+    </div>`).join('');
+});
+</script>
+</body>
+</html>

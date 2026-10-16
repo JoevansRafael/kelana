@@ -1,0 +1,269 @@
+/* ==========================================================================
+   KELANA — DESIGN TOKENS
+   Keliling Nusantara · platform perjalanan Indonesia
+
+   Satu sumber kebenaran untuk warna, tipografi, spacing, dan elevasi.
+   Mirror 1:1 dengan Figma Variables (lihat tokens/kelana.tokens.json).
+
+   Naming di Figma: color/ocean/500, color/kelana-blue/500, text/h1, space/400
+   ========================================================================== */
+
+:root {
+  /* ======================================================================
+     1. PALET RESMI KELANA
+     Dua belas warna brand. Semua token lain di bawah diturunkan dari sini —
+     ubah di sini, seluruh situs ikut berubah.
+     ====================================================================== */
+  --kelana-blue:           #35A8FF;  /* Ocean Blue — interaksi utama */
+  --kelana-blue-secondary: #4087C4;  /* Kelana Blue — biru tenang & profesional */
+  --kelana-orange:         #FF6B24;  /* Sunset Orange — aksen brand */
+  --kelana-navy:           #0F172A;  /* Midnight Navy — teks utama */
+  --kelana-white:          #FFFFFF;  /* Pure White — permukaan konten */
+  --kelana-cloud:          #F8FAFC;  /* Cloud White — latar halaman */
+  --kelana-ice-blue:       #EAF5FF;  /* Ice Blue — panel & kartu terpilih */
+  --kelana-text-secondary: #64748B;  /* Slate Gray — deskripsi & metadata */
+  --kelana-border:         #E2E8F0;  /* Border & pemisah */
+  --kelana-success:        #16A34A;
+  --kelana-warning:        #F59E0B;
+  --kelana-error:          #DC2626;
+
+  /* ======================================================================
+     2. TANGGA WARNA (diturunkan dari palet resmi)
+     Tangga 50–900 dipertahankan supaya tiap komponen punya pilihan
+     terang/gelap untuk state hover, selected, dan disabled.
+     ====================================================================== */
+
+  /* Ocean — biru utama. Langit dan laut Nusantara. */
+  --ocean-50:  #EAF5FF;  /* = Ice Blue */
+  --ocean-100: #D3EBFF;
+  --ocean-200: #ABD9FF;
+  --ocean-300: #7FC6FF;
+  --ocean-400: #55B5FF;
+  --ocean-500: #35A8FF;  /* ★ Ocean Blue */
+  --ocean-600: #1E8FE6;  /* hover tombol primer */
+  --ocean-700: #1574BF;  /* teks biru yang aman dibaca (4,9:1 di putih) */
+  --ocean-800: #115A94;
+  --ocean-900: #0D4470;
+
+  /* Kelana Blue — biru sekunder. Lebih tenang, dipakai saat Ocean terlalu kuat. */
+  --kblue-50:  #EDF4FB;
+  --kblue-100: #D9E8F6;
+  --kblue-200: #B4CFEA;
+  --kblue-300: #8BB3DC;
+  --kblue-400: #629BCF;
+  --kblue-500: #4087C4;  /* ★ Kelana Blue */
+  --kblue-600: #336FA4;  /* hover tombol sekunder */
+  --kblue-700: #285884;
+  --kblue-800: #1E4263;
+  --kblue-900: #152F47;
+
+  /* Sunset Orange — aksen. Dipakai hemat, maksimal satu per layar. */
+  --orange-50:  #FFF2EC;
+  --orange-100: #FFE1D4;
+  --orange-200: #FFC1A5;
+  --orange-300: #FF9E76;
+  --orange-400: #FF854C;
+  --orange-500: #FF6B24;  /* ★ Sunset Orange */
+  --orange-600: #E65411;
+  --orange-700: #BC410A;
+
+  /* Netral sejuk — latar halaman dan permukaan */
+  --white:     #FFFFFF;
+  --cloud-100: #F8FAFC;  /* ★ Cloud White — latar halaman */
+  --cloud-200: #F1F5F9;  /* seksi alternatif */
+
+  /* Slate — border, pemisah, teks pendukung */
+  --slate-100: #E8EEF4;  /* border halus, isian terang */
+  --slate-200: #E2E8F0;  /* ★ border standar */
+  --slate-300: #CBD5E1;  /* border tegas */
+  --slate-400: #94A3B8;  /* teks tersier */
+  --slate-500: #64748B;  /* ★ Slate Gray — teks sekunder */
+
+  /* Navy — teks dan permukaan gelap */
+  --navy-500: #475569;
+  --navy-700: #1E293B;
+  --navy-900: #0F172A;  /* ★ Midnight Navy */
+
+  /* Semantik — hanya untuk umpan balik status */
+  --success-500: #16A34A;
+  --success-700: #15803D;  /* teks di atas success-50 */
+  --success-50:  #ECFDF3;
+  --success-100: #C8EED8;  /* border kartu sukses */
+  --warning-500: #F59E0B;
+  --warning-700: #A16207;  /* teks di atas warning-50 */
+  --warning-50:  #FFF8EB;
+  --warning-100: #FBE3B6;  /* border kartu peringatan */
+  --error-500:   #DC2626;
+  --error-50:    #FEF2F2;
+  --info-500:    #2563EB;
+  --info-50:     #EFF6FF;
+
+  /* ======================================================================
+     3. ALIAS SEMANTIK
+     Komponen memakai alias ini, bukan tangga warna langsung — supaya peran
+     warna jelas dan penggantian tema cukup di satu tempat.
+     ====================================================================== */
+
+  /* Latar */
+  --bg-canvas:      var(--cloud-100);  /* latar halaman */
+  --bg-surface:     var(--white);      /* kartu, navbar, modal */
+  --bg-surface-alt: var(--cloud-200);  /* seksi selang-seling */
+  --bg-inverse:     var(--navy-900);   /* seksi gelap, footer */
+  --bg-ice:         var(--ocean-50);   /* panel pencarian, kartu terpilih */
+  --bg-brand:       var(--ocean-500);
+  --bg-brand-soft:  var(--ocean-50);
+  --bg-brand-alt:   var(--kblue-500);
+  --bg-accent:      var(--orange-500);
+  --bg-accent-soft: var(--orange-50);
+
+  /* Teks */
+  --text-primary:    var(--navy-900);   /* 17,4:1 di putih */
+  --text-secondary:  var(--slate-500);  /*  4,8:1 di putih */
+  --text-tertiary:   var(--slate-400);
+  --text-on-brand:   var(--white);
+  --text-brand:      var(--ocean-700);  /* biru untuk teks & tautan — 4,9:1 */
+  --text-brand-alt:  var(--kblue-600);  /* biru sekunder untuk teks — 5,2:1 */
+  --text-accent:     var(--orange-600); /* oranye untuk teks — 4,6:1 */
+
+  /* Border */
+  --border-subtle:  var(--slate-100);
+  --border-default: var(--slate-200);
+  --border-strong:  var(--slate-300);
+  --border-brand:   var(--ocean-500);
+  --border-brand-alt: var(--kblue-500);
+
+  /* Kontrol & tombol */
+  --control-bg:           var(--white);
+  --control-border:       var(--slate-200);
+  --control-border-focus: var(--ocean-500);
+  --control-bg-selected:  var(--ocean-50);
+  --control-accent:       var(--kblue-500);
+
+  /* Tombol primer.
+     CATATAN AKSESIBILITAS: teks putih di atas Ocean Blue (#35A8FF) terukur
+     2,56:1 — di bawah ambang WCAG AA 4,5:1 untuk teks 14px bold. Warna ini
+     dipakai sesuai ketentuan brand. Kalau kepatuhan WCAG diperlukan, ganti
+     --btn-primary-bg ke var(--ocean-700) (#1574BF) yang terukur 4,9:1
+     tanpa mengubah apa pun yang lain. */
+  --btn-primary-bg:       var(--ocean-500);
+  --btn-primary-bg-hover: var(--ocean-600);
+  --btn-primary-text:     var(--white);
+
+  --btn-secondary-text:   var(--kblue-500);
+  --btn-secondary-border: var(--kblue-500);
+  --btn-secondary-bg-hover: var(--ocean-50);
+
+  --btn-accent-bg:        var(--orange-500);
+  --btn-accent-bg-hover:  var(--orange-600);
+
+  /* Fokus — indikator harus selalu terlihat jelas */
+  --focus-ring:   var(--ocean-500);
+  --focus-shadow: 0 0 0 4px var(--ocean-100);
+
+  /* Disabled — netral, jelas beda dari kontrol aktif */
+  --disabled-bg:     var(--cloud-200);
+  --disabled-text:   var(--slate-400);
+  --disabled-border: var(--slate-200);
+
+  /* Permukaan peta. Netral biru muda supaya pin dan garis rute tetap kontras,
+     tanpa menambah warna di luar keluarga palet. */
+  --map-surface: #DCEAF7;
+  --map-land:    #C3DAEE;
+  --map-island:  #A7C8E4;
+  --map-route:   var(--ocean-500);
+
+  /* ---------- TYPOGRAPHY ---------- */
+  /* Plus Jakarta Sans — dirancang Tokotype di Jakarta. Brand Indonesia
+     memakai typeface Indonesia. */
+  --font-sans: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+
+  --fs-display: 60px;  --lh-display: 64px;
+  --fs-h1: 48px;       --lh-h1: 56px;
+  --fs-h2: 36px;       --lh-h2: 44px;
+  --fs-h3: 28px;       --lh-h3: 36px;
+  --fs-h4: 22px;       --lh-h4: 30px;
+  --fs-h5: 18px;       --lh-h5: 26px;
+  --fs-body-lg: 18px;  --lh-body-lg: 28px;
+  --fs-body: 16px;     --lh-body: 26px;
+  --fs-body-sm: 14px;  --lh-body-sm: 22px;
+  --fs-caption: 12px;  --lh-caption: 18px;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+
+  /* ---------- SPACING (skala 4pt) ---------- */
+  --space-25:  2px;
+  --space-50:  4px;
+  --space-100: 8px;
+  --space-150: 12px;
+  --space-200: 16px;
+  --space-250: 20px;
+  --space-300: 24px;
+  --space-400: 32px;
+  --space-500: 40px;
+  --space-600: 48px;
+  --space-800: 64px;
+  --space-1000: 80px;
+  --space-1200: 96px;
+  --space-1600: 128px;
+
+  /* ---------- RADIUS ---------- */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 999px;
+
+  /* ---------- ELEVASI ----------
+     Shadow di-tint Midnight Navy, bukan hitam netral, supaya menyatu dengan
+     latar Cloud White. Sengaja dibuat halus — kedalaman utama datang dari
+     border, bukan bayangan. */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.07);
+  --shadow-lg: 0 10px 24px rgba(15, 23, 42, 0.08);
+  --shadow-xl: 0 20px 44px rgba(15, 23, 42, 0.12);
+  --shadow-brand:  0 4px 12px rgba(53, 168, 255, 0.24);
+  --shadow-accent: 0 4px 12px rgba(255, 107, 36, 0.24);
+
+  /* ---------- LAYOUT ---------- */
+  --container-max: 1280px;
+  --container-pad: 40px;
+  --nav-height: 76px;
+
+  /* ---------- MOTION ---------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur-base: 240ms;
+  --dur-slow: 420ms;
+
+  /* ---------- Z-INDEX ---------- */
+  --z-nav: 100;
+  --z-sticky: 50;
+  --z-overlay: 500;
+  --z-modal: 600;
+  --z-toast: 700;
+}
+
+/* Breakpoint overrides: padding container mengikuti spesifikasi grid */
+@media (max-width: 1024px) {
+  :root { --container-pad: 32px; }
+}
+@media (max-width: 640px) {
+  :root {
+    --container-pad: 20px;
+    --fs-display: 36px; --lh-display: 42px;
+    --fs-h1: 32px;      --lh-h1: 40px;
+    --fs-h2: 26px;      --lh-h2: 34px;
+    --fs-h3: 22px;      --lh-h3: 30px;
+    --fs-h4: 19px;      --lh-h4: 27px;
+    --nav-height: 64px;
+  }
+}
