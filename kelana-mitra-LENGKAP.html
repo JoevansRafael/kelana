@@ -1609,6 +1609,24 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
 }
 
 /* ===== PAGE STYLES ===== */
+/* ===== mitra-login.html ===== */
+/* Figma: Desktop/Mitra 00 Login */
+  .login-wrap { display: grid; grid-template-columns: 1.05fr 1fr; min-height: 100vh; }
+  .login-brand {
+    position: relative; overflow: hidden; color: var(--white);
+    background: linear-gradient(150deg, var(--kblue-600), var(--navy-900));
+    padding: var(--space-800) var(--space-600);
+    display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-600);
+  }
+  .login-brand-bg { position: absolute; inset: 0; opacity: .22; }
+  .login-brand > * { position: relative; z-index: 1; }
+  .login-panel { display: grid; place-items: center; padding: var(--space-500); position: relative; background: var(--bg-canvas); }
+  .login-card { width: 100%; max-width: 400px; }
+  .login-top { position: absolute; top: var(--space-300); right: var(--space-400); }
+  @media (max-width: 860px) {
+    .login-wrap { grid-template-columns: 1fr; }
+    .login-brand { display: none; }
+  }
 /* ===== mitra-daftar.html ===== */
 /* Figma: Desktop/Mitra 02 Daftar */
   .wizard { max-width: 760px; margin-inline: auto; }
@@ -1998,6 +2016,100 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
 </main>
 
 <div data-slot="partner-footer"></div>
+</section>
+<section class="kframe" data-frame="mitra-login" hidden aria-label="Masuk">
+<main class="login-wrap">
+
+  <!-- Panel brand (kiri) -->
+  <section class="login-brand">
+    <div class="login-brand-bg"><div data-scene="ocean" style="width:100%;height:100%"></div></div>
+
+    <a class="logo" href="mitra.html" aria-label="Kelana Mitra">
+      <span class="logo-mark logo-mark--mitra"><i data-icon="logo" data-icon-size="22px"></i></span>
+      <span class="logo-type" style="color:var(--white)">kelana<em>.</em></span>
+      <span class="logo-chip-mitra">Mitra</span>
+    </a>
+
+    <div class="stack stack-300" style="max-width:420px">
+      <h1 class="t-h1 t-balance" style="color:var(--white)">Satu dashboard untuk semua tamumu</h1>
+      <div class="stack stack-200">
+        <span class="row row-100 t-body-lg" style="color:rgba(255,255,255,.92)"><i data-icon="calendar"></i> Kelola booking &amp; ketersediaan</span>
+        <span class="row row-100 t-body-lg" style="color:rgba(255,255,255,.92)"><i data-icon="wallet"></i> Pantau pendapatan, cair H+2</span>
+        <span class="row row-100 t-body-lg" style="color:rgba(255,255,255,.92)"><i data-icon="star"></i> Bangun reputasi lewat ulasan</span>
+      </div>
+    </div>
+
+    <div class="row row-100">
+      <div class="avatar-stack" aria-hidden="true">
+        <span class="avatar avatar--sm">YN</span>
+        <span class="avatar avatar--sm avatar--c2">KA</span>
+        <span class="avatar avatar--sm avatar--c3">SH</span>
+      </div>
+      <span class="t-body-sm" style="color:rgba(255,255,255,.82)">Bergabung dengan 3.200+ mitra</span>
+    </div>
+  </section>
+
+  <!-- Panel form (kanan) -->
+  <section class="login-panel">
+    <a class="btn btn--ghost btn--sm login-top" href="index.html">
+      <i data-icon="globe"></i> Ke sisi wisatawan
+    </a>
+
+    <div class="login-card">
+      <div class="stack stack-300">
+        <div class="stack stack-150">
+          <a class="logo" href="mitra.html" aria-label="Kelana Mitra">
+            <span class="logo-mark logo-mark--mitra"><i data-icon="logo" data-icon-size="22px"></i></span>
+            <span class="logo-type">kelana<em>.</em></span>
+            <span class="logo-chip-mitra">Mitra</span>
+          </a>
+          <div class="stack" style="gap:2px">
+            <h2 class="t-h3">Masuk ke dashboard</h2>
+            <p class="t-body-sm t-muted">Selamat datang kembali. Kelola usahamu di satu tempat.</p>
+          </div>
+        </div>
+
+        <button class="btn btn--secondary btn--block btn--lg" data-toast="Demo prototype — OAuth belum disambungkan" data-toast-icon="info">
+          <i data-icon="globe"></i> Masuk dengan Google
+        </button>
+
+        <div class="row row-100">
+          <hr class="divider" style="flex:1"><span class="t-caption t-subtle">atau</span><hr class="divider" style="flex:1">
+        </div>
+
+        <!-- Navigasi lewat anchor tersembunyi agar jalan di versi multi-halaman
+             (navigasi file) maupun di bundel satu-file (router cegat klik). -->
+        <a id="go-dash" href="mitra-dashboard.html" hidden aria-hidden="true"></a>
+        <form class="stack stack-200" onsubmit="event.preventDefault(); Kelana.toast('Berhasil masuk — membuka dashboard','check'); setTimeout(function(){document.getElementById('go-dash').click()}, 500)">
+          <label class="field">
+            <span class="field-label">Email</span>
+            <input class="input" type="email" placeholder="nama@usaha.com" value="yanto@komodosail.id" required>
+          </label>
+          <label class="field">
+            <div class="row row-between">
+              <span class="field-label">Kata sandi</span>
+              <a class="t-caption" style="color:var(--text-brand);font-weight:var(--fw-bold);cursor:pointer"
+                 onclick="Kelana.toast('Tautan reset dikirim ke emailmu','info')">Lupa sandi?</a>
+            </div>
+            <input class="input" type="password" placeholder="Kata sandi" value="demo1234" required>
+          </label>
+          <label class="check">
+            <input type="checkbox" checked>
+            <span class="check-box"><i data-icon="check"></i></span>
+            <span class="t-body-sm">Ingat saya di perangkat ini</span>
+          </label>
+          <button class="btn btn--primary btn--block btn--lg" type="submit">Masuk</button>
+        </form>
+
+        <p class="t-body-sm t-muted t-center">
+          Belum punya akun?
+          <a href="mitra-daftar.html" style="color:var(--text-brand);font-weight:var(--fw-bold)">Daftar jadi mitra</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
 </section>
 <section class="kframe" data-frame="mitra-daftar" hidden aria-label="Daftar">
 <div data-slot="partner-navbar"></div>
@@ -2484,6 +2596,7 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
 <nav class="proto-bar" aria-label="Navigasi frame mitra">
   <span class="proto-bar-label">Mitra</span>
   <a href="mitra.html" class="is-active">Beranda Mitra</a>
+  <a href="mitra-login.html">Masuk</a>
   <a href="mitra-daftar.html">Daftar</a>
   <a href="mitra-dashboard.html">Dashboard</a>
   <a href="index.html" style="opacity:.6">↗ Sisi wisatawan</a>
@@ -2893,6 +3006,8 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
     { href: 'itinerary.html',  label: 'Detail Trip' },
     { href: 'trips.html',      label: 'Trip Saya' },
     { href: 'booking.html',    label: 'Booking' },
+    { href: 'checkout.html',       label: 'Checkout' },
+    { href: 'mitra-login.html',    label: 'Mitra · Login' },
     { href: 'mitra.html',          label: 'Mitra' },
     { href: 'mitra-daftar.html',   label: 'Mitra · Daftar' },
     { href: 'mitra-dashboard.html',label: 'Mitra · Dashboard' },
@@ -2902,7 +3017,7 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
 
   /* Halaman sisi mitra memakai shell sendiri (navbar & footer berbeda dari
      sisi wisatawan). Dikenali dari prefix nama file. */
-  const PARTNER_PAGES = ['mitra.html', 'mitra-daftar.html', 'mitra-dashboard.html'];
+  const PARTNER_PAGES = ['mitra.html', 'mitra-login.html', 'mitra-daftar.html', 'mitra-dashboard.html'];
   function isPartnerPage() { return PARTNER_PAGES.indexOf(currentPage()) !== -1; }
 
   /* Navigasi utama — hanya 4 menu.
@@ -3008,6 +3123,7 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
             <i data-icon="menu" data-icon-size="20px"></i>
           </button>
           <a class="btn btn--ghost btn--sm hide-mobile" href="index.html">Ke sisi wisatawan</a>
+          <a class="btn btn--secondary btn--sm hide-mobile" href="mitra-login.html">Masuk</a>
           <a class="btn btn--primary btn--sm" href="mitra-daftar.html">Daftar jadi mitra</a>
         </div>
       </header>`;

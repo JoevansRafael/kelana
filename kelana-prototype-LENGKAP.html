@@ -1547,6 +1547,10 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
 }
 .dash-body { padding: var(--space-500); display: flex; flex-direction: column; gap: var(--space-400); }
 
+/* Split chart + panel: 2 kolom di desktop, menumpuk di bawah 760px */
+.dash-split { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--space-300); }
+@media (max-width: 760px) { .dash-split { grid-template-columns: 1fr; } }
+
 /* ---------- Grafik batang sederhana (Figma: Chart/Bars) ---------- */
 .chart { display: flex; align-items: flex-end; gap: var(--space-200); height: 180px; padding-top: var(--space-200); }
 .chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-100); height: 100%; justify-content: flex-end; }
@@ -1757,6 +1761,11 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
     border-radius: var(--radius-lg);
   }
   .booking-filter .select-wrap { flex: 1 1 170px; min-width: 0; }
+/* ===== dari checkout.html ===== */
+/* Figma: Desktop/09 Checkout */
+  .checkout-layout { display: grid; grid-template-columns: minmax(0,1fr) 380px; gap: var(--space-500); align-items: start; }
+  .checkout-side { position: sticky; top: calc(var(--nav-height) + var(--space-300)); }
+  @media (max-width: 1000px) { .checkout-layout { grid-template-columns: 1fr; } .checkout-side { position: static; } }
 /* ===== dari mobile.html ===== */
 /* ======================================================================
      Papan pamer frame mobile — 390 × 844 (iPhone 15 / Figma Mobile preset)
@@ -3681,10 +3690,9 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
                 <button class="btn btn--secondary" data-toast="Draf disimpan — bisa dilanjut nanti" data-toast-icon="download">
                   Simpan draf
                 </button>
-                <a class="btn btn--accent btn--lg" href="trips.html"
-                   onclick="sessionStorage.setItem('kelana-new-trip','1')">
+                <button class="btn btn--accent btn--lg" data-modal-open="trip-done">
                   <i data-icon="check"></i> Selesai &amp; simpan rencana
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -5485,6 +5493,118 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
 
 
 </section>
+<section class="kframe" data-frame="checkout" hidden aria-label="Checkout">
+
+  <section style="padding-block:var(--space-400) var(--space-300)">
+    <div class="container">
+      <!-- Breadcrumb alur -->
+      <nav class="row row-100 t-caption t-subtle" aria-label="Langkah" style="margin-bottom:var(--space-250)">
+        <a href="builder.html" style="color:var(--text-brand);font-weight:600">Susun itinerary</a>
+        <i data-icon="chevR" data-icon-size="12px"></i>
+        <a href="booking.html" style="color:var(--text-brand);font-weight:600">Pilih pemandu</a>
+        <i data-icon="chevR" data-icon-size="12px"></i>
+        <span style="color:var(--text-primary);font-weight:600">Konfirmasi &amp; bayar</span>
+      </nav>
+      <h1 class="t-h2">Tinggal satu langkah lagi</h1>
+      <p class="t-body t-muted" style="margin-top:var(--space-100)">Cek ringkasan tripmu sebelum bayar. Semua bisa diubah sebelum konfirmasi.</p>
+    </div>
+  </section>
+
+  <section style="padding-bottom:var(--space-1000)">
+    <div class="container">
+      <div class="checkout-layout">
+
+        <!-- Kiri: ringkasan -->
+        <div class="stack stack-400">
+
+          <!-- Itinerary -->
+          <div class="stack stack-200">
+            <h2 class="t-h4">Itinerary kamu</h2>
+            <article class="card" style="display:grid;grid-template-columns:120px 1fr;overflow:hidden">
+              <div style="position:relative;min-height:120px"><div data-scene="ocean" style="position:absolute;inset:0"></div></div>
+              <div class="stack stack-100" style="padding:var(--space-250)">
+                <div class="row row-wrap row-100">
+                  <span class="badge badge--brand"><i data-icon="sparkle"></i> Rencanamu</span>
+                  <span class="badge badge--neutral"><i data-icon="calendar"></i> 12–15 Nov 2026</span>
+                </div>
+                <strong class="t-body">Sailing Komodo: Padar, Pink Beach &amp; Manta Point</strong>
+                <span class="t-body-sm t-muted">4 hari 3 malam · 11 titik · 2 orang</span>
+                <a class="t-body-sm" href="builder.html" style="color:var(--text-brand);font-weight:var(--fw-bold)">Ubah rencana</a>
+              </div>
+            </article>
+          </div>
+
+          <!-- Pemandu (bisa dihapus) -->
+          <div class="stack stack-200" data-guide-block>
+            <div class="row row-between">
+              <h2 class="t-h4">Pemandu wisata</h2>
+              <span class="badge badge--success"><i data-icon="shield"></i> Terverifikasi</span>
+            </div>
+            <article class="card card--pad row" style="gap:var(--space-250);align-items:center">
+              <div class="service-thumb" style="width:64px;height:64px"><div data-scene="reef"></div></div>
+              <div class="stack" style="gap:2px;flex:1;min-width:0">
+                <strong class="t-body">Yanto Nugraha</strong>
+                <span class="t-caption t-muted">Labuan Bajo · 4,9 (284 trip) · 3 hari × Rp 650 rb</span>
+              </div>
+              <div class="stack" style="align-items:flex-end;gap:4px">
+                <strong class="t-body">Rp 1,95 jt</strong>
+                <button class="btn btn--ghost btn--sm" data-remove-guide><i data-icon="trash" data-icon-size="15px"></i> Hapus</button>
+              </div>
+            </article>
+          </div>
+
+          <!-- Yang termasuk -->
+          <div class="card card--pad stack stack-150">
+            <strong class="t-body">Yang sudah termasuk</strong>
+            <div class="grid grid-2" style="gap:var(--space-100)">
+              <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Kapal phinisi &amp; kru 3 malam</span>
+              <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Tiket taman nasional</span>
+              <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> 8 kali makan</span>
+              <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Pemandu lokal 3 hari</span>
+            </div>
+          </div>
+
+          <!-- Data pemesan -->
+          <div class="card card--pad stack stack-250">
+            <h2 class="t-h4">Data pemesan</h2>
+            <div class="grid grid-2" style="gap:var(--space-250)">
+              <label class="field"><span class="field-label">Nama lengkap</span><input class="input" value="Rizky Adiputra"></label>
+              <label class="field"><span class="field-label">Nomor WhatsApp</span><input class="input" value="0812 3456 7890"></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kanan: rincian biaya -->
+        <aside class="checkout-side">
+          <div class="card card--pad stack stack-250" style="box-shadow:var(--shadow-md)">
+            <h2 class="t-h5">Rincian biaya</h2>
+            <div class="stack stack-100">
+              <div class="row row-between t-body-sm"><span class="t-muted">Itinerary · 2 orang</span><span>Rp 9.700.000</span></div>
+              <div class="row row-between t-body-sm" data-guide-row><span class="t-muted">Pemandu · 3 hari</span><span>Rp 1.950.000</span></div>
+              <div class="row row-between t-body-sm"><span class="t-muted">Biaya layanan Kelana</span><span>Rp 145.000</span></div>
+            </div>
+            <hr class="divider">
+            <div class="row row-between">
+              <strong class="t-body">Total</strong>
+              <strong class="t-h4" data-total>Rp 11.795.000</strong>
+            </div>
+            <div class="card card--pad stack stack-100" style="background:var(--bg-ice);border-color:var(--ocean-100)">
+              <span class="row row-100 t-body-sm"><i data-icon="shield" style="color:var(--text-brand)"></i> <strong>Gratis batal sampai 7 hari sebelum berangkat</strong></span>
+              <span class="t-caption t-muted">Pembayaran ditahan Kelana &amp; baru diteruskan ke mitra setelah trip selesai.</span>
+            </div>
+            <a class="btn btn--accent btn--lg btn--block" href="trips.html"
+               onclick="sessionStorage.setItem('kelana-new-trip','1')">
+              <i data-icon="check"></i> Konfirmasi &amp; bayar
+            </a>
+            <p class="t-caption t-subtle t-center">Dengan melanjutkan, kamu setuju pada Syarat &amp; Kebijakan Kelana.</p>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+</section>
 <section class="kframe" data-frame="mobile" hidden aria-label="Mobile">
 
   <div class="board-intro">
@@ -6865,6 +6985,45 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
     </div>
   </div>
 </div>
+<div class="overlay" data-modal="trip-done" role="dialog" aria-modal="true" aria-labelledby="done-title">
+  <div class="modal" style="position:relative">
+    <button class="btn-icon btn-icon--sm modal-close" data-modal-close aria-label="Tutup">
+      <i data-icon="x" data-icon-size="18px"></i>
+    </button>
+    <div class="stack stack-300">
+      <div class="stack stack-100" style="align-items:center;text-align:center">
+        <span class="dropzone-icon is-done" style="width:60px;height:60px;background:var(--success-100);color:var(--success-700)">
+          <i data-icon="check" data-icon-size="28px"></i>
+        </span>
+        <h2 class="t-h3" id="done-title">Rencana 4 hari kamu tersimpan</h2>
+        <p class="t-body-sm t-muted" style="max-width:380px">
+          Mau ditemani pemandu lokal terverifikasi? Mereka tahu jam terbaik tiap titik dan
+          bisa atur ulang rencanamu kalau cuaca berubah.
+        </p>
+      </div>
+
+      <!-- Kartu pemandu yang disarankan untuk rute ini -->
+      <div class="card card--pad row" style="gap:var(--space-200);align-items:center;background:var(--bg-ice);border-color:var(--ocean-100)">
+        <div class="service-thumb"><div data-scene="ocean"></div></div>
+        <div class="stack" style="gap:2px;flex:1;min-width:0">
+          <strong class="t-body-sm">Yanto Nugraha</strong>
+          <span class="t-caption t-muted">Pemandu Labuan Bajo · 4,9 · dari Rp 650 rb/hari</span>
+        </div>
+        <span class="badge badge--brand">Cocok rute</span>
+      </div>
+
+      <div class="stack stack-100">
+        <a class="btn btn--primary btn--block btn--lg" href="booking.html">
+          <i data-icon="users"></i> Pilih pemandu wisata
+        </a>
+        <a class="btn btn--ghost btn--block" href="trips.html"
+           onclick="sessionStorage.setItem('kelana-new-trip','1')">
+          Nanti saja, simpan dulu
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="overlay" data-modal="guide" role="dialog" aria-modal="true" aria-labelledby="guide-title">
   <div class="modal modal--wide" style="position:relative">
     <button class="btn-icon btn-icon--sm modal-close" data-modal-close aria-label="Tutup">
@@ -6951,10 +7110,9 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
           <button class="btn btn--secondary" data-toast="Chat dibuka dengan Yanto" data-toast-icon="chat">
             <i data-icon="chat"></i> Tanya dulu
           </button>
-          <button class="btn btn--accent btn--lg" data-modal-close
-                  onclick="Kelana.toast('Permintaan booking dikirim ke Yanto — tunggu konfirmasi','check')">
-            Booking pemandu
-          </button>
+          <a class="btn btn--accent btn--lg" href="checkout.html">
+            Tambahkan ke trip
+          </a>
         </div>
       </div>
     </div>
@@ -7050,6 +7208,7 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
   <a href="itinerary.html">Detail Trip</a>
   <a href="trips.html">Trip Saya</a>
   <a href="booking.html">Booking</a>
+  <a href="checkout.html">Checkout</a>
   <a href="mobile.html">Mobile</a>
   <a href="styleguide.html">Design System</a>
 </nav>
@@ -7458,6 +7617,8 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
     { href: 'itinerary.html',  label: 'Detail Trip' },
     { href: 'trips.html',      label: 'Trip Saya' },
     { href: 'booking.html',    label: 'Booking' },
+    { href: 'checkout.html',       label: 'Checkout' },
+    { href: 'mitra-login.html',    label: 'Mitra · Login' },
     { href: 'mitra.html',          label: 'Mitra' },
     { href: 'mitra-daftar.html',   label: 'Mitra · Daftar' },
     { href: 'mitra-dashboard.html',label: 'Mitra · Dashboard' },
@@ -7467,7 +7628,7 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
 
   /* Halaman sisi mitra memakai shell sendiri (navbar & footer berbeda dari
      sisi wisatawan). Dikenali dari prefix nama file. */
-  const PARTNER_PAGES = ['mitra.html', 'mitra-daftar.html', 'mitra-dashboard.html'];
+  const PARTNER_PAGES = ['mitra.html', 'mitra-login.html', 'mitra-daftar.html', 'mitra-dashboard.html'];
   function isPartnerPage() { return PARTNER_PAGES.indexOf(currentPage()) !== -1; }
 
   /* Navigasi utama — hanya 4 menu.
@@ -7573,6 +7734,7 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
             <i data-icon="menu" data-icon-size="20px"></i>
           </button>
           <a class="btn btn--ghost btn--sm hide-mobile" href="index.html">Ke sisi wisatawan</a>
+          <a class="btn btn--secondary btn--sm hide-mobile" href="mitra-login.html">Masuk</a>
           <a class="btn btn--primary btn--sm" href="mitra-daftar.html">Daftar jadi mitra</a>
         </div>
       </header>`;
@@ -7875,6 +8037,20 @@ select.input { appearance: none; cursor: pointer; padding-right: var(--space-500
       setTimeout(() => Kelana.toast('Rencana disimpan ke Trip Saya', 'check'), 500);
     }
   });
+/* ===== script dari checkout.html ===== */
+/* Hapus pemandu -> perbarui rincian & total */
+(function () {
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('[data-remove-guide]')) return;
+    var block = document.querySelector('[data-guide-block]');
+    var row = document.querySelector('[data-guide-row]');
+    var total = document.querySelector('[data-total]');
+    if (block) block.remove();
+    if (row) row.remove();
+    if (total) total.textContent = 'Rp 9.845.000';
+    Kelana.toast('Pemandu dihapus dari trip', 'info');
+  });
+})();
 /* ===== script dari styleguide.html ===== */
 /* Galeri ikon dibangun dari sumber yang sama dengan komponen — nggak bisa basi */
 document.addEventListener('DOMContentLoaded', () => {

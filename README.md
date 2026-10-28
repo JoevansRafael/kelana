@@ -46,11 +46,16 @@ Di kanan bawah ada **bar navigasi frame** untuk melompat antar halaman. Yang bis
 | `builder.html` | **Alur 3 langkah + drag-and-drop day planner** ← fitur andalan |
 | `trips.html` | Tab status trip, lanjutkan draf |
 | `booking.html` | **Pemandu wisata + open trip patungan** · tier harga, modal gabung |
+| `checkout.html` | **Konfirmasi trip** — itinerary + pemandu + rincian biaya |
 | `mobile.html` | 4 frame mobile dalam device mockup |
 | `styleguide.html` | Design system lengkap: warna, tipografi, semua komponen |
 | `mitra.html` | **Sisi mitra** — landing "Jadi Mitra Kelana" (UMKM/tour guide) |
+| `mitra-login.html` | **Sisi mitra** — login (email/Google) ke dashboard |
 | `mitra-daftar.html` | **Sisi mitra** — wizard pendaftaran 4 langkah + status verifikasi |
 | `mitra-dashboard.html` | **Sisi mitra** — dashboard: booking masuk, layanan, pendapatan |
+
+Alur ujung-ke-ujung (login mitra, dan susun itinerary → tambah pemandu → checkout)
+didokumentasikan di [`docs/03-user-flows.md`](docs/03-user-flows.md).
 
 > **Coba ini saat demo:** buka frame **Builder** → klik sampai langkah 3 → **tarik kartu
 > aktivitas** untuk menukar urutan. Jam tiap aktivitas langsung dihitung ulang. Ini bagian
@@ -136,7 +141,9 @@ kelana/
     ├── itinerary.html ............... Detail trip                    (anak Jelajah)
     ├── trips.html ................... Trip Saya
     ├── booking.html ................. Booking — pemandu + open trip patungan
+    ├── checkout.html ................ Konfirmasi trip (itinerary + pemandu)
     ├── mitra.html ................... Sisi mitra — landing "Jadi Mitra"
+    ├── mitra-login.html ............. Sisi mitra — login
     ├── mitra-daftar.html ............ Sisi mitra — wizard pendaftaran
     ├── mitra-dashboard.html ......... Sisi mitra — dashboard pengelolaan
     ├── mobile.html .................. 4 frame mobile 390×844

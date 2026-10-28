@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Konfirmasi Trip — Kelana</title>
+<meta name="description" content="Ringkasan itinerary dan pemandu sebelum konfirmasi: rincian biaya, kebijakan batal, dan pembayaran.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  /* Figma: Desktop/09 Checkout */
+  .checkout-layout { display: grid; grid-template-columns: minmax(0,1fr) 380px; gap: var(--space-500); align-items: start; }
+  .checkout-side { position: sticky; top: calc(var(--nav-height) + var(--space-300)); }
+  @media (max-width: 1000px) { .checkout-layout { grid-template-columns: 1fr; } .checkout-side { position: static; } }
+</style>
+</head>
+<body>
+
+<div data-slot="navbar"></div>
+
+<main>
+  <section style="padding-block:var(--space-400) var(--space-300)">
+    <div class="container">
+      <!-- Breadcrumb alur -->
+      <nav class="row row-100 t-caption t-subtle" aria-label="Langkah" style="margin-bottom:var(--space-250)">
+        <a href="builder.html" style="color:var(--text-brand);font-weight:600">Susun itinerary</a>
+        <i data-icon="chevR" data-icon-size="12px"></i>
+        <a href="booking.html" style="color:var(--text-brand);font-weight:600">Pilih pemandu</a>
+        <i data-icon="chevR" data-icon-size="12px"></i>
+        <span style="color:var(--text-primary);font-weight:600">Konfirmasi &amp; bayar</span>
+      </nav>
+      <h1 class="t-h2">Tinggal satu langkah lagi</h1>
+      <p class="t-body t-muted" style="margin-top:var(--space-100)">Cek ringkasan tripmu sebelum bayar. Semua bisa diubah sebelum konfirmasi.</p>
+    </div>
+  </section>
+
+  <section style="padding-bottom:var(--space-1000)">
+    <div class="container">
+      <div class="checkout-layout">
+
+        <!-- Kiri: ringkasan -->
+        <div class="stack stack-400">
+
+          <!-- Itinerary -->
+          <div class="stack stack-200">
+            <h2 class="t-h4">Itinerary kamu</h2>
+            <article class="card" style="display:grid;grid-template-columns:120px 1fr;overflow:hidden">
+              <div style="position:relative;min-height:120px"><div data-scene="ocean" style="position:absolute;inset:0"></div></div>
+              <div class="stack stack-100" style="padding:var(--space-250)">
+                <div class="row row-wrap row-100">
+                  <span class="badge badge--brand"><i data-icon="sparkle"></i> Rencanamu</span>
+                  <span class="badge badge--neutral"><i data-icon="calendar"></i> 12–15 Nov 2026</span>
+                </div>
+                <strong class="t-body">Sailing Komodo: Padar, Pink Beach &amp; Manta Point</strong>
+                <span class="t-body-sm t-muted">4 hari 3 malam · 11 titik · 2 orang</span>
+                <a class="t-body-sm" href="builder.html" style="color:var(--text-brand);font-weight:var(--fw-bold)">Ubah rencana</a>
+              </div>
+            </article>
+          </div>
+
+          <!-- Pemandu (bisa dihapus) -->
+          <div class="stack stack-200" data-guide-block>
+            <div class="row row-between">
+              <h2 class="t-h4">Pemandu wisata</h2>
+              <span class="badge badge--success"><i data-icon="shield"></i> Terverifikasi</span>
+            </div>
+            <article class="card card--pad row" style="gap:var(--space-250);align-items:center">
+              <div class="service-thumb" style="width:64px;height:64px"><div data-scene="reef"></div></div>
+              <div class="stack" style="gap:2px;flex:1;min-width:0">
+                <strong class="t-body">Yanto Nugraha</strong>
+                <span class="t-caption t-muted">Labuan Bajo · 4,9 (284 trip) · 3 hari × Rp 650 rb</span>
+              </div>
+              <div class="stack" style="align-items:flex-end;gap:4px">
+                <strong class="t-body">Rp 1,95 jt</strong>
+                <button class="btn btn--ghost btn--sm" data-remove-guide><i data-icon="trash" data-icon-size="15px"></i> Hapus</button>
+              </div>
+            </article>
+          </div>
+
+          <!-- Yang termasuk -->
+          <div class="card card--pad stack stack-150">
+            <strong class="t-body">Yang sudah termasuk</strong>
+            <div class="grid grid-2" style="gap:var(--space-100)">
+              <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Kapal phinisi &amp; kru 3 malam</span>
+              <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Tiket taman nasional</span>
+              <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> 8 kali makan</span>
+              <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Pemandu lokal 3 hari</span>
+            </div>
+          </div>
+
+          <!-- Data pemesan -->
+          <div class="card card--pad stack stack-250">
+            <h2 class="t-h4">Data pemesan</h2>
+            <div class="grid grid-2" style="gap:var(--space-250)">
+              <label class="field"><span class="field-label">Nama lengkap</span><input class="input" value="Rizky Adiputra"></label>
+              <label class="field"><span class="field-label">Nomor WhatsApp</span><input class="input" value="0812 3456 7890"></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kanan: rincian biaya -->
+        <aside class="checkout-side">
+          <div class="card card--pad stack stack-250" style="box-shadow:var(--shadow-md)">
+            <h2 class="t-h5">Rincian biaya</h2>
+            <div class="stack stack-100">
+              <div class="row row-between t-body-sm"><span class="t-muted">Itinerary · 2 orang</span><span>Rp 9.700.000</span></div>
+              <div class="row row-between t-body-sm" data-guide-row><span class="t-muted">Pemandu · 3 hari</span><span>Rp 1.950.000</span></div>
+              <div class="row row-between t-body-sm"><span class="t-muted">Biaya layanan Kelana</span><span>Rp 145.000</span></div>
+            </div>
+            <hr class="divider">
+            <div class="row row-between">
+              <strong class="t-body">Total</strong>
+              <strong class="t-h4" data-total>Rp 11.795.000</strong>
+            </div>
+            <div class="card card--pad stack stack-100" style="background:var(--bg-ice);border-color:var(--ocean-100)">
+              <span class="row row-100 t-body-sm"><i data-icon="shield" style="color:var(--text-brand)"></i> <strong>Gratis batal sampai 7 hari sebelum berangkat</strong></span>
+              <span class="t-caption t-muted">Pembayaran ditahan Kelana &amp; baru diteruskan ke mitra setelah trip selesai.</span>
+            </div>
+            <a class="btn btn--accent btn--lg btn--block" href="trips.html"
+               onclick="sessionStorage.setItem('kelana-new-trip','1')">
+              <i data-icon="check"></i> Konfirmasi &amp; bayar
+            </a>
+            <p class="t-caption t-subtle t-center">Dengan melanjutkan, kamu setuju pada Syarat &amp; Kebijakan Kelana.</p>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<div data-slot="footer"></div>
+<div data-slot="protobar"></div>
+
+<script src="assets/js/scenes.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+/* Hapus pemandu -> perbarui rincian & total */
+(function () {
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('[data-remove-guide]')) return;
+    var block = document.querySelector('[data-guide-block]');
+    var row = document.querySelector('[data-guide-row]');
+    var total = document.querySelector('[data-total]');
+    if (block) block.remove();
+    if (row) row.remove();
+    if (total) total.textContent = 'Rp 9.845.000';
+    Kelana.toast('Pemandu dihapus dari trip', 'info');
+  });
+})();
+</script>
+</body>
+</html>

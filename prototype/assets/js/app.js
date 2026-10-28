@@ -76,6 +76,8 @@
     { href: 'itinerary.html',  label: 'Detail Trip' },
     { href: 'trips.html',      label: 'Trip Saya' },
     { href: 'booking.html',    label: 'Booking' },
+    { href: 'checkout.html',       label: 'Checkout' },
+    { href: 'mitra-login.html',    label: 'Mitra · Login' },
     { href: 'mitra.html',          label: 'Mitra' },
     { href: 'mitra-daftar.html',   label: 'Mitra · Daftar' },
     { href: 'mitra-dashboard.html',label: 'Mitra · Dashboard' },
@@ -85,7 +87,7 @@
 
   /* Halaman sisi mitra memakai shell sendiri (navbar & footer berbeda dari
      sisi wisatawan). Dikenali dari prefix nama file. */
-  const PARTNER_PAGES = ['mitra.html', 'mitra-daftar.html', 'mitra-dashboard.html'];
+  const PARTNER_PAGES = ['mitra.html', 'mitra-login.html', 'mitra-daftar.html', 'mitra-dashboard.html'];
   function isPartnerPage() { return PARTNER_PAGES.indexOf(currentPage()) !== -1; }
 
   /* Navigasi utama — hanya 4 menu.
@@ -191,6 +193,7 @@
             <i data-icon="menu" data-icon-size="20px"></i>
           </button>
           <a class="btn btn--ghost btn--sm hide-mobile" href="index.html">Ke sisi wisatawan</a>
+          <a class="btn btn--secondary btn--sm hide-mobile" href="mitra-login.html">Masuk</a>
           <a class="btn btn--primary btn--sm" href="mitra-daftar.html">Daftar jadi mitra</a>
         </div>
       </header>`;

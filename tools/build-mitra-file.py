@@ -22,6 +22,7 @@ OUT = os.path.join(ROOT, 'kelana-mitra-LENGKAP.html')
 
 PAGES = [
     ('mitra',           'Beranda Mitra'),
+    ('mitra-login',     'Masuk'),
     ('mitra-daftar',    'Daftar'),
     ('mitra-dashboard', 'Dashboard'),
 ]
