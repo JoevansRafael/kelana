@@ -76,9 +76,19 @@
     { href: 'itinerary.html',  label: 'Detail Trip' },
     { href: 'trips.html',      label: 'Trip Saya' },
     { href: 'booking.html',    label: 'Booking' },
+    { href: 'checkout.html',       label: 'Checkout' },
+    { href: 'mitra-login.html',    label: 'Mitra · Login' },
+    { href: 'mitra.html',          label: 'Mitra' },
+    { href: 'mitra-daftar.html',   label: 'Mitra · Daftar' },
+    { href: 'mitra-dashboard.html',label: 'Mitra · Dashboard' },
     { href: 'mobile.html',     label: 'Mobile' },
     { href: 'styleguide.html', label: 'Design System' }
   ];
+
+  /* Halaman sisi mitra memakai shell sendiri (navbar & footer berbeda dari
+     sisi wisatawan). Dikenali dari prefix nama file. */
+  const PARTNER_PAGES = ['mitra.html', 'mitra-login.html', 'mitra-daftar.html', 'mitra-dashboard.html'];
+  function isPartnerPage() { return PARTNER_PAGES.indexOf(currentPage()) !== -1; }
 
   /* Navigasi utama — hanya 4 menu.
      `match` menentukan menu mana yang menyala saat halaman anak dibuka:
@@ -143,11 +153,76 @@
             </div>
             ${col('Produk', [['Jelajah itinerary', 'explore.html'], ['Buat itinerary', 'builder.html'], ['Trip saya', 'trips.html'], ['Booking pemandu', 'booking.html'], ['Open trip patungan', 'booking.html']])}
             ${col('Destinasi', [['Labuan Bajo', 'explore.html'], ['Yogyakarta', 'explore.html'], ['Raja Ampat', 'explore.html'], ['Bali', 'explore.html']])}
-            ${col('Perusahaan', [['Tentang kami'], ['Karier'], ['Pusat bantuan'], ['Syarat & privasi']])}
+            ${col('Perusahaan', [['Tentang kami'], ['Jadi mitra Kelana', 'mitra.html'], ['Pusat bantuan'], ['Syarat & privasi']])}
           </div>
           <div class="footer-bottom">
             <span>© 2026 Kelana. Dibuat di Indonesia.</span>
             <span>Prototype v1.0 — design review internal</span>
+          </div>
+        </div>
+      </footer>`;
+  }
+
+  /* ---------- SHELL SISI MITRA ----------
+     Logo memakai sufiks "mitra", menu berbeda, dan CTA mengarah ke pendaftaran.
+     Dipakai di mitra.html & mitra-daftar.html (dashboard pakai sidebar sendiri). */
+  const LOGO_MITRA = `
+    <a class="logo" href="mitra.html" aria-label="Kelana Mitra — beranda">
+      <span class="logo-mark logo-mark--mitra">${icon('logo')}</span>
+      <span class="logo-type">kelana<em>.</em></span>
+      <span class="logo-chip-mitra">Mitra</span>
+    </a>`;
+
+  const PARTNER_NAV = [
+    { href: 'mitra.html#kenapa',   label: 'Kenapa Kelana' },
+    { href: 'mitra.html#tipe',     label: 'Tipe mitra' },
+    { href: 'mitra.html#cara',     label: 'Cara kerja' },
+    { href: 'mitra-dashboard.html',label: 'Lihat dashboard' }
+  ];
+
+  function partnerNavbarHTML() {
+    const links = PARTNER_NAV.map((l) =>
+      `<a class="nav-link" href="${l.href}">${l.label}</a>`).join('');
+    return `
+      <header class="navbar navbar--mitra">
+        <div class="container">
+          ${LOGO_MITRA}
+          <nav class="nav-links" aria-label="Navigasi mitra">${links}</nav>
+          <span class="spacer"></span>
+          <button class="btn-icon nav-toggle" data-toggle-nav aria-label="Buka menu">
+            <i data-icon="menu" data-icon-size="20px"></i>
+          </button>
+          <a class="btn btn--ghost btn--sm hide-mobile" href="index.html">Ke sisi wisatawan</a>
+          <a class="btn btn--secondary btn--sm hide-mobile" href="mitra-login.html">Masuk</a>
+          <a class="btn btn--primary btn--sm" href="mitra-daftar.html">Daftar jadi mitra</a>
+        </div>
+      </header>`;
+  }
+
+  function partnerFooterHTML() {
+    const col = (title, items) =>
+      `<div><h5>${title}</h5>${items.map((i) => `<a class="footer-link" href="${i[1] || '#'}">${i[0]}</a>`).join('')}</div>`;
+    return `
+      <footer class="footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div class="stack stack-200">
+              ${LOGO_MITRA}
+              <p class="t-body-sm" style="max-width:300px;color:rgba(226,232,240,.72)">
+                Jangkau ribuan wisatawan, kelola booking dari satu tempat, dan terima pembayaran
+                tepat waktu. Gratis didaftarkan.
+              </p>
+              <div class="row row-100" style="margin-top:4px">
+                <span class="badge badge--glass">${icon('shield')} Mitra terverifikasi</span>
+              </div>
+            </div>
+            ${col('Untuk mitra', [['Jadi mitra', 'mitra.html'], ['Daftar sekarang', 'mitra-daftar.html'], ['Dashboard', 'mitra-dashboard.html'], ['Pusat bantuan mitra']])}
+            ${col('Tipe mitra', [['Pemandu wisata', 'mitra-daftar.html'], ['UMKM lokal', 'mitra-daftar.html'], ['Operator open trip', 'mitra-daftar.html']])}
+            ${col('Perusahaan', [['Tentang Kelana', 'index.html'], ['Sisi wisatawan', 'index.html'], ['Syarat kemitraan'], ['Kebijakan privasi']])}
+          </div>
+          <div class="footer-bottom">
+            <span>© 2026 Kelana. Dibuat di Indonesia.</span>
+            <span>Prototype v1.0 — sisi mitra</span>
           </div>
         </div>
       </footer>`;
@@ -340,6 +415,8 @@
   function boot() {
     document.querySelectorAll('[data-slot="navbar"]').forEach((n) => (n.outerHTML = navbarHTML()));
     document.querySelectorAll('[data-slot="footer"]').forEach((n) => (n.outerHTML = footerHTML()));
+    document.querySelectorAll('[data-slot="partner-navbar"]').forEach((n) => (n.outerHTML = partnerNavbarHTML()));
+    document.querySelectorAll('[data-slot="partner-footer"]').forEach((n) => (n.outerHTML = partnerFooterHTML()));
     document.querySelectorAll('[data-slot="protobar"]').forEach((n) => (n.outerHTML = protoBarHTML()));
 
     mountIcons(document);

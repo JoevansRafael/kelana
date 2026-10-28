@@ -1,0 +1,3516 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kelana Mitra — Prototype Lengkap (UMKM / Tour Guide)</title>
+<meta name="description" content="Sisi mitra Kelana dalam satu file: landing jadi mitra, wizard pendaftaran, dan dashboard pengelolaan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== TOKENS ===== */
+/* ==========================================================================
+   KELANA — DESIGN TOKENS
+   Keliling Nusantara · platform perjalanan Indonesia
+
+   Satu sumber kebenaran untuk warna, tipografi, spacing, dan elevasi.
+   Mirror 1:1 dengan Figma Variables (lihat tokens/kelana.tokens.json).
+
+   Naming di Figma: color/ocean/500, color/kelana-blue/500, text/h1, space/400
+   ========================================================================== */
+
+:root {
+  /* ======================================================================
+     1. PALET RESMI KELANA
+     Dua belas warna brand. Semua token lain di bawah diturunkan dari sini —
+     ubah di sini, seluruh situs ikut berubah.
+     ====================================================================== */
+  --kelana-blue:           #35A8FF;  /* Ocean Blue — interaksi utama */
+  --kelana-blue-secondary: #4087C4;  /* Kelana Blue — biru tenang & profesional */
+  --kelana-orange:         #FF6B24;  /* Sunset Orange — aksen brand */
+  --kelana-navy:           #0F172A;  /* Midnight Navy — teks utama */
+  --kelana-white:          #FFFFFF;  /* Pure White — permukaan konten */
+  --kelana-cloud:          #F8FAFC;  /* Cloud White — latar halaman */
+  --kelana-ice-blue:       #EAF5FF;  /* Ice Blue — panel & kartu terpilih */
+  --kelana-text-secondary: #64748B;  /* Slate Gray — deskripsi & metadata */
+  --kelana-border:         #E2E8F0;  /* Border & pemisah */
+  --kelana-success:        #16A34A;
+  --kelana-warning:        #F59E0B;
+  --kelana-error:          #DC2626;
+
+  /* ======================================================================
+     2. TANGGA WARNA (diturunkan dari palet resmi)
+     Tangga 50–900 dipertahankan supaya tiap komponen punya pilihan
+     terang/gelap untuk state hover, selected, dan disabled.
+     ====================================================================== */
+
+  /* Ocean — biru utama. Langit dan laut Nusantara. */
+  --ocean-50:  #EAF5FF;  /* = Ice Blue */
+  --ocean-100: #D3EBFF;
+  --ocean-200: #ABD9FF;
+  --ocean-300: #7FC6FF;
+  --ocean-400: #55B5FF;
+  --ocean-500: #35A8FF;  /* ★ Ocean Blue */
+  --ocean-600: #1E8FE6;  /* hover tombol primer */
+  --ocean-700: #1574BF;  /* teks biru yang aman dibaca (4,9:1 di putih) */
+  --ocean-800: #115A94;
+  --ocean-900: #0D4470;
+
+  /* Kelana Blue — biru sekunder. Lebih tenang, dipakai saat Ocean terlalu kuat. */
+  --kblue-50:  #EDF4FB;
+  --kblue-100: #D9E8F6;
+  --kblue-200: #B4CFEA;
+  --kblue-300: #8BB3DC;
+  --kblue-400: #629BCF;
+  --kblue-500: #4087C4;  /* ★ Kelana Blue */
+  --kblue-600: #336FA4;  /* hover tombol sekunder */
+  --kblue-700: #285884;
+  --kblue-800: #1E4263;
+  --kblue-900: #152F47;
+
+  /* Sunset Orange — aksen. Dipakai hemat, maksimal satu per layar. */
+  --orange-50:  #FFF2EC;
+  --orange-100: #FFE1D4;
+  --orange-200: #FFC1A5;
+  --orange-300: #FF9E76;
+  --orange-400: #FF854C;
+  --orange-500: #FF6B24;  /* ★ Sunset Orange */
+  --orange-600: #E65411;
+  --orange-700: #BC410A;
+
+  /* Netral sejuk — latar halaman dan permukaan */
+  --white:     #FFFFFF;
+  --cloud-100: #F8FAFC;  /* ★ Cloud White — latar halaman */
+  --cloud-200: #F1F5F9;  /* seksi alternatif */
+
+  /* Slate — border, pemisah, teks pendukung */
+  --slate-100: #E8EEF4;  /* border halus, isian terang */
+  --slate-200: #E2E8F0;  /* ★ border standar */
+  --slate-300: #CBD5E1;  /* border tegas */
+  --slate-400: #94A3B8;  /* teks tersier */
+  --slate-500: #64748B;  /* ★ Slate Gray — teks sekunder */
+
+  /* Navy — teks dan permukaan gelap */
+  --navy-500: #475569;
+  --navy-700: #1E293B;
+  --navy-900: #0F172A;  /* ★ Midnight Navy */
+
+  /* Semantik — hanya untuk umpan balik status */
+  --success-500: #16A34A;
+  --success-700: #15803D;  /* teks di atas success-50 */
+  --success-50:  #ECFDF3;
+  --success-100: #C8EED8;  /* border kartu sukses */
+  --warning-500: #F59E0B;
+  --warning-700: #A16207;  /* teks di atas warning-50 */
+  --warning-50:  #FFF8EB;
+  --warning-100: #FBE3B6;  /* border kartu peringatan */
+  --error-500:   #DC2626;
+  --error-50:    #FEF2F2;
+  --info-500:    #2563EB;
+  --info-50:     #EFF6FF;
+
+  /* ======================================================================
+     3. ALIAS SEMANTIK
+     Komponen memakai alias ini, bukan tangga warna langsung — supaya peran
+     warna jelas dan penggantian tema cukup di satu tempat.
+     ====================================================================== */
+
+  /* Latar */
+  --bg-canvas:      var(--cloud-100);  /* latar halaman */
+  --bg-surface:     var(--white);      /* kartu, navbar, modal */
+  --bg-surface-alt: var(--cloud-200);  /* seksi selang-seling */
+  --bg-inverse:     var(--navy-900);   /* seksi gelap, footer */
+  --bg-ice:         var(--ocean-50);   /* panel pencarian, kartu terpilih */
+  --bg-brand:       var(--ocean-500);
+  --bg-brand-soft:  var(--ocean-50);
+  --bg-brand-alt:   var(--kblue-500);
+  --bg-accent:      var(--orange-500);
+  --bg-accent-soft: var(--orange-50);
+
+  /* Teks */
+  --text-primary:    var(--navy-900);   /* 17,4:1 di putih */
+  --text-secondary:  var(--slate-500);  /*  4,8:1 di putih */
+  --text-tertiary:   var(--slate-400);
+  --text-on-brand:   var(--white);
+  --text-brand:      var(--ocean-700);  /* biru untuk teks & tautan — 4,9:1 */
+  --text-brand-alt:  var(--kblue-600);  /* biru sekunder untuk teks — 5,2:1 */
+  --text-accent:     var(--orange-600); /* oranye untuk teks — 4,6:1 */
+
+  /* Border */
+  --border-subtle:  var(--slate-100);
+  --border-default: var(--slate-200);
+  --border-strong:  var(--slate-300);
+  --border-brand:   var(--ocean-500);
+  --border-brand-alt: var(--kblue-500);
+
+  /* Kontrol & tombol */
+  --control-bg:           var(--white);
+  --control-border:       var(--slate-200);
+  --control-border-focus: var(--ocean-500);
+  --control-bg-selected:  var(--ocean-50);
+  --control-accent:       var(--kblue-500);
+
+  /* Tombol primer.
+     CATATAN AKSESIBILITAS: teks putih di atas Ocean Blue (#35A8FF) terukur
+     2,56:1 — di bawah ambang WCAG AA 4,5:1 untuk teks 14px bold. Warna ini
+     dipakai sesuai ketentuan brand. Kalau kepatuhan WCAG diperlukan, ganti
+     --btn-primary-bg ke var(--ocean-700) (#1574BF) yang terukur 4,9:1
+     tanpa mengubah apa pun yang lain. */
+  --btn-primary-bg:       var(--ocean-500);
+  --btn-primary-bg-hover: var(--ocean-600);
+  --btn-primary-text:     var(--white);
+
+  --btn-secondary-text:   var(--kblue-500);
+  --btn-secondary-border: var(--kblue-500);
+  --btn-secondary-bg-hover: var(--ocean-50);
+
+  --btn-accent-bg:        var(--orange-500);
+  --btn-accent-bg-hover:  var(--orange-600);
+
+  /* Fokus — indikator harus selalu terlihat jelas */
+  --focus-ring:   var(--ocean-500);
+  --focus-shadow: 0 0 0 4px var(--ocean-100);
+
+  /* Disabled — netral, jelas beda dari kontrol aktif */
+  --disabled-bg:     var(--cloud-200);
+  --disabled-text:   var(--slate-400);
+  --disabled-border: var(--slate-200);
+
+  /* Permukaan peta. Netral biru muda supaya pin dan garis rute tetap kontras,
+     tanpa menambah warna di luar keluarga palet. */
+  --map-surface: #DCEAF7;
+  --map-land:    #C3DAEE;
+  --map-island:  #A7C8E4;
+  --map-route:   var(--ocean-500);
+
+  /* ---------- TYPOGRAPHY ---------- */
+  /* Plus Jakarta Sans — dirancang Tokotype di Jakarta. Brand Indonesia
+     memakai typeface Indonesia. */
+  --font-sans: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+
+  --fs-display: 60px;  --lh-display: 64px;
+  --fs-h1: 48px;       --lh-h1: 56px;
+  --fs-h2: 36px;       --lh-h2: 44px;
+  --fs-h3: 28px;       --lh-h3: 36px;
+  --fs-h4: 22px;       --lh-h4: 30px;
+  --fs-h5: 18px;       --lh-h5: 26px;
+  --fs-body-lg: 18px;  --lh-body-lg: 28px;
+  --fs-body: 16px;     --lh-body: 26px;
+  --fs-body-sm: 14px;  --lh-body-sm: 22px;
+  --fs-caption: 12px;  --lh-caption: 18px;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+
+  /* ---------- SPACING (skala 4pt) ---------- */
+  --space-25:  2px;
+  --space-50:  4px;
+  --space-100: 8px;
+  --space-150: 12px;
+  --space-200: 16px;
+  --space-250: 20px;
+  --space-300: 24px;
+  --space-400: 32px;
+  --space-500: 40px;
+  --space-600: 48px;
+  --space-800: 64px;
+  --space-1000: 80px;
+  --space-1200: 96px;
+  --space-1600: 128px;
+
+  /* ---------- RADIUS ---------- */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 999px;
+
+  /* ---------- ELEVASI ----------
+     Shadow di-tint Midnight Navy, bukan hitam netral, supaya menyatu dengan
+     latar Cloud White. Sengaja dibuat halus — kedalaman utama datang dari
+     border, bukan bayangan. */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.07);
+  --shadow-lg: 0 10px 24px rgba(15, 23, 42, 0.08);
+  --shadow-xl: 0 20px 44px rgba(15, 23, 42, 0.12);
+  --shadow-brand:  0 4px 12px rgba(53, 168, 255, 0.24);
+  --shadow-accent: 0 4px 12px rgba(255, 107, 36, 0.24);
+
+  /* ---------- LAYOUT ---------- */
+  --container-max: 1280px;
+  --container-pad: 40px;
+  --nav-height: 76px;
+
+  /* ---------- MOTION ---------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur-base: 240ms;
+  --dur-slow: 420ms;
+
+  /* ---------- Z-INDEX ---------- */
+  --z-nav: 100;
+  --z-sticky: 50;
+  --z-overlay: 500;
+  --z-modal: 600;
+  --z-toast: 700;
+}
+
+/* Breakpoint overrides: padding container mengikuti spesifikasi grid */
+@media (max-width: 1024px) {
+  :root { --container-pad: 32px; }
+}
+@media (max-width: 640px) {
+  :root {
+    --container-pad: 20px;
+    --fs-display: 36px; --lh-display: 42px;
+    --fs-h1: 32px;      --lh-h1: 40px;
+    --fs-h2: 26px;      --lh-h2: 34px;
+    --fs-h3: 22px;      --lh-h3: 30px;
+    --fs-h4: 19px;      --lh-h4: 27px;
+    --nav-height: 64px;
+  }
+}
+
+/* ===== COMPONENTS ===== */
+/* ==========================================================================
+   KELANA — COMPONENT LIBRARY
+   Tiap blok di sini = 1 component di Figma. Komentar menyebut nama Figma-nya.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+/* Atribut [hidden] harus benar-benar menyembunyikan.
+   UA stylesheet memberi `[hidden] { display: none }`, tapi CSS author selalu
+   menang atas UA — jadi elemen dengan class seperti `.stack { display: flex }`
+   tetap terlihat meski sudah di-set hidden. Ini pernah bikin panel tab Booking
+   dan Detail Trip tampil bertumpuk. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-primary);
+  background: var(--bg-canvas);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; text-decoration: none; }
+
+/* ---------- TYPOGRAPHY STYLES (Figma: text styles) ---------- */
+.t-display { font-size: var(--fs-display); line-height: var(--lh-display); font-weight: var(--fw-extrabold); letter-spacing: -0.03em; margin: 0; }
+.t-h1 { font-size: var(--fs-h1); line-height: var(--lh-h1); font-weight: var(--fw-extrabold); letter-spacing: -0.025em; margin: 0; }
+.t-h2 { font-size: var(--fs-h2); line-height: var(--lh-h2); font-weight: var(--fw-bold); letter-spacing: -0.02em; margin: 0; }
+.t-h3 { font-size: var(--fs-h3); line-height: var(--lh-h3); font-weight: var(--fw-bold); letter-spacing: -0.015em; margin: 0; }
+.t-h4 { font-size: var(--fs-h4); line-height: var(--lh-h4); font-weight: var(--fw-bold); letter-spacing: -0.01em; margin: 0; }
+.t-h5 { font-size: var(--fs-h5); line-height: var(--lh-h5); font-weight: var(--fw-semibold); margin: 0; }
+.t-body-lg { font-size: var(--fs-body-lg); line-height: var(--lh-body-lg); margin: 0; }
+.t-body { font-size: var(--fs-body); line-height: var(--lh-body); margin: 0; }
+.t-body-sm { font-size: var(--fs-body-sm); line-height: var(--lh-body-sm); margin: 0; }
+.t-caption { font-size: var(--fs-caption); line-height: var(--lh-caption); margin: 0; }
+.t-overline {
+  font-size: var(--fs-caption); line-height: var(--lh-caption);
+  font-weight: var(--fw-bold); text-transform: uppercase;
+  letter-spacing: 0.1em; margin: 0;
+}
+
+.t-muted { color: var(--text-secondary); }
+.t-subtle { color: var(--text-tertiary); }
+.t-brand { color: var(--text-brand); }
+.t-accent { color: var(--text-accent); }
+.t-center { text-align: center; }
+.t-balance { text-wrap: balance; }
+
+/* Highlight brush di headline — aksen brand */
+.t-mark {
+  position: relative;
+  display: inline-block;
+  color: var(--ocean-700);
+}
+.t-mark::after {
+  content: "";
+  position: absolute;
+  left: -2%; right: -2%; bottom: 0.08em;
+  height: 0.34em;
+  background: var(--ocean-200);
+  opacity: 0.6;
+  border-radius: var(--radius-full);
+  z-index: -1;
+}
+
+/* ---------- LAYOUT ---------- */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.section { padding-block: var(--space-1200); }
+.section--tight { padding-block: var(--space-800); }
+.section--alt { background: var(--bg-surface-alt); }
+.section--ink { background: var(--bg-inverse); color: var(--white); }
+
+.stack { display: flex; flex-direction: column; }
+.stack-100 { gap: var(--space-100); }
+.stack-150 { gap: var(--space-150); }
+.stack-200 { gap: var(--space-200); }
+.stack-300 { gap: var(--space-300); }
+.stack-400 { gap: var(--space-400); }
+.stack-600 { gap: var(--space-600); }
+
+.row { display: flex; align-items: center; gap: var(--space-200); }
+.row-100 { gap: var(--space-100); }
+.row-300 { gap: var(--space-300); }
+.row-wrap { flex-wrap: wrap; }
+.row-between { justify-content: space-between; }
+.spacer { flex: 1; }
+
+.grid { display: grid; gap: var(--space-300); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-400);
+  margin-bottom: var(--space-600);
+}
+.section-head .stack { max-width: 620px; }
+
+/* ==========================================================================
+   COMPONENT: Button  (Figma: Button / variant=primary|secondary|ghost|accent,
+                       size=sm|md|lg, state=default|hover|pressed|disabled)
+   ========================================================================== */
+.btn {
+  --btn-pad-x: var(--space-300);
+  --btn-h: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-100);
+  height: var(--btn-h);
+  padding-inline: var(--btn-pad-x);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-body-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+.btn:active { transform: translateY(1px) scale(0.99); }
+.btn:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+
+.btn--sm { --btn-h: 38px; --btn-pad-x: var(--space-200); font-size: var(--fs-caption); }
+.btn--lg { --btn-h: 56px; --btn-pad-x: var(--space-400); font-size: var(--fs-body); }
+
+/* Primer — aksi utama. Ocean Blue. */
+.btn--primary { background: var(--btn-primary-bg); color: var(--btn-primary-text); box-shadow: var(--shadow-brand); }
+.btn--primary:hover { background: var(--btn-primary-bg-hover); }
+
+/* Aksen — aksi penting kedua. Sunset Orange, maksimal satu per layar. */
+.btn--accent { background: var(--btn-accent-bg); color: var(--white); box-shadow: var(--shadow-accent); }
+.btn--accent:hover { background: var(--btn-accent-bg-hover); }
+
+/* Kelana Blue solid — interaksi sekunder yang perlu bobot lebih dari outline,
+   tapi tidak boleh bersaing dengan tombol primer. */
+.btn--brand-alt { background: var(--bg-brand-alt); color: var(--white); box-shadow: var(--shadow-sm); }
+.btn--brand-alt:hover { background: var(--kblue-600); }
+
+/* Sekunder — outline. Teks Kelana Blue, hover Ice Blue. */
+.btn--secondary {
+  background: var(--white);
+  color: var(--btn-secondary-text);
+  border-color: var(--btn-secondary-border);
+  box-shadow: none;
+}
+.btn--secondary:hover {
+  background: var(--btn-secondary-bg-hover);
+  border-color: var(--kblue-600);
+  color: var(--kblue-700);
+}
+
+.btn--ghost { background: transparent; color: var(--text-primary); }
+.btn--ghost:hover { background: var(--bg-ice); color: var(--text-brand-alt); }
+
+.btn--on-ink { background: rgba(255,255,255,0.1); color: var(--white); border-color: rgba(255,255,255,0.28); }
+.btn--on-ink:hover { background: rgba(255,255,255,0.18); }
+
+.btn--block { width: 100%; }
+/* Disabled memakai netral teredam supaya jelas beda dari kontrol aktif —
+   bukan opacity, karena opacity membuat tombol tetap terlihat "berwarna". */
+.btn[disabled], .btn[aria-disabled="true"] {
+  background: var(--disabled-bg);
+  color: var(--disabled-text);
+  border-color: var(--disabled-border);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Icon-only button */
+.btn-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; flex: none;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  background: var(--white);
+  color: var(--navy-700);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+.btn-icon:hover { border-color: var(--kblue-400); color: var(--kblue-600); background: var(--bg-ice); }
+.btn-icon:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.btn-icon[disabled] { background: var(--disabled-bg); color: var(--disabled-text); border-color: var(--disabled-border); cursor: not-allowed; }
+.btn-icon--sm { width: 36px; height: 36px; }
+.btn-icon.is-active { background: var(--orange-50); border-color: var(--orange-300); color: var(--orange-600); }
+
+/* ==========================================================================
+   COMPONENT: Badge / Tag / Pill  (Figma: Badge / tone=*)
+   ========================================================================== */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.badge--brand { background: var(--ocean-50); color: var(--ocean-700); }
+.badge--accent { background: var(--orange-50); color: var(--orange-700); }
+.badge--neutral { background: var(--slate-100); color: var(--navy-700); }
+.badge--success { background: var(--success-50); color: var(--success-500); }
+.badge--warning { background: var(--warning-50); color: var(--warning-700); }
+.badge--info { background: var(--info-50); color: var(--info-500); }
+.badge--glass {
+  background: rgba(255,255,255,0.92);
+  color: var(--navy-900);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-sm);
+}
+.badge--ink { background: rgba(15,23,42,0.72); color: var(--white); backdrop-filter: blur(8px); }
+
+.badge-dot { width: 6px; height: 6px; border-radius: var(--radius-full); background: currentColor; flex: none; }
+
+/* ==========================================================================
+   COMPONENT: Chip / Filter  (Figma: Chip / state=default|selected)
+   ========================================================================== */
+.chip {
+  display: inline-flex; align-items: center; gap: var(--space-100);
+  height: 40px; padding-inline: var(--space-200);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-full);
+  background: var(--white);
+  font-size: var(--fs-body-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--navy-700);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+.chip:hover { border-color: var(--kblue-400); background: var(--bg-ice); color: var(--text-brand-alt); }
+.chip:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+/* Terpilih memakai Kelana Blue, bukan Ocean — supaya deretan filter aktif
+   tidak seterang tombol primer di layar yang sama. */
+.chip.is-selected {
+  background: var(--control-accent); border-color: var(--control-accent);
+  color: var(--white); box-shadow: none;
+}
+.chip input { display: none; }
+
+/* ==========================================================================
+   COMPONENT: Input / Field  (Figma: Input / state=default|focus|filled|error)
+   ========================================================================== */
+.field { display: flex; flex-direction: column; gap: var(--space-100); }
+.field-label {
+  font-size: var(--fs-body-sm);
+  font-weight: var(--fw-bold);
+  color: var(--navy-700);
+}
+.field-hint { font-size: var(--fs-caption); color: var(--text-tertiary); }
+.field-error { font-size: var(--fs-caption); color: var(--error-500); font-weight: var(--fw-semibold); }
+
+.input {
+  height: 52px;
+  padding-inline: var(--space-200);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  font-size: var(--fs-body);
+  transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  width: 100%;
+}
+.input::placeholder { color: var(--text-tertiary); }
+.input:hover { border-color: var(--border-strong); }
+.input:focus {
+  outline: none;
+  border-color: var(--control-border-focus);
+  box-shadow: var(--focus-shadow);
+}
+.input[disabled] {
+  background: var(--disabled-bg);
+  color: var(--disabled-text);
+  border-color: var(--disabled-border);
+  cursor: not-allowed;
+}
+.input--textarea { height: auto; min-height: 112px; padding-block: var(--space-150); resize: vertical; }
+.input.has-error { border-color: var(--error-500); }
+.input.has-error:focus { box-shadow: 0 0 0 4px var(--error-50); }
+.input.has-error { border-color: var(--error-500); }
+
+select.input { appearance: none; cursor: pointer; padding-right: var(--space-500); background-image: none; }
+
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: ""; position: absolute; right: 18px; top: 50%;
+  width: 8px; height: 8px; margin-top: -6px;
+  border-right: 2px solid var(--slate-500);
+  border-bottom: 2px solid var(--slate-500);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   COMPONENT: Search Bar (composite)  (Figma: SearchBar / layout=hero|compact)
+   ========================================================================== */
+.searchbar {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr auto;
+  align-items: center;
+  gap: var(--space-100);
+  padding: var(--space-150);
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-subtle);
+}
+.searchbar-cell {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: var(--space-100) var(--space-200);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out);
+  min-width: 0;
+}
+.searchbar-cell:hover { background: var(--cloud-200); }
+.searchbar-cell + .searchbar-cell { box-shadow: inset 1px 0 0 var(--border-subtle); }
+.searchbar-label {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  color: var(--navy-700);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.searchbar-value {
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+  border: none; background: transparent; padding: 0; outline: none;
+  width: 100%;
+  text-overflow: ellipsis;
+}
+.searchbar-value::placeholder { color: var(--text-tertiary); }
+.searchbar .btn { height: 56px; width: 56px; padding: 0; }
+.searchbar .btn svg { width: 22px; height: 22px; }
+
+/* ==========================================================================
+   COMPONENT: Card — base  (Figma: Card / type=*)
+   ========================================================================== */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: transform var(--dur-base) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out);
+}
+.card--pad { padding: var(--space-300); }
+.card--flat { box-shadow: none; }
+
+.card--interactive { cursor: pointer; }
+.card--interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--kblue-200);
+}
+
+/* ---------- Itinerary Card (Figma: Card/Itinerary) ---------- */
+.itin-card { display: flex; flex-direction: column; }
+.itin-card-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.itin-card-media > .scene { width: 100%; height: 100%; }
+.itin-card-media-top {
+  position: absolute; inset: var(--space-150) var(--space-150) auto;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-100);
+}
+.itin-card-media-bottom {
+  position: absolute; inset: auto var(--space-150) var(--space-150);
+  display: flex; align-items: center; gap: var(--space-100);
+}
+.itin-card-body { padding: var(--space-250); display: flex; flex-direction: column; gap: var(--space-150); flex: 1; }
+.itin-card-title {
+  font-size: var(--fs-h5); line-height: 1.35; font-weight: var(--fw-bold);
+  letter-spacing: -0.01em; margin: 0;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.itin-card-meta {
+  display: flex; align-items: center; gap: var(--space-150);
+  font-size: var(--fs-caption); color: var(--text-secondary); flex-wrap: wrap;
+}
+.itin-card-foot {
+  margin-top: auto; padding-top: var(--space-150);
+  border-top: 1px solid var(--border-subtle);
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: var(--space-150); flex-wrap: wrap;
+}
+
+/* Toolbar Jelajah: sort + toggle tampilan. Harus boleh turun baris di layar sempit. */
+.explore-toolbar { display: flex; align-items: center; gap: var(--space-100); flex-wrap: wrap; }
+.explore-toolbar .select-wrap { flex: 1 1 160px; min-width: 0; }
+.explore-toolbar .tabs { flex: none; }
+.price { display: flex; flex-direction: column; gap: 0; }
+/* Harga tidak boleh pecah jadi dua baris — "Rp" sendirian di satu baris terbaca salah */
+.price-value {
+  font-size: var(--fs-h5); font-weight: var(--fw-extrabold);
+  letter-spacing: -0.02em; white-space: nowrap;
+}
+.price-note { font-size: var(--fs-caption); color: var(--text-tertiary); }
+
+/* ---------- Result Card — varian horizontal (Figma: Card/Itinerary layout=horizontal) ----------
+   Di bawah 720px berubah jadi vertikal: kolom media 270px tidak mungkin muat
+   bersama kolom teks di layar mobile. */
+.result-card { display: grid; grid-template-columns: 270px minmax(0, 1fr); }
+.result-card-media { position: relative; min-height: 190px; }
+
+@media (max-width: 720px) {
+  .result-card { grid-template-columns: 1fr; }
+  .result-card-media { aspect-ratio: 16 / 10; min-height: 0; }
+}
+
+/* ---------- Destination Card (Figma: Card/Destination) ---------- */
+.dest-card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  text-align: left;
+  display: block;
+  width: 100%;
+}
+.dest-card > .scene { position: absolute; inset: 0; width: 100%; height: 100%; transition: transform var(--dur-slow) var(--ease-out); }
+.dest-card:hover > .scene { transform: scale(1.06); }
+.dest-card::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(15,23,42,0.86) 0%, rgba(15,23,42,0.25) 45%, transparent 75%);
+}
+.dest-card-body {
+  position: absolute; inset: auto 0 0 0; z-index: 1;
+  padding: var(--space-250);
+  color: var(--white);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.dest-card--wide { aspect-ratio: 16 / 10; }
+
+/* ---------- Destination Info Card (Figma: Card/DestinationInfo) ----------
+   Varian informatif untuk Beranda: bukan cuma nama tempat, tapi juga musim
+   terbaik, kisaran biaya, dan daya tarik utama. */
+.dest-info-media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; }
+.dest-info-media > div { position: absolute; inset: 0; }
+.dest-info-media-badges {
+  position: absolute; inset: auto var(--space-150) var(--space-150);
+  display: flex; gap: var(--space-100); flex-wrap: wrap;
+}
+.dest-info-body { padding: var(--space-250); display: flex; flex-direction: column; gap: var(--space-150); flex: 1; }
+.dest-info-facts { display: flex; flex-direction: column; gap: var(--space-100); }
+.dest-info-fact {
+  display: flex; align-items: flex-start; gap: var(--space-100);
+  font-size: var(--fs-body-sm); color: var(--text-secondary);
+}
+.dest-info-fact i svg { width: 16px; height: 16px; color: var(--ocean-500); flex: none; }
+.dest-info-fact strong { color: var(--text-primary); font-weight: var(--fw-semibold); }
+
+/* ---------- Feature / Step Card ---------- */
+.feature-card {
+  padding: var(--space-400);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  display: flex; flex-direction: column; gap: var(--space-200);
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card__num {
+  position: absolute; top: -10px; right: 14px;
+  font-size: 88px; font-weight: var(--fw-extrabold);
+  color: var(--slate-100); line-height: 1; letter-spacing: -0.05em;
+  user-select: none;
+}
+.feature-icon {
+  width: 56px; height: 56px; flex: none;
+  display: grid; place-items: center;
+  border-radius: var(--radius-lg);
+  background: var(--ocean-50);
+  color: var(--ocean-600);
+  position: relative;
+}
+.feature-icon svg { width: 28px; height: 28px; }
+.feature-icon--accent { background: var(--orange-50); color: var(--orange-600); }
+.feature-icon--sand { background: var(--slate-100); color: var(--navy-700); }
+
+/* ==========================================================================
+   COMPONENT: Guide Card  (Figma: Card/Guide)
+   Dipakai di halaman Booking untuk daftar pemandu wisata.
+   ========================================================================== */
+.guide-card { display: flex; flex-direction: column; }
+.guide-card-head {
+  display: flex; gap: var(--space-200);
+  padding: var(--space-250);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.guide-photo {
+  width: 72px; height: 72px; flex: none;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+  background: var(--ocean-100);
+}
+.guide-photo > div { width: 100%; height: 100%; }
+.guide-photo-initials {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-size: var(--fs-h4); font-weight: var(--fw-extrabold);
+  color: var(--white);
+  background: linear-gradient(145deg, var(--ocean-500), var(--kblue-600));
+}
+.guide-card-body { padding: var(--space-250); display: flex; flex-direction: column; gap: var(--space-150); flex: 1; }
+.guide-card-foot {
+  margin-top: auto;
+  padding: var(--space-200) var(--space-250);
+  border-top: 1px solid var(--border-subtle);
+  background: var(--cloud-100);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-150); flex-wrap: wrap;
+}
+
+/* Baris fakta singkat: bahasa, pengalaman, spesialisasi */
+.fact-row {
+  display: flex; align-items: center; gap: var(--space-100);
+  font-size: var(--fs-body-sm); color: var(--text-secondary);
+}
+.fact-row i svg { width: 16px; height: 16px; color: var(--ocean-500); }
+
+/* ==========================================================================
+   COMPONENT: Slot / kuota peserta  (Figma: SlotMeter)
+   Inti dari fitur patungan — menunjukkan berapa kursi sudah terisi.
+   ========================================================================== */
+.slot-meter { display: flex; flex-direction: column; gap: 6px; }
+.slot-bar {
+  height: 8px; border-radius: var(--radius-full);
+  background: var(--slate-100); overflow: hidden; display: flex;
+}
+.slot-bar span { display: block; height: 100%; background: var(--ocean-500); }
+.slot-bar span.is-warm { background: var(--orange-500); }
+.slot-bar span.is-full { background: var(--success-500); }
+
+/* ==========================================================================
+   COMPONENT: Price tier  (Figma: PriceTier / state=default|active|reached)
+   Harga turun saat kursi makin terisi — daya tarik utama open trip.
+   ========================================================================== */
+.tier-list { display: flex; flex-direction: column; gap: var(--space-100); }
+.tier {
+  display: flex; align-items: center; gap: var(--space-150);
+  padding: var(--space-100) var(--space-150);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-body-sm);
+  background: var(--white);
+}
+.tier-label { flex: 1; color: var(--text-secondary); }
+.tier-price { font-weight: var(--fw-bold); white-space: nowrap; }
+.tier.is-active {
+  border-color: var(--control-accent); background: var(--control-bg-selected);
+  box-shadow: none;
+}
+.tier.is-active .tier-label { color: var(--text-brand-alt); font-weight: var(--fw-semibold); }
+.tier.is-reached { border-style: dashed; opacity: 0.6; }
+.tier.is-reached .tier-price { text-decoration: line-through; }
+
+/* ==========================================================================
+   COMPONENT: Rating + Avatar  (Figma: Rating, Avatar, AvatarStack)
+   ========================================================================== */
+.rating { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-caption); font-weight: var(--fw-bold); }
+.rating svg { width: 14px; height: 14px; color: var(--warning-500); }
+
+.avatar {
+  width: 40px; height: 40px; flex: none;
+  border-radius: var(--radius-full);
+  display: grid; place-items: center;
+  font-size: var(--fs-body-sm); font-weight: var(--fw-bold);
+  color: var(--white);
+  background: var(--ocean-500);
+  border: 2px solid var(--white);
+}
+.avatar--sm { width: 32px; height: 32px; font-size: var(--fs-caption); }
+.avatar--lg { width: 56px; height: 56px; font-size: var(--fs-body); }
+.avatar--c2 { background: var(--orange-500); }
+.avatar--c3 { background: var(--ocean-700); }
+.avatar--c4 { background: var(--orange-700); }
+.avatar--c5 { background: var(--navy-700); }
+
+.avatar-stack { display: flex; }
+.avatar-stack .avatar + .avatar { margin-left: -12px; }
+/* Avatar kecil berisi inisial, bukan foto. Tumpang tindih -12px memotong
+   hurufnya, jadi overlap-nya dikurangi khusus ukuran sm. */
+.avatar-stack .avatar--sm + .avatar--sm { margin-left: -8px; }
+
+/* ==========================================================================
+   COMPONENT: Navbar  (Figma: Navbar / scroll=top|scrolled)
+   ========================================================================== */
+.navbar {
+  position: sticky; top: 0; z-index: var(--z-nav);
+  height: var(--nav-height);
+  display: flex; align-items: center;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px) saturate(1.1);
+  border-bottom: 1px solid var(--border-default);
+}
+.navbar .container { display: flex; align-items: center; gap: var(--space-400); }
+
+.logo { display: inline-flex; align-items: center; gap: var(--space-150); flex: none; }
+.logo-mark {
+  width: 38px; height: 38px; flex: none;
+  border-radius: 12px;
+  background: linear-gradient(145deg, var(--ocean-500), var(--kblue-600));
+  display: grid; place-items: center;
+  box-shadow: var(--shadow-sm);
+}
+.logo-mark svg { width: 22px; height: 22px; color: var(--white); }
+.logo-type {
+  font-size: 21px; font-weight: var(--fw-extrabold);
+  letter-spacing: -0.04em; color: var(--ocean-800);
+}
+.logo-type em { font-style: normal; color: var(--orange-500); }
+
+.nav-links { display: flex; align-items: center; gap: var(--space-50); }
+.nav-link {
+  padding: var(--space-100) var(--space-200);
+  border-radius: var(--radius-full);
+  font-size: var(--fs-body-sm); font-weight: var(--fw-semibold);
+  color: var(--navy-700);
+  transition: all var(--dur-fast) var(--ease-out);
+}
+.nav-link:hover { background: var(--bg-ice); color: var(--text-brand-alt); }
+.nav-link.is-active { background: var(--bg-ice); color: var(--text-brand-alt); font-weight: var(--fw-bold); }
+.nav-link:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+
+.nav-toggle { display: none; }
+
+/* ==========================================================================
+   SECTION: Hero  (Figma: Section/Hero)
+   ========================================================================== */
+.hero { position: relative; overflow: hidden; padding-block: var(--space-1000) var(--space-1200); }
+.hero-bg { position: absolute; inset: 0; z-index: 0; }
+.hero-bg::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 420px at 78% 8%, rgba(255,107,36,0.14), transparent 70%),
+    radial-gradient(760px 420px at 12% 22%, rgba(53,168,255,0.16), transparent 70%);
+}
+.hero .container { position: relative; z-index: 1; }
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: var(--space-800);
+  align-items: center;
+}
+.hero-copy { display: flex; flex-direction: column; gap: var(--space-300); max-width: 620px; }
+.hero-proof { display: flex; align-items: center; gap: var(--space-200); margin-top: var(--space-100); }
+
+/* Hero visual: kolase kartu — di Figma ini frame dengan 3 layer card + rotasi */
+.hero-art { position: relative; aspect-ratio: 1 / 1; }
+.hero-art-card {
+  position: absolute;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  border: 5px solid var(--white);
+  background: var(--white);
+}
+.hero-art-card:nth-child(1) { inset: 0 18% 26% 0; transform: rotate(-4deg); z-index: 2; }
+.hero-art-card:nth-child(2) { inset: 34% 0 0 30%; transform: rotate(5deg); z-index: 3; }
+.hero-art-card > .scene { width: 100%; height: 100%; }
+
+.hero-art-float {
+  position: absolute; z-index: 4;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-150) var(--space-200);
+  display: flex; align-items: center; gap: var(--space-150);
+  border: 1px solid var(--border-subtle);
+}
+.hero-art-float--a { top: 6%; right: 0; }
+.hero-art-float--b { bottom: 10%; left: -2%; }
+
+/* ==========================================================================
+   COMPONENT: Stat
+   ========================================================================== */
+.stat { display: flex; flex-direction: column; gap: 2px; }
+.stat-value { font-size: var(--fs-h3); font-weight: var(--fw-extrabold); letter-spacing: -0.03em; line-height: 1.1; }
+.stat-label { font-size: var(--fs-caption); color: var(--text-secondary); }
+.stat-divider { width: 1px; align-self: stretch; background: var(--border-default); }
+
+/* ==========================================================================
+   COMPONENT: Timeline / Day Plan  (Figma: DayTimeline, ActivityRow)
+   ========================================================================== */
+.day-group { display: flex; flex-direction: column; gap: var(--space-200); }
+.day-head {
+  display: flex; align-items: center; gap: var(--space-200);
+  padding: var(--space-200);
+  background: var(--ocean-50);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--ocean-100);
+}
+.day-chip {
+  width: 52px; height: 52px; flex: none;
+  border-radius: var(--radius-md);
+  /* Kelana Blue: chip ini muncul di tiap hari, jadi dibuat lebih tenang
+     daripada Ocean supaya tidak bersaing dengan tombol aksi. */
+  background: var(--bg-brand-alt); color: var(--white);
+  display: grid; place-items: center; text-align: center;
+  line-height: 1.1;
+}
+.day-chip span { display: block; font-size: 10px; font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.85; }
+.day-chip strong { display: block; font-size: 20px; font-weight: var(--fw-extrabold); }
+
+.timeline { position: relative; padding-left: var(--space-400); display: flex; flex-direction: column; gap: var(--space-150); }
+.timeline::before {
+  content: ""; position: absolute; left: 11px; top: 14px; bottom: 14px;
+  width: 2px; background: var(--border-default); border-radius: 2px;
+}
+
+.activity {
+  position: relative;
+  display: flex; gap: var(--space-200);
+  padding: var(--space-200);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: all var(--dur-fast) var(--ease-out);
+}
+.activity:hover { border-color: var(--kblue-200); box-shadow: var(--shadow-sm); }
+.activity::before {
+  content: ""; position: absolute; left: calc(-1 * var(--space-400) + 6px); top: 24px;
+  width: 12px; height: 12px; border-radius: var(--radius-full);
+  background: var(--white); border: 3px solid var(--kblue-400);
+  z-index: 1;
+}
+.activity-time {
+  flex: none; width: 58px;
+  font-size: var(--fs-body-sm); font-weight: var(--fw-bold);
+  color: var(--ocean-700);
+}
+.activity-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1; }
+.activity-thumb {
+  width: 76px; height: 76px; flex: none;
+  border-radius: var(--radius-md); overflow: hidden;
+}
+.activity-thumb > .scene { width: 100%; height: 100%; }
+.activity-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.activity--transit {
+  background: var(--cloud-200);
+  border-style: dashed;
+  border-color: var(--border-default);
+  align-items: center;
+}
+.activity--transit::before { border-color: var(--slate-300); }
+
+/* Drag handle (Figma: DragHandle) */
+.drag-handle {
+  flex: none; width: 24px;
+  display: grid; place-items: center;
+  color: var(--slate-300);
+  cursor: grab;
+  border-radius: var(--radius-xs);
+  align-self: center;
+}
+.drag-handle:hover { color: var(--slate-500); background: var(--slate-100); }
+.drag-handle svg { width: 16px; height: 16px; }
+.activity.is-dragging { opacity: 0.45; border-style: dashed; border-color: var(--ocean-400); }
+.activity.is-drop-target { box-shadow: 0 -3px 0 var(--orange-400); }
+
+/* ==========================================================================
+   COMPONENT: Budget breakdown  (Figma: BudgetBreakdown)
+   ========================================================================== */
+.budget-bar { display: flex; height: 12px; border-radius: var(--radius-full); overflow: hidden; background: var(--slate-100); }
+.budget-bar span { display: block; height: 100%; }
+.bg-seg-1 { background: var(--ocean-500); }
+.bg-seg-2 { background: var(--kblue-500); }
+.bg-seg-3 { background: var(--orange-400); }
+.bg-seg-4 { background: var(--warning-500); }
+.bg-seg-5 { background: var(--slate-300); }
+
+.budget-row {
+  display: flex; align-items: center; gap: var(--space-150);
+  padding-block: var(--space-100);
+  font-size: var(--fs-body-sm);
+}
+.budget-row + .budget-row { border-top: 1px dashed var(--border-subtle); }
+.budget-key { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+
+/* ==========================================================================
+   COMPONENT: Sidebar filter  (Figma: FilterPanel)
+   ========================================================================== */
+.explore-layout {
+  display: grid;
+  grid-template-columns: 286px minmax(0, 1fr);
+  gap: var(--space-500);
+  align-items: start;
+}
+/* Tanpa ini, kolom grid melebar mengikuti min-content anaknya dan menembus
+   lebar layar di mobile — penyebab overflow horizontal paling umum. */
+.explore-layout > * { min-width: 0; }
+.filter-panel {
+  position: sticky; top: calc(var(--nav-height) + var(--space-300));
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-300);
+  display: flex; flex-direction: column; gap: var(--space-300);
+  max-height: calc(100vh - var(--nav-height) - var(--space-600));
+  overflow-y: auto;
+}
+.filter-group { display: flex; flex-direction: column; gap: var(--space-150); }
+.filter-group + .filter-group { padding-top: var(--space-300); border-top: 1px solid var(--border-subtle); }
+.filter-title { font-size: var(--fs-body-sm); font-weight: var(--fw-bold); }
+
+.check {
+  display: flex; align-items: center; gap: var(--space-150);
+  font-size: var(--fs-body-sm); color: var(--navy-700);
+  cursor: pointer; padding: 3px 0;
+}
+.check input { display: none; }
+.check-box {
+  width: 20px; height: 20px; flex: none;
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-xs);
+  display: grid; place-items: center;
+  transition: all var(--dur-fast) var(--ease-out);
+  background: var(--white);
+}
+.check-box svg { width: 12px; height: 12px; color: var(--white); opacity: 0; transform: scale(0.6); transition: all var(--dur-fast) var(--ease-out); }
+.check input:checked + .check-box { background: var(--ocean-500); border-color: var(--ocean-500); }
+.check input:checked + .check-box svg { opacity: 1; transform: scale(1); }
+.check:hover .check-box { border-color: var(--ocean-400); }
+.check-count { margin-left: auto; font-size: var(--fs-caption); color: var(--text-tertiary); }
+
+/* Range slider */
+.range { width: 100%; -webkit-appearance: none; appearance: none; height: 6px; border-radius: var(--radius-full); background: var(--slate-100); outline: none; }
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 22px; height: 22px; border-radius: var(--radius-full);
+  background: var(--ocean-500); border: 3px solid var(--white);
+  box-shadow: var(--shadow-sm); cursor: pointer;
+}
+.range::-moz-range-thumb {
+  width: 22px; height: 22px; border-radius: var(--radius-full);
+  background: var(--ocean-500); border: 3px solid var(--white);
+  box-shadow: var(--shadow-sm); cursor: pointer;
+}
+
+/* ==========================================================================
+   COMPONENT: Tabs  (Figma: Tabs / state=default|active)
+   ========================================================================== */
+.tabs {
+  display: inline-flex; gap: 4px;
+  padding: 5px;
+  background: var(--slate-100);
+  border-radius: var(--radius-full);
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { height: 0; }
+.tab {
+  padding: var(--space-100) var(--space-250);
+  border: none; background: transparent;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-body-sm); font-weight: var(--fw-bold);
+  color: var(--slate-500); cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.tab:hover { color: var(--navy-900); }
+.tab.is-active { background: var(--white); color: var(--text-brand-alt); box-shadow: var(--shadow-xs); }
+.tab:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+
+/* ==========================================================================
+   COMPONENT: Stepper  (Figma: Stepper / state=done|current|todo)
+   ========================================================================== */
+.stepper { display: flex; align-items: center; gap: var(--space-150); }
+.step { display: flex; align-items: center; gap: var(--space-150); }
+.step-dot {
+  width: 32px; height: 32px; flex: none;
+  border-radius: var(--radius-full);
+  display: grid; place-items: center;
+  font-size: var(--fs-body-sm); font-weight: var(--fw-bold);
+  background: var(--white); color: var(--slate-400);
+  border: 1.5px solid var(--border-default);
+}
+.step-label { font-size: var(--fs-body-sm); font-weight: var(--fw-semibold); color: var(--text-tertiary); }
+.step-line { width: 44px; height: 2px; background: var(--border-default); border-radius: 2px; flex: none; }
+
+.step.is-current .step-dot { background: var(--ocean-500); border-color: var(--ocean-500); color: var(--white); box-shadow: 0 0 0 4px var(--ocean-50); }
+.step.is-current .step-label { color: var(--ocean-700); font-weight: var(--fw-bold); }
+.step.is-done .step-dot { background: var(--ocean-50); border-color: var(--ocean-400); color: var(--ocean-600); }
+.step.is-done .step-label { color: var(--navy-700); }
+
+/* ==========================================================================
+   COMPONENT: Map placeholder  (Figma: MapFrame — di Figma pakai static image)
+   ========================================================================== */
+.map {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--map-surface);
+  border: 1px solid var(--border-subtle);
+  min-height: 220px;
+}
+.map > svg { width: 100%; height: 100%; position: absolute; inset: 0; }
+.map-pin {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  display: flex; flex-direction: column; align-items: center;
+  z-index: 2;
+}
+.map-pin-bubble {
+  background: var(--kblue-500); color: var(--white);
+  font-size: var(--fs-caption); font-weight: var(--fw-bold);
+  padding: 5px 10px; border-radius: var(--radius-full);
+  box-shadow: var(--shadow-md); white-space: nowrap;
+}
+.map-pin-bubble--accent { background: var(--orange-500); }
+.map-pin-tail { width: 2px; height: 10px; background: var(--kblue-500); }
+.map-pin-tail--accent { background: var(--orange-500); }
+.map-overlay-btn { position: absolute; right: var(--space-200); bottom: var(--space-200); z-index: 3; }
+
+/* ==========================================================================
+   COMPONENT: Modal  (Figma: Modal/Auth, Modal/AddActivity)
+   ========================================================================== */
+.overlay {
+  position: fixed; inset: 0; z-index: var(--z-overlay);
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+  display: grid; place-items: center;
+  padding: var(--space-300);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.overlay.is-open { opacity: 1; pointer-events: auto; }
+
+.modal {
+  width: 100%; max-width: 460px;
+  background: var(--bg-surface);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-500);
+  transform: translateY(16px) scale(0.98);
+  transition: transform var(--dur-base) var(--ease-out);
+  max-height: 90vh; overflow-y: auto;
+}
+.overlay.is-open .modal { transform: none; }
+.modal--wide { max-width: 680px; }
+.modal-close {
+  position: absolute; top: var(--space-200); right: var(--space-200);
+}
+
+/* ==========================================================================
+   COMPONENT: Toast  (Figma: Toast / tone=success|info)
+   ========================================================================== */
+.toast-region {
+  position: fixed; z-index: var(--z-toast);
+  bottom: var(--space-400); left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; gap: var(--space-150);
+  width: min(420px, calc(100vw - 40px));
+}
+.toast {
+  display: flex; align-items: center; gap: var(--space-150);
+  padding: var(--space-200);
+  background: var(--ocean-900); color: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  font-size: var(--fs-body-sm); font-weight: var(--fw-semibold);
+  animation: toast-in var(--dur-base) var(--ease-out);
+}
+.toast-icon {
+  width: 28px; height: 28px; flex: none;
+  border-radius: var(--radius-full);
+  background: var(--ocean-400); color: var(--ocean-900);
+  display: grid; place-items: center;
+}
+.toast-icon svg { width: 16px; height: 16px; }
+.toast.is-leaving { animation: toast-out var(--dur-base) var(--ease-in-out) forwards; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(16px) scale(0.96); } }
+@keyframes toast-out { to { opacity: 0; transform: translateY(8px) scale(0.98); } }
+
+/* ==========================================================================
+   COMPONENT: Footer  (Figma: Footer)
+   ========================================================================== */
+.footer { background: var(--ocean-900); color: var(--slate-100); padding-block: var(--space-800) var(--space-400); }
+.footer-grid { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: var(--space-600); }
+.footer h5 { color: var(--white); font-size: var(--fs-body-sm); font-weight: var(--fw-bold); margin: 0 0 var(--space-150); }
+.footer-link { display: block; padding: 5px 0; font-size: var(--fs-body-sm); color: rgba(226,232,240,0.72); transition: color var(--dur-fast); }
+.footer-link:hover { color: var(--white); }
+.footer .logo-type { color: var(--white); }
+.footer-bottom {
+  margin-top: var(--space-600); padding-top: var(--space-300);
+  border-top: 1px solid rgba(255,255,255,0.12);
+  display: flex; justify-content: space-between; gap: var(--space-300);
+  font-size: var(--fs-caption); color: rgba(226,232,240,0.6);
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   SCENE: SVG illustration helper
+   Di Figma, semua .scene diganti dengan image fill (foto destinasi).
+   Di prototype ini pakai SVG supaya self-contained & tanpa dependency.
+   ========================================================================== */
+.scene { display: block; object-fit: cover; }
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+.divider { height: 1px; background: var(--border-subtle); border: 0; margin: 0; }
+.hide-mobile { display: initial; }
+.show-mobile { display: none !important; }
+.mt-auto { margin-top: auto; }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--slate-100) 25%, var(--cloud-200) 50%, var(--slate-100) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius-sm);
+}
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* ==========================================================================
+   PROTOTYPE CHROME — penanda "ini prototype", bukan bagian dari produk
+   ========================================================================== */
+.proto-bar {
+  position: fixed; bottom: var(--space-200); right: var(--space-200);
+  z-index: var(--z-toast);
+  display: flex; align-items: center; gap: var(--space-100);
+  padding: var(--space-100);
+  background: rgba(15,23,42,0.9);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-xl);
+}
+.proto-bar a {
+  padding: 7px 13px; border-radius: var(--radius-full);
+  font-size: var(--fs-caption); font-weight: var(--fw-bold);
+  color: rgba(255,255,255,0.68);
+  transition: all var(--dur-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.proto-bar a:hover { color: var(--white); background: rgba(255,255,255,0.12); }
+.proto-bar a.is-active { background: var(--ocean-400); color: var(--ocean-900); }
+.proto-bar-label {
+  font-size: 10px; font-weight: var(--fw-extrabold); text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--ocean-300); padding-left: var(--space-150); padding-right: 4px;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 1100px) {
+  .hero-grid { grid-template-columns: 1fr; gap: var(--space-600); }
+  .hero-art { max-width: 520px; }
+  .explore-layout { grid-template-columns: 1fr; }
+  .filter-panel { position: static; max-height: none; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--space-400); }
+}
+
+/* Navbar beralih ke hamburger di 900px, bukan 640px.
+   Di 768px, logo + 4 nav link + 2 tombol butuh 791px tapi cuma tersedia 753px. */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: inline-flex; }
+}
+
+@media (max-width: 860px) {
+  .searchbar { grid-template-columns: 1fr; }
+  .searchbar-cell + .searchbar-cell { box-shadow: inset 0 1px 0 var(--border-subtle); }
+  .searchbar .btn { width: 100%; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .section-head { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 640px) {
+  /* ---- Baris aktivitas di layar sempit ----
+     Di 360px, thumbnail 76px + kolom jam 58px + drag handle + tombol hapus
+     menyisakan ~0px untuk teks, sehingga badge menembus kartu.
+     Solusinya: buang thumbnail, lalu turunkan kolom teks ke barisnya sendiri
+     dengan lebar penuh. Jam dan aksi tetap di baris pertama. */
+  .timeline { padding-left: var(--space-300); }
+  .activity::before { left: calc(-1 * var(--space-300) + 6px); }
+  .activity {
+    padding: var(--space-150);
+    gap: var(--space-100);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .activity-thumb { display: none; }
+  /* Urutan dipaksa: baris 1 = handle + jam + tombol aksi (didorong ke kanan),
+     baris 2 = teks selebar kartu. Tanpa order, tombol hapus jatuh ke baris
+     ketiga sendirian dan terlihat seperti salah pasang. */
+  .activity > .drag-handle { order: 1; }
+  .activity-time { order: 2; width: auto; }
+  .activity > .stack:last-child { order: 3; margin-left: auto; }
+  .activity-body { order: 4; flex: 1 1 100%; min-width: 0; }
+
+  .section { padding-block: var(--space-600); }
+  .section--tight { padding-block: var(--space-500); }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .hide-mobile { display: none !important; }
+  .show-mobile { display: initial !important; }
+  .modal { padding: var(--space-300); border-radius: var(--radius-xl); }
+  .footer-grid { grid-template-columns: 1fr; }
+  .proto-bar { left: var(--space-150); right: var(--space-150); overflow-x: auto; }
+  .hero { padding-block: var(--space-500) var(--space-600); }
+  .feature-card { padding: var(--space-300); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* ==========================================================================
+   SISI MITRA (UMKM / Tour Guide)
+   Komponen untuk landing mitra, pendaftaran, dan dashboard.
+   ========================================================================== */
+
+/* Logo mitra: mark biru-sekunder + pil "Mitra" yang kontras */
+.logo-mark--mitra { background: linear-gradient(145deg, var(--kblue-500), var(--kblue-700)); }
+.logo-chip-mitra {
+  display: inline-flex; align-items: center;
+  padding: 3px 9px; border-radius: var(--radius-full);
+  background: var(--kblue-500); color: var(--white);
+  font-size: var(--fs-caption); font-weight: var(--fw-bold);
+  letter-spacing: 0.01em;
+}
+.navbar--mitra { background: rgba(255, 255, 255, 0.92); }
+
+/* ---------- Stat card (Figma: Card/Stat) ---------- */
+.stat-card {
+  display: flex; flex-direction: column; gap: var(--space-150);
+  padding: var(--space-300);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+.stat-card-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-150); }
+.stat-card-icon {
+  width: 40px; height: 40px; flex: none; border-radius: var(--radius-md);
+  display: grid; place-items: center;
+  background: var(--bg-brand-soft); color: var(--text-brand);
+}
+.stat-card-icon svg { width: 20px; height: 20px; }
+.stat-card-icon--alt { background: var(--kblue-50); color: var(--kblue-600); }
+.stat-card-icon--accent { background: var(--bg-accent-soft); color: var(--text-accent); }
+.stat-card-icon--success { background: var(--success-50); color: var(--success-700); }
+.stat-card-value { font-size: var(--fs-h2); font-weight: var(--fw-extrabold); letter-spacing: -0.03em; line-height: 1.05; }
+.stat-card-label { font-size: var(--fs-body-sm); color: var(--text-secondary); }
+.stat-delta { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-caption); font-weight: var(--fw-bold); }
+.stat-delta--up { color: var(--success-700); }
+.stat-delta--down { color: var(--error-500); }
+
+/* ---------- Dropzone unggah dokumen (Figma: Dropzone) ---------- */
+.dropzone {
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-100);
+  padding: var(--space-400);
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface-alt);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+.dropzone:hover { border-color: var(--border-brand); background: var(--bg-ice); }
+.dropzone.is-done { border-style: solid; border-color: var(--success-500); background: var(--success-50); }
+.dropzone-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-full);
+  display: grid; place-items: center;
+  background: var(--bg-brand-soft); color: var(--text-brand);
+}
+.dropzone.is-done .dropzone-icon { background: var(--success-100); color: var(--success-700); }
+.dropzone-icon svg { width: 24px; height: 24px; }
+
+/* ---------- Toggle switch (Figma: Toggle / state=off|on) ---------- */
+.toggle { display: inline-flex; align-items: center; gap: var(--space-150); cursor: pointer; }
+.toggle input { display: none; }
+.toggle-track {
+  width: 44px; height: 26px; flex: none; border-radius: var(--radius-full);
+  background: var(--slate-300); position: relative;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.toggle-track::after {
+  content: ""; position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: var(--radius-full);
+  background: var(--white); box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.toggle input:checked + .toggle-track { background: var(--ocean-500); }
+.toggle input:checked + .toggle-track::after { transform: translateX(18px); }
+
+/* ---------- Dashboard shell (Figma: Desktop/Mitra Dashboard) ---------- */
+.dash-layout {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--bg-canvas);
+}
+.dash-sidebar {
+  position: sticky; top: 0; align-self: start;
+  height: 100vh; overflow-y: auto;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-default);
+  padding: var(--space-300) var(--space-200);
+  display: flex; flex-direction: column; gap: var(--space-300);
+}
+.dash-nav { display: flex; flex-direction: column; gap: 2px; }
+.dash-nav-label {
+  font-size: var(--fs-caption); font-weight: var(--fw-bold);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  padding: var(--space-150) var(--space-200) var(--space-100);
+}
+.dash-navlink {
+  display: flex; align-items: center; gap: var(--space-150);
+  padding: var(--space-150) var(--space-200);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-body-sm); font-weight: var(--fw-semibold);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.dash-navlink svg { width: 20px; height: 20px; flex: none; }
+.dash-navlink:hover { background: var(--bg-ice); color: var(--text-brand-alt); }
+.dash-navlink.is-active { background: var(--bg-ice); color: var(--text-brand-alt); font-weight: var(--fw-bold); }
+.dash-navlink .badge { margin-left: auto; }
+
+.dash-main { min-width: 0; display: flex; flex-direction: column; }
+.dash-topbar {
+  position: sticky; top: 0; z-index: var(--z-sticky);
+  display: flex; align-items: center; gap: var(--space-200);
+  padding: var(--space-250) var(--space-500);
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-default);
+}
+.dash-body { padding: var(--space-500); display: flex; flex-direction: column; gap: var(--space-400); }
+
+/* Split chart + panel: 2 kolom di desktop, menumpuk di bawah 760px */
+.dash-split { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--space-300); }
+@media (max-width: 760px) { .dash-split { grid-template-columns: 1fr; } }
+
+/* ---------- Grafik batang sederhana (Figma: Chart/Bars) ---------- */
+.chart { display: flex; align-items: flex-end; gap: var(--space-200); height: 180px; padding-top: var(--space-200); }
+.chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-100); height: 100%; justify-content: flex-end; }
+.chart-bar {
+  width: 100%; max-width: 44px; border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  background: var(--ocean-200);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.chart-col.is-peak .chart-bar { background: var(--ocean-500); }
+.chart-col:hover .chart-bar { background: var(--kblue-500); }
+.chart-x { font-size: var(--fs-caption); color: var(--text-tertiary); }
+
+/* ---------- Booking masuk (Figma: Card/BookingRequest) ---------- */
+.booking-req {
+  display: flex; align-items: center; gap: var(--space-250);
+  padding: var(--space-250);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  flex-wrap: wrap;
+}
+.booking-req + .booking-req { margin-top: var(--space-150); }
+.booking-req-main { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 180px; }
+.booking-req-actions { display: flex; gap: var(--space-100); flex-wrap: wrap; }
+.booking-req.is-pending { border-left: 4px solid var(--warning-500); }
+
+/* ---------- Service row (Figma: Card/Service) ---------- */
+.service-row {
+  display: flex; align-items: center; gap: var(--space-200);
+  padding: var(--space-200) var(--space-250);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  flex-wrap: wrap;
+}
+.service-row + .service-row { margin-top: var(--space-150); }
+.service-thumb { width: 56px; height: 56px; flex: none; border-radius: var(--radius-md); overflow: hidden; }
+.service-thumb > .scene, .service-thumb > div { width: 100%; height: 100%; }
+
+/* ---------- Responsif sisi mitra ---------- */
+@media (max-width: 1000px) {
+  .dash-layout { grid-template-columns: 1fr; }
+  .dash-sidebar {
+    position: static; height: auto; flex-direction: row; flex-wrap: wrap;
+    border-right: none; border-bottom: 1px solid var(--border-default);
+    align-items: center;
+  }
+  .dash-nav { flex-direction: row; flex-wrap: wrap; }
+  .dash-nav-label { display: none; }
+  .dash-navlink .badge { margin-left: 0; }
+}
+@media (max-width: 640px) {
+  .dash-body { padding: var(--space-250); }
+  .dash-topbar { padding: var(--space-200) var(--space-250); }
+  .logo-chip-mitra { display: none; }
+}
+
+/* ===== PAGE STYLES ===== */
+/* ===== mitra-login.html ===== */
+/* Figma: Desktop/Mitra 00 Login */
+  .login-wrap { display: grid; grid-template-columns: 1.05fr 1fr; min-height: 100vh; }
+  .login-brand {
+    position: relative; overflow: hidden; color: var(--white);
+    background: linear-gradient(150deg, var(--kblue-600), var(--navy-900));
+    padding: var(--space-800) var(--space-600);
+    display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-600);
+  }
+  .login-brand-bg { position: absolute; inset: 0; opacity: .22; }
+  .login-brand > * { position: relative; z-index: 1; }
+  .login-panel { display: grid; place-items: center; padding: var(--space-500); position: relative; background: var(--bg-canvas); }
+  .login-card { width: 100%; max-width: 400px; }
+  .login-top { position: absolute; top: var(--space-300); right: var(--space-400); }
+  @media (max-width: 860px) {
+    .login-wrap { grid-template-columns: 1fr; }
+    .login-brand { display: none; }
+  }
+/* ===== mitra-daftar.html ===== */
+/* Figma: Desktop/Mitra 02 Daftar */
+  .wizard { max-width: 760px; margin-inline: auto; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-250); }
+  @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+
+  .select-card {
+    position: relative;
+    padding: var(--space-250);
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    cursor: pointer; text-align: left;
+    display: flex; flex-direction: column; gap: var(--space-150);
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+  .select-card:hover { border-color: var(--ocean-400); background: var(--ocean-50); }
+  .select-card input { display: none; }
+  .select-card.is-selected {
+    border-color: var(--ocean-500); background: var(--ocean-50);
+    box-shadow: 0 0 0 3px var(--ocean-50);
+  }
+  .select-card__tick {
+    position: absolute; top: 14px; right: 14px;
+    width: 22px; height: 22px; border-radius: var(--radius-full);
+    background: var(--ocean-500); color: var(--white);
+    display: grid; place-items: center;
+    opacity: 0; transform: scale(.6);
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+  .select-card.is-selected .select-card__tick { opacity: 1; transform: scale(1); }
+/* ===== SHELL ===== */
+.kframe[hidden] { display: none; }
+</style>
+</head>
+<body>
+
+<section class="kframe" data-frame="mitra" aria-label="Beranda Mitra">
+<div data-slot="partner-navbar"></div>
+
+<main>
+
+  <!-- ====================================================================
+       Hero — ajakan jadi mitra
+       Figma: Desktop/Mitra 01 Landing
+       ==================================================================== -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="badge badge--brand" style="align-self:flex-start">
+            <i data-icon="sparkle"></i> Gratis didaftarkan · tanpa biaya bulanan
+          </span>
+          <h1 class="t-display t-balance">
+            Tumbuhkan usahamu bareng <span class="t-mark">wisatawan Nusantara</span>
+          </h1>
+          <p class="t-body-lg t-muted" style="max-width:520px">
+            Kelana menghubungkan pemandu wisata, UMKM lokal, dan operator trip dengan ribuan
+            wisatawan yang sedang menyusun rencana jalan. Pasang layananmu, kelola booking dari
+            satu dashboard, dan terima pembayaran tepat waktu.
+          </p>
+          <div class="row row-wrap" style="margin-top:var(--space-100)">
+            <a class="btn btn--primary btn--lg" href="mitra-daftar.html">
+              <i data-icon="plus"></i> Daftar jadi mitra
+            </a>
+            <a class="btn btn--secondary btn--lg" href="mitra-dashboard.html">
+              Lihat contoh dashboard
+            </a>
+          </div>
+          <div class="hero-proof">
+            <div class="avatar-stack" aria-hidden="true">
+              <span class="avatar avatar--sm">YN</span>
+              <span class="avatar avatar--sm avatar--c2">KA</span>
+              <span class="avatar avatar--sm avatar--c3">SH</span>
+              <span class="avatar avatar--sm avatar--c4">MS</span>
+              <span class="avatar avatar--sm avatar--c5">+</span>
+            </div>
+            <p class="t-body-sm t-muted">
+              <strong style="color:var(--text-primary)">3.200+ mitra</strong> sudah bergabung di
+              87 destinasi
+            </p>
+          </div>
+        </div>
+
+        <!-- Visual: kartu penghasilan mitra -->
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-art-card"><div data-scene="reef"></div></div>
+          <div class="hero-art-card"><div data-scene="volcano"></div></div>
+          <div class="hero-art-float hero-art-float--a">
+            <span class="feature-icon" style="width:40px;height:40px;border-radius:12px">
+              <i data-icon="wallet" data-icon-size="20px"></i>
+            </span>
+            <div class="stack">
+              <strong class="t-body-sm">Rp 8,4 jt bulan ini</strong>
+              <span class="t-caption t-muted">12 booking selesai</span>
+            </div>
+          </div>
+          <div class="hero-art-float hero-art-float--b">
+            <span class="feature-icon feature-icon--accent" style="width:40px;height:40px;border-radius:12px">
+              <i data-icon="star" data-icon-size="20px"></i>
+            </span>
+            <div class="stack">
+              <strong class="t-body-sm">Rating 4,9</strong>
+              <span class="t-caption t-muted">dari 284 ulasan</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Strip statistik -->
+  <section style="padding-block:var(--space-400);border-block:1px solid var(--border-subtle);background:var(--bg-surface)">
+    <div class="container">
+      <div class="row row-wrap" style="gap:var(--space-600);justify-content:space-between">
+        <div class="stat">
+          <span class="stat-value">3.200+</span>
+          <span class="stat-label">Mitra aktif</span>
+        </div>
+        <span class="stat-divider hide-mobile"></span>
+        <div class="stat">
+          <span class="stat-value">24.800</span>
+          <span class="stat-label">Wisatawan per bulan</span>
+        </div>
+        <span class="stat-divider hide-mobile"></span>
+        <div class="stat">
+          <span class="stat-value">H+2</span>
+          <span class="stat-label">Pembayaran cair</span>
+        </div>
+        <span class="stat-divider hide-mobile"></span>
+        <div class="stat">
+          <span class="stat-value">0%</span>
+          <span class="stat-label">Biaya pendaftaran</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       Kenapa Kelana
+       ==================================================================== -->
+  <section class="section" id="kenapa">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack stack-150">
+          <p class="t-overline t-accent">Kenapa Kelana</p>
+          <h2 class="t-h2 t-balance">Fokus melayani tamu, biar Kelana yang urus sisanya</h2>
+          <p class="t-body t-muted">
+            Kamu nggak perlu bikin website sendiri atau kejar-kejaran DM. Semua booking,
+            jadwal, dan pembayaran ada di satu tempat.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-4">
+        <article class="feature-card">
+          <span class="feature-icon"><i data-icon="users" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Jangkauan luas</h3>
+          <p class="t-body t-muted">
+            Layananmu muncul saat wisatawan menyusun itinerary ke destinasimu — tepat waktu
+            mereka butuh.
+          </p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon feature-icon--accent"><i data-icon="calendar" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Kelola satu tempat</h3>
+          <p class="t-body t-muted">
+            Terima atau tolak booking, atur ketersediaan, dan update harga dari dashboard yang
+            sama.
+          </p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon feature-icon--sand"><i data-icon="wallet" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Bayaran tepat waktu</h3>
+          <p class="t-body t-muted">
+            Pembayaran wisatawan ditahan Kelana sampai trip selesai, lalu cair ke rekeningmu
+            dalam 2 hari.
+          </p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon"><i data-icon="shield" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Perlindungan mitra</h3>
+          <p class="t-body t-muted">
+            Verifikasi dua arah, kebijakan pembatalan yang adil, dan tim dukungan yang paham
+            lapangan.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       Tipe mitra
+       ==================================================================== -->
+  <section class="section section--alt" id="tipe">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack stack-150">
+          <p class="t-overline t-accent">Tipe mitra</p>
+          <h2 class="t-h2 t-balance">Apa pun yang kamu tawarkan, ada tempatnya</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-3">
+        <article class="card card--pad stack stack-200">
+          <span class="feature-icon"><i data-icon="compass" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Pemandu wisata</h3>
+          <p class="t-body t-muted">
+            Tawarkan jasa memandu harian atau per-trip. Atur spesialisasi, bahasa, dan tarif
+            per hari.
+          </p>
+          <div class="stack stack-100" style="margin-top:var(--space-100)">
+            <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Profil terverifikasi &amp; rating</span>
+            <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Booking langsung &amp; open trip</span>
+            <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Kalender ketersediaan</span>
+          </div>
+          <a class="btn btn--secondary btn--block mt-auto" href="mitra-daftar.html">Daftar sebagai pemandu</a>
+        </article>
+
+        <article class="card card--pad stack stack-200" style="border-color:var(--border-brand);box-shadow:var(--shadow-brand)">
+          <div class="row row-between">
+            <span class="feature-icon feature-icon--accent"><i data-icon="food" data-icon-size="28px"></i></span>
+            <span class="badge badge--accent">Paling populer</span>
+          </div>
+          <h3 class="t-h4">UMKM lokal</h3>
+          <p class="t-body t-muted">
+            Warung, kerajinan, sewa alat, homestay, atau pengalaman khas. Jual langsung ke
+            wisatawan yang lewat.
+          </p>
+          <div class="stack stack-100" style="margin-top:var(--space-100)">
+            <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Etalase produk &amp; layanan</span>
+            <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Muncul di itinerary terkait</span>
+            <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Terima pesanan &amp; reservasi</span>
+          </div>
+          <a class="btn btn--primary btn--block mt-auto" href="mitra-daftar.html">Daftarkan usahaku</a>
+        </article>
+
+        <article class="card card--pad stack stack-200">
+          <span class="feature-icon feature-icon--sand"><i data-icon="route" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Operator open trip</h3>
+          <p class="t-body t-muted">
+            Buka trip patungan untuk umum. Atur kuota, tanggal, dan tarif bertingkat yang turun
+            saat kursi terisi.
+          </p>
+          <div class="stack stack-100" style="margin-top:var(--space-100)">
+            <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Kelola kuota &amp; peserta</span>
+            <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Tarif patungan otomatis</span>
+            <span class="row row-100 t-body-sm"><i data-icon="check" style="color:var(--success-500)"></i> Grup chat peserta</span>
+          </div>
+          <a class="btn btn--secondary btn--block mt-auto" href="mitra-daftar.html">Daftar sebagai operator</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       Cara kerja
+       ==================================================================== -->
+  <section class="section" id="cara">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack stack-150">
+          <p class="t-overline t-accent">Cara kerja</p>
+          <h2 class="t-h2 t-balance">Dari daftar sampai dibayar — empat langkah</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-4">
+        <article class="feature-card">
+          <span class="feature-card__num">1</span>
+          <span class="feature-icon"><i data-icon="edit" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Daftar</h3>
+          <p class="t-body t-muted">Isi data usaha dan pilih tipe mitramu. Gratis, 5 menit.</p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-card__num">2</span>
+          <span class="feature-icon feature-icon--accent"><i data-icon="shield" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Verifikasi</h3>
+          <p class="t-body t-muted">Unggah identitas &amp; sertifikasi. Tim Kelana cek dalam 1–2 hari kerja.</p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-card__num">3</span>
+          <span class="feature-icon feature-icon--sand"><i data-icon="camera" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Pasang layanan</h3>
+          <p class="t-body t-muted">Tambah foto, deskripsi, dan tarif. Atur kapan kamu tersedia.</p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-card__num">4</span>
+          <span class="feature-icon"><i data-icon="wallet" data-icon-size="28px"></i></span>
+          <h3 class="t-h4">Terima booking</h3>
+          <p class="t-body t-muted">Wisatawan pesan, kamu konfirmasi, lalu dibayar setelah trip selesai.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       Testimoni mitra
+       ==================================================================== -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack stack-150">
+          <p class="t-overline t-accent">Kata mitra</p>
+          <h2 class="t-h2 t-balance">Mereka sudah jalan duluan</h2>
+        </div>
+      </div>
+      <div class="grid grid-3">
+        <article class="card card--pad stack stack-200">
+          <span class="rating">
+            <i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i>
+          </span>
+          <p class="t-body">
+            "Dulu saya cuma dapat tamu dari mulut ke mulut. Sekarang kalender saya penuh dua
+            minggu ke depan, dan bayarannya pasti."
+          </p>
+          <div class="row" style="margin-top:auto">
+            <span class="avatar">YN</span>
+            <div class="stack">
+              <strong class="t-body-sm">Yanto Nugraha</strong>
+              <span class="t-caption t-muted">Pemandu · Labuan Bajo</span>
+            </div>
+          </div>
+        </article>
+        <article class="card card--pad stack stack-200">
+          <span class="rating">
+            <i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i>
+          </span>
+          <p class="t-body">
+            "Warung kopi saya muncul di itinerary trip Bromo. Tiap pagi ada saja rombongan yang
+            mampir karena lihat di Kelana."
+          </p>
+          <div class="row" style="margin-top:auto">
+            <span class="avatar avatar--c2">BP</span>
+            <div class="stack">
+              <strong class="t-body-sm">Bu Pur</strong>
+              <span class="t-caption t-muted">UMKM · Warung Kopi, Malang</span>
+            </div>
+          </div>
+        </article>
+        <article class="card card--pad stack stack-200">
+          <span class="rating">
+            <i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i><i data-icon="star"></i>
+          </span>
+          <p class="t-body">
+            "Fitur open trip patungannya bikin kursi cepat penuh. Saya tinggal atur kuota, sistem
+            yang hitung tarifnya."
+          </p>
+          <div class="row" style="margin-top:auto">
+            <span class="avatar avatar--c3">MS</span>
+            <div class="stack">
+              <strong class="t-body-sm">Markus Sauyai</strong>
+              <span class="t-caption t-muted">Operator · Raja Ampat</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA penutup -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="card" style="position:relative;overflow:hidden;border:none;background:var(--kblue-700);padding:var(--space-1000) var(--space-600);text-align:center">
+        <div style="position:absolute;inset:0;opacity:.3">
+          <div data-scene="ocean" style="width:100%;height:100%"></div>
+        </div>
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(21,47,71,.94),rgba(21,47,71,.64))"></div>
+        <div class="stack stack-300" style="position:relative;align-items:center;max-width:620px;margin-inline:auto">
+          <h2 class="t-h1 t-balance" style="color:var(--white)">Siap menerima tamu pertamamu?</h2>
+          <p class="t-body-lg" style="color:rgba(226,232,240,.86)">
+            Pendaftaran gratis dan cuma butuh 5 menit. Kamu bisa mulai pasang layanan sambil
+            menunggu verifikasi.
+          </p>
+          <div class="row row-wrap" style="justify-content:center;margin-top:var(--space-100)">
+            <a class="btn btn--accent btn--lg" href="mitra-daftar.html">
+              <i data-icon="plus"></i> Daftar jadi mitra sekarang
+            </a>
+            <a class="btn btn--on-ink btn--lg" href="mitra-dashboard.html">Lihat dashboard dulu</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div data-slot="partner-footer"></div>
+</section>
+<section class="kframe" data-frame="mitra-login" hidden aria-label="Masuk">
+<main class="login-wrap">
+
+  <!-- Panel brand (kiri) -->
+  <section class="login-brand">
+    <div class="login-brand-bg"><div data-scene="ocean" style="width:100%;height:100%"></div></div>
+
+    <a class="logo" href="mitra.html" aria-label="Kelana Mitra">
+      <span class="logo-mark logo-mark--mitra"><i data-icon="logo" data-icon-size="22px"></i></span>
+      <span class="logo-type" style="color:var(--white)">kelana<em>.</em></span>
+      <span class="logo-chip-mitra">Mitra</span>
+    </a>
+
+    <div class="stack stack-300" style="max-width:420px">
+      <h1 class="t-h1 t-balance" style="color:var(--white)">Satu dashboard untuk semua tamumu</h1>
+      <div class="stack stack-200">
+        <span class="row row-100 t-body-lg" style="color:rgba(255,255,255,.92)"><i data-icon="calendar"></i> Kelola booking &amp; ketersediaan</span>
+        <span class="row row-100 t-body-lg" style="color:rgba(255,255,255,.92)"><i data-icon="wallet"></i> Pantau pendapatan, cair H+2</span>
+        <span class="row row-100 t-body-lg" style="color:rgba(255,255,255,.92)"><i data-icon="star"></i> Bangun reputasi lewat ulasan</span>
+      </div>
+    </div>
+
+    <div class="row row-100">
+      <div class="avatar-stack" aria-hidden="true">
+        <span class="avatar avatar--sm">YN</span>
+        <span class="avatar avatar--sm avatar--c2">KA</span>
+        <span class="avatar avatar--sm avatar--c3">SH</span>
+      </div>
+      <span class="t-body-sm" style="color:rgba(255,255,255,.82)">Bergabung dengan 3.200+ mitra</span>
+    </div>
+  </section>
+
+  <!-- Panel form (kanan) -->
+  <section class="login-panel">
+    <a class="btn btn--ghost btn--sm login-top" href="index.html">
+      <i data-icon="globe"></i> Ke sisi wisatawan
+    </a>
+
+    <div class="login-card">
+      <div class="stack stack-300">
+        <div class="stack stack-150">
+          <a class="logo" href="mitra.html" aria-label="Kelana Mitra">
+            <span class="logo-mark logo-mark--mitra"><i data-icon="logo" data-icon-size="22px"></i></span>
+            <span class="logo-type">kelana<em>.</em></span>
+            <span class="logo-chip-mitra">Mitra</span>
+          </a>
+          <div class="stack" style="gap:2px">
+            <h2 class="t-h3">Masuk ke dashboard</h2>
+            <p class="t-body-sm t-muted">Selamat datang kembali. Kelola usahamu di satu tempat.</p>
+          </div>
+        </div>
+
+        <button class="btn btn--secondary btn--block btn--lg" data-toast="Demo prototype — OAuth belum disambungkan" data-toast-icon="info">
+          <i data-icon="globe"></i> Masuk dengan Google
+        </button>
+
+        <div class="row row-100">
+          <hr class="divider" style="flex:1"><span class="t-caption t-subtle">atau</span><hr class="divider" style="flex:1">
+        </div>
+
+        <!-- Navigasi lewat anchor tersembunyi agar jalan di versi multi-halaman
+             (navigasi file) maupun di bundel satu-file (router cegat klik). -->
+        <a id="go-dash" href="mitra-dashboard.html" hidden aria-hidden="true"></a>
+        <form class="stack stack-200" onsubmit="event.preventDefault(); Kelana.toast('Berhasil masuk — membuka dashboard','check'); setTimeout(function(){document.getElementById('go-dash').click()}, 500)">
+          <label class="field">
+            <span class="field-label">Email</span>
+            <input class="input" type="email" placeholder="nama@usaha.com" value="yanto@komodosail.id" required>
+          </label>
+          <label class="field">
+            <div class="row row-between">
+              <span class="field-label">Kata sandi</span>
+              <a class="t-caption" style="color:var(--text-brand);font-weight:var(--fw-bold);cursor:pointer"
+                 onclick="Kelana.toast('Tautan reset dikirim ke emailmu','info')">Lupa sandi?</a>
+            </div>
+            <input class="input" type="password" placeholder="Kata sandi" value="demo1234" required>
+          </label>
+          <label class="check">
+            <input type="checkbox" checked>
+            <span class="check-box"><i data-icon="check"></i></span>
+            <span class="t-body-sm">Ingat saya di perangkat ini</span>
+          </label>
+          <button class="btn btn--primary btn--block btn--lg" type="submit">Masuk</button>
+        </form>
+
+        <p class="t-body-sm t-muted t-center">
+          Belum punya akun?
+          <a href="mitra-daftar.html" style="color:var(--text-brand);font-weight:var(--fw-bold)">Daftar jadi mitra</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+</section>
+<section class="kframe" data-frame="mitra-daftar" hidden aria-label="Daftar">
+<div data-slot="partner-navbar"></div>
+
+<main>
+  <!-- Header + stepper -->
+  <section style="background:var(--bg-surface);border-bottom:1px solid var(--border-subtle);padding-block:var(--space-400)">
+    <div class="container">
+      <div class="wizard">
+        <div class="row row-wrap row-between" style="gap:var(--space-300)">
+          <div class="stack stack-100">
+            <p class="t-overline t-accent">Pendaftaran mitra</p>
+            <h1 class="t-h3" id="mitra-daftar-title">Kamu mitra tipe apa?</h1>
+          </div>
+          <div class="stepper" id="stepper">
+            <div class="step is-current" data-step-indicator="1"><span class="step-dot">1</span><span class="step-label hide-mobile">Tipe</span></div>
+            <span class="step-line"></span>
+            <div class="step" data-step-indicator="2"><span class="step-dot">2</span><span class="step-label hide-mobile">Data</span></div>
+            <span class="step-line"></span>
+            <div class="step" data-step-indicator="3"><span class="step-dot">3</span><span class="step-label hide-mobile">Verifikasi</span></div>
+            <span class="step-line"></span>
+            <div class="step" data-step-indicator="4"><span class="step-dot">4</span><span class="step-label hide-mobile">Layanan</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="wizard">
+
+        <!-- ============ LANGKAH 1 — Tipe mitra ============ -->
+        <div data-step="1">
+          <div class="stack stack-300">
+            <p class="t-body t-muted">Pilih yang paling pas. Kamu bisa menambah tipe lain nanti dari dashboard.</p>
+            <div class="stack stack-150">
+              <label class="select-card is-selected" style="flex-direction:row;align-items:center">
+                <input type="radio" name="tipe" checked>
+                <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                <span class="feature-icon" style="width:48px;height:48px;flex:none"><i data-icon="compass" data-icon-size="24px"></i></span>
+                <span class="stack" style="flex:1">
+                  <strong class="t-body">Pemandu wisata</strong>
+                  <span class="t-body-sm t-muted">Jasa memandu harian atau per-trip, dengan tarif per hari.</span>
+                </span>
+              </label>
+              <label class="select-card" style="flex-direction:row;align-items:center">
+                <input type="radio" name="tipe">
+                <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                <span class="feature-icon feature-icon--accent" style="width:48px;height:48px;flex:none"><i data-icon="food" data-icon-size="24px"></i></span>
+                <span class="stack" style="flex:1">
+                  <strong class="t-body">UMKM lokal</strong>
+                  <span class="t-body-sm t-muted">Warung, kerajinan, sewa alat, homestay, atau pengalaman khas.</span>
+                </span>
+              </label>
+              <label class="select-card" style="flex-direction:row;align-items:center">
+                <input type="radio" name="tipe">
+                <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                <span class="feature-icon feature-icon--sand" style="width:48px;height:48px;flex:none"><i data-icon="route" data-icon-size="24px"></i></span>
+                <span class="stack" style="flex:1">
+                  <strong class="t-body">Operator open trip</strong>
+                  <span class="t-body-sm t-muted">Buka trip patungan untuk umum dengan kuota dan tarif bertingkat.</span>
+                </span>
+              </label>
+            </div>
+            <div class="row row-between row-wrap" style="gap:var(--space-200)">
+              <a class="btn btn--ghost" href="mitra.html"><i data-icon="chevL"></i> Batal</a>
+              <button class="btn btn--primary btn--lg" data-goto-step="2">Lanjut ke data usaha <i data-icon="arrowR"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ LANGKAH 2 — Data usaha ============ -->
+        <div data-step="2" hidden>
+          <div class="stack stack-300">
+            <div class="card card--pad stack stack-300">
+              <h2 class="t-h4">Profil usaha</h2>
+              <div class="form-grid">
+                <label class="field">
+                  <span class="field-label">Nama usaha / nama kamu</span>
+                  <input class="input" type="text" placeholder="mis. Komodo Sail by Yanto">
+                </label>
+                <label class="field">
+                  <span class="field-label">Nama penanggung jawab</span>
+                  <input class="input" type="text" placeholder="Nama lengkap sesuai KTP">
+                </label>
+                <label class="field">
+                  <span class="field-label">Destinasi / kota</span>
+                  <div class="select-wrap">
+                    <select class="input">
+                      <option>Labuan Bajo, NTT</option>
+                      <option>Yogyakarta</option>
+                      <option>Bali</option>
+                      <option>Bromo &amp; Malang</option>
+                      <option>Raja Ampat</option>
+                    </select>
+                  </div>
+                </label>
+                <label class="field">
+                  <span class="field-label">Nomor WhatsApp</span>
+                  <input class="input" type="tel" placeholder="08xx xxxx xxxx">
+                </label>
+              </div>
+              <label class="field">
+                <span class="field-label">Ceritakan usahamu</span>
+                <textarea class="input input--textarea" placeholder="Apa yang kamu tawarkan, apa yang bikin beda, pengalaman kamu…"></textarea>
+                <span class="field-hint">Ini yang dibaca wisatawan di profilmu. Jujur dan spesifik lebih meyakinkan.</span>
+              </label>
+            </div>
+            <div class="row row-between row-wrap" style="gap:var(--space-200)">
+              <button class="btn btn--ghost" data-goto-step="1"><i data-icon="chevL"></i> Kembali</button>
+              <button class="btn btn--primary btn--lg" data-goto-step="3">Lanjut ke verifikasi <i data-icon="arrowR"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ LANGKAH 3 — Verifikasi ============ -->
+        <div data-step="3" hidden>
+          <div class="stack stack-300">
+            <div class="card card--pad stack stack-300">
+              <div class="stack stack-100">
+                <h2 class="t-h4">Verifikasi identitas</h2>
+                <p class="t-body-sm t-muted">Dokumen hanya dipakai untuk verifikasi dan tidak ditampilkan ke wisatawan.</p>
+              </div>
+              <div class="form-grid">
+                <div class="dropzone" data-dropzone>
+                  <span class="dropzone-icon"><i data-icon="users" data-icon-size="24px"></i></span>
+                  <strong class="t-body-sm">KTP penanggung jawab</strong>
+                  <span class="t-caption t-muted">JPG atau PNG, maks 5 MB</span>
+                </div>
+                <div class="dropzone" data-dropzone>
+                  <span class="dropzone-icon"><i data-icon="shield" data-icon-size="24px"></i></span>
+                  <strong class="t-body-sm">NIB / sertifikasi</strong>
+                  <span class="t-caption t-muted">Opsional untuk UMKM, wajib untuk pemandu</span>
+                </div>
+              </div>
+              <div class="card card--pad stack stack-100" style="background:var(--bg-ice);border-color:var(--ocean-100)">
+                <div class="row row-100">
+                  <i data-icon="info" data-icon-size="18px" style="color:var(--text-brand)"></i>
+                  <strong class="t-body-sm">Butuh 1–2 hari kerja</strong>
+                </div>
+                <p class="t-caption t-muted">
+                  Kamu tetap bisa menyelesaikan pendaftaran dan memasang layanan sekarang. Layanan
+                  mulai tampil ke wisatawan setelah verifikasi disetujui.
+                </p>
+              </div>
+            </div>
+            <div class="row row-between row-wrap" style="gap:var(--space-200)">
+              <button class="btn btn--ghost" data-goto-step="2"><i data-icon="chevL"></i> Kembali</button>
+              <button class="btn btn--primary btn--lg" data-goto-step="4">Lanjut ke layanan <i data-icon="arrowR"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ LANGKAH 4 — Layanan & tarif ============ -->
+        <div data-step="4" hidden>
+          <div class="stack stack-300">
+            <div class="card card--pad stack stack-300">
+              <div class="row row-between">
+                <h2 class="t-h4">Layanan pertamamu</h2>
+                <span class="badge badge--neutral">Bisa tambah lagi nanti</span>
+              </div>
+              <div class="form-grid">
+                <label class="field">
+                  <span class="field-label">Nama layanan</span>
+                  <input class="input" type="text" value="Sailing Komodo 3 Hari">
+                </label>
+                <label class="field">
+                  <span class="field-label">Tarif</span>
+                  <input class="input" type="text" value="Rp 650.000 / hari">
+                </label>
+              </div>
+              <label class="field">
+                <span class="field-label">Deskripsi singkat</span>
+                <textarea class="input input--textarea" placeholder="Apa yang termasuk, durasi, titik temu…"></textarea>
+              </label>
+              <div class="field">
+                <span class="field-label">Foto layanan</span>
+                <div class="dropzone" data-dropzone>
+                  <span class="dropzone-icon"><i data-icon="camera" data-icon-size="24px"></i></span>
+                  <strong class="t-body-sm">Tarik foto ke sini atau klik untuk pilih</strong>
+                  <span class="t-caption t-muted">Minimal 3 foto, rasio 4:3 paling bagus</span>
+                </div>
+              </div>
+            </div>
+            <div class="row row-between row-wrap" style="gap:var(--space-200)">
+              <button class="btn btn--ghost" data-goto-step="3"><i data-icon="chevL"></i> Kembali</button>
+              <button class="btn btn--accent btn--lg" data-goto-step="5"><i data-icon="check"></i> Selesai &amp; kirim</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ LANGKAH 5 — Selesai ============ -->
+        <div data-step="5" hidden>
+          <div class="card card--pad stack stack-300" style="text-align:center;align-items:center;padding-block:var(--space-800)">
+            <span class="dropzone-icon is-done" style="width:72px;height:72px;background:var(--success-100);color:var(--success-700)">
+              <i data-icon="check" data-icon-size="34px"></i>
+            </span>
+            <div class="stack stack-150" style="align-items:center;max-width:460px">
+              <h2 class="t-h3">Pendaftaran terkirim!</h2>
+              <p class="t-body t-muted">
+                Tim Kelana sedang memverifikasi datamu. Kamu akan dikabari lewat WhatsApp dalam
+                1–2 hari kerja. Sementara itu, lengkapi profil dan layananmu di dashboard.
+              </p>
+              <span class="badge badge--warning" style="margin-top:var(--space-100)">
+                <span class="badge-dot"></span> Status: menunggu verifikasi
+              </span>
+            </div>
+            <div class="row row-wrap" style="justify-content:center;margin-top:var(--space-100)">
+              <a class="btn btn--primary btn--lg" href="mitra-dashboard.html"><i data-icon="arrowR"></i> Buka dashboard</a>
+              <a class="btn btn--secondary btn--lg" href="mitra.html">Kembali ke beranda mitra</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<div data-slot="partner-footer"></div>
+</section>
+<section class="kframe" data-frame="mitra-dashboard" hidden aria-label="Dashboard">
+<!-- ======================================================================
+     Dashboard mitra — shell sidebar + main (bukan navbar wisatawan)
+     Figma: Desktop/Mitra 03 Dashboard
+     ====================================================================== -->
+<div class="dash-layout">
+
+  <!-- ============ Sidebar ============ -->
+  <aside class="dash-sidebar">
+    <a class="logo" href="mitra.html" aria-label="Kelana Mitra">
+      <span class="logo-mark logo-mark--mitra"><i data-icon="logo" data-icon-size="22px"></i></span>
+      <span class="logo-type">kelana<em>.</em></span>
+    </a>
+
+    <nav class="dash-nav" aria-label="Navigasi dashboard">
+      <span class="dash-nav-label">Kelola</span>
+      <a class="dash-navlink is-active" href="#ringkasan"><i data-icon="compass"></i> Dashboard</a>
+      <a class="dash-navlink" href="#booking"><i data-icon="calendar"></i> Booking <span class="badge badge--accent">3</span></a>
+      <a class="dash-navlink" href="#layanan"><i data-icon="route"></i> Layanan</a>
+      <a class="dash-navlink" data-soon><i data-icon="clock"></i> Kalender</a>
+      <a class="dash-navlink" href="#ringkasan"><i data-icon="wallet"></i> Pendapatan</a>
+      <a class="dash-navlink" href="#ulasan"><i data-icon="star"></i> Ulasan</a>
+      <span class="dash-nav-label">Akun</span>
+      <a class="dash-navlink" data-soon><i data-icon="users"></i> Profil usaha</a>
+      <a class="dash-navlink" data-soon><i data-icon="shield"></i> Pengaturan</a>
+    </nav>
+
+    <div class="stack stack-150" style="margin-top:auto">
+      <div class="card card--pad stack stack-100" style="background:var(--bg-ice);border-color:var(--ocean-100)">
+        <span class="badge badge--success" style="align-self:flex-start"><i data-icon="shield"></i> Terverifikasi</span>
+        <span class="t-caption t-muted">Yanto Nugraha · Pemandu, Labuan Bajo</span>
+      </div>
+      <a class="dash-navlink" href="index.html"><i data-icon="globe"></i> Ke sisi wisatawan</a>
+    </div>
+  </aside>
+
+  <!-- ============ Main ============ -->
+  <div class="dash-main">
+    <header class="dash-topbar">
+      <div class="stack" style="gap:0">
+        <strong class="t-h5" id="dash-title">Dashboard</strong>
+        <span class="t-caption t-muted">Halo, Yanto — ini ringkasan usahamu</span>
+      </div>
+      <span class="spacer"></span>
+      <label class="toggle hide-mobile" title="Terima booking baru">
+        <input type="checkbox" checked data-availability>
+        <span class="toggle-track"></span>
+        <span class="t-body-sm" style="font-weight:var(--fw-semibold)">Menerima booking</span>
+      </label>
+      <button class="btn-icon" data-toast="2 notifikasi baru" data-toast-icon="info" aria-label="Notifikasi"><i data-icon="chat" data-icon-size="18px"></i></button>
+      <span class="avatar">YN</span>
+    </header>
+
+    <div class="dash-body">
+
+      <!-- ===== Ringkasan ===== -->
+      <section id="ringkasan" class="stack stack-400" style="scroll-margin-top:84px">
+        <div class="grid grid-4">
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-card-icon"><i data-icon="wallet"></i></span>
+              <span class="stat-delta stat-delta--up"><i data-icon="arrowR" data-icon-size="12px" style="transform:rotate(-45deg)"></i> 18%</span>
+            </div>
+            <span class="stat-card-value">Rp 8,4jt</span>
+            <span class="stat-card-label">Pendapatan bulan ini</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-card-icon stat-card-icon--alt"><i data-icon="calendar"></i></span>
+              <span class="stat-delta stat-delta--up"><i data-icon="arrowR" data-icon-size="12px" style="transform:rotate(-45deg)"></i> 3 baru</span>
+            </div>
+            <span class="stat-card-value">12</span>
+            <span class="stat-card-label">Booking aktif</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-card-icon stat-card-icon--accent"><i data-icon="star"></i></span>
+              <span class="stat-delta stat-delta--up">4,9</span>
+            </div>
+            <span class="stat-card-value">284</span>
+            <span class="stat-card-label">Ulasan diterima</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-card-icon stat-card-icon--success"><i data-icon="chat"></i></span>
+              <span class="stat-delta stat-delta--up">Cepat</span>
+            </div>
+            <span class="stat-card-value">98%</span>
+            <span class="stat-card-label">Tingkat respons</span>
+          </div>
+        </div>
+
+        <div class="dash-split">
+          <div class="card card--pad stack stack-200">
+            <div class="row row-between">
+              <div class="stack" style="gap:0">
+                <strong class="t-h5">Pendapatan 7 bulan terakhir</strong>
+                <span class="t-caption t-muted">Total Rp 46,2 jt</span>
+              </div>
+              <div class="select-wrap">
+                <select class="input" style="height:40px;font-size:var(--fs-body-sm)">
+                  <option>2026</option><option>2025</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart">
+              <div class="chart-col"><div class="chart-bar" style="height:38%"></div><span class="chart-x">Apr</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:52%"></div><span class="chart-x">Mei</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:45%"></div><span class="chart-x">Jun</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:70%"></div><span class="chart-x">Jul</span></div>
+              <div class="chart-col is-peak"><div class="chart-bar" style="height:92%"></div><span class="chart-x">Agu</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:64%"></div><span class="chart-x">Sep</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:78%"></div><span class="chart-x">Okt</span></div>
+            </div>
+          </div>
+
+          <div class="card card--pad stack stack-200">
+            <div class="row row-between">
+              <strong class="t-h5">Ketersediaan</strong>
+              <span class="badge badge--success">Aktif</span>
+            </div>
+            <p class="t-body-sm t-muted">Atur hari kamu bisa menerima tamu minggu ini.</p>
+            <div class="stack stack-100">
+              <label class="toggle row-between" style="justify-content:space-between;width:100%">
+                <span class="t-body-sm">Sen – Jum</span>
+                <span style="display:inline-flex"><input type="checkbox" checked><span class="toggle-track"></span></span>
+              </label>
+              <hr class="divider">
+              <label class="toggle" style="justify-content:space-between;width:100%">
+                <span class="t-body-sm">Sabtu</span>
+                <span style="display:inline-flex"><input type="checkbox" checked><span class="toggle-track"></span></span>
+              </label>
+              <hr class="divider">
+              <label class="toggle" style="justify-content:space-between;width:100%">
+                <span class="t-body-sm">Minggu</span>
+                <span style="display:inline-flex"><input type="checkbox"><span class="toggle-track"></span></span>
+              </label>
+            </div>
+            <button class="btn btn--secondary btn--sm btn--block" data-toast="Ketersediaan tersimpan" data-toast-icon="check">Simpan ketersediaan</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Booking masuk ===== -->
+      <section id="booking" class="stack stack-200" style="scroll-margin-top:84px">
+        <div class="row row-between">
+          <h2 class="t-h4">Booking masuk</h2>
+          <span class="badge badge--accent">3 menunggu konfirmasi</span>
+        </div>
+
+        <div class="booking-req is-pending" data-req>
+          <div class="service-thumb"><div data-scene="ocean"></div></div>
+          <div class="booking-req-main">
+            <strong class="t-body">Sailing Komodo 3 Hari · 2 orang</strong>
+            <span class="t-body-sm t-muted"><i data-icon="calendar"></i> 14–16 Nov 2026 · dipesan Dara Pramesti</span>
+            <span class="row row-100"><span class="badge badge--neutral">Rp 3,9 jt</span><span class="badge badge--warning">Konfirmasi &lt; 24 jam</span></span>
+          </div>
+          <div class="booking-req-actions">
+            <button class="btn btn--primary btn--sm" data-accept data-toast="Booking diterima — Dara dikabari" data-toast-icon="check"><i data-icon="check"></i> Terima</button>
+            <button class="btn btn--secondary btn--sm" data-reject data-toast="Booking ditolak" data-toast-icon="x">Tolak</button>
+          </div>
+        </div>
+
+        <div class="booking-req is-pending" data-req>
+          <div class="service-thumb"><div data-scene="reef"></div></div>
+          <div class="booking-req-main">
+            <strong class="t-body">Trip Manta Point · 4 orang</strong>
+            <span class="t-body-sm t-muted"><i data-icon="calendar"></i> 20 Nov 2026 · dipesan Rizky Adiputra</span>
+            <span class="row row-100"><span class="badge badge--neutral">Rp 2,4 jt</span><span class="badge badge--warning">Konfirmasi &lt; 24 jam</span></span>
+          </div>
+          <div class="booking-req-actions">
+            <button class="btn btn--primary btn--sm" data-accept data-toast="Booking diterima" data-toast-icon="check"><i data-icon="check"></i> Terima</button>
+            <button class="btn btn--secondary btn--sm" data-reject data-toast="Booking ditolak" data-toast-icon="x">Tolak</button>
+          </div>
+        </div>
+
+        <div class="booking-req is-pending" data-req>
+          <div class="service-thumb"><div data-scene="sunset"></div></div>
+          <div class="booking-req-main">
+            <strong class="t-body">Open trip Padar Sunrise · 1 kursi</strong>
+            <span class="t-body-sm t-muted"><i data-icon="calendar"></i> 28 Nov 2026 · dipesan Laras Puspita</span>
+            <span class="row row-100"><span class="badge badge--neutral">Rp 850 rb</span><span class="badge badge--info">Patungan 5/8 kursi</span></span>
+          </div>
+          <div class="booking-req-actions">
+            <button class="btn btn--primary btn--sm" data-accept data-toast="Peserta diterima ke open trip" data-toast-icon="check"><i data-icon="check"></i> Terima</button>
+            <button class="btn btn--secondary btn--sm" data-reject data-toast="Peserta ditolak" data-toast-icon="x">Tolak</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Layanan aktif ===== -->
+      <section id="layanan" class="stack stack-200" style="scroll-margin-top:84px">
+        <div class="row row-between">
+          <h2 class="t-h4">Layanan aktif</h2>
+          <button class="btn btn--secondary btn--sm" data-toast="Form tambah layanan — di luar lingkup prototype" data-toast-icon="plus"><i data-icon="plus"></i> Tambah layanan</button>
+        </div>
+
+        <div class="service-row">
+          <div class="service-thumb"><div data-scene="ocean"></div></div>
+          <div class="stack" style="gap:2px;flex:1;min-width:160px">
+            <strong class="t-body">Sailing Komodo 3 Hari</strong>
+            <span class="t-caption t-muted">Rp 650 rb / hari · 48 booking · rating 4,9</span>
+          </div>
+          <span class="badge badge--success">Tayang</span>
+          <button class="btn-icon btn-icon--sm" data-toast="Edit layanan" data-toast-icon="edit" aria-label="Edit"><i data-icon="edit" data-icon-size="16px"></i></button>
+        </div>
+
+        <div class="service-row">
+          <div class="service-thumb"><div data-scene="reef"></div></div>
+          <div class="stack" style="gap:2px;flex:1;min-width:160px">
+            <strong class="t-body">Manta Point Day Trip</strong>
+            <span class="t-caption t-muted">Rp 600 rb / orang · 31 booking · rating 4,8</span>
+          </div>
+          <span class="badge badge--success">Tayang</span>
+          <button class="btn-icon btn-icon--sm" data-toast="Edit layanan" data-toast-icon="edit" aria-label="Edit"><i data-icon="edit" data-icon-size="16px"></i></button>
+        </div>
+
+        <div class="service-row">
+          <div class="service-thumb"><div data-scene="sunset"></div></div>
+          <div class="stack" style="gap:2px;flex:1;min-width:160px">
+            <strong class="t-body">Open Trip Padar Sunrise</strong>
+            <span class="t-caption t-muted">Rp 850 rb / orang · 5/8 kursi terisi</span>
+          </div>
+          <span class="badge badge--warning">Draf</span>
+          <button class="btn-icon btn-icon--sm" data-toast="Edit layanan" data-toast-icon="edit" aria-label="Edit"><i data-icon="edit" data-icon-size="16px"></i></button>
+        </div>
+      </section>
+
+      <!-- ===== Ulasan ===== -->
+      <section id="ulasan" class="stack stack-200" style="scroll-margin-top:84px">
+        <div class="row row-between">
+          <h2 class="t-h4">Ulasan terbaru</h2>
+          <span class="rating"><i data-icon="star"></i> 4,9 rata-rata</span>
+        </div>
+        <div class="grid grid-2">
+          <article class="card card--pad stack stack-150">
+            <div class="row row-100">
+              <span class="avatar avatar--sm">RA</span>
+              <div class="stack" style="gap:0"><strong class="t-body-sm">Rizky Adiputra</strong><span class="t-caption t-muted">Sailing Komodo · Nov 2026</span></div>
+              <span class="rating" style="margin-left:auto"><i data-icon="star"></i> 5,0</span>
+            </div>
+            <p class="t-body-sm t-muted">"Pak Yanto tahu jam terbaik ke Padar supaya nggak kena rombongan. Pengalaman yang mulus dari awal sampai akhir."</p>
+            <button class="btn btn--ghost btn--sm" style="align-self:flex-start" data-toast="Balasan terkirim" data-toast-icon="chat"><i data-icon="chat"></i> Balas</button>
+          </article>
+          <article class="card card--pad stack stack-150">
+            <div class="row row-100">
+              <span class="avatar avatar--sm avatar--c2">DP</span>
+              <div class="stack" style="gap:0"><strong class="t-body-sm">Dara Pramesti</strong><span class="t-caption t-muted">Manta Point · Okt 2026</span></div>
+              <span class="rating" style="margin-left:auto"><i data-icon="star"></i> 4,0</span>
+            </div>
+            <p class="t-body-sm t-muted">"Seru banget! Cuma kapalnya agak telat berangkat. Selebihnya memuaskan dan ramah."</p>
+            <button class="btn btn--ghost btn--sm" style="align-self:flex-start" data-toast="Balasan terkirim" data-toast-icon="chat"><i data-icon="chat"></i> Balas</button>
+          </article>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+</section>
+
+<nav class="proto-bar" aria-label="Navigasi frame mitra">
+  <span class="proto-bar-label">Mitra</span>
+  <a href="mitra.html" class="is-active">Beranda Mitra</a>
+  <a href="mitra-login.html">Masuk</a>
+  <a href="mitra-daftar.html">Daftar</a>
+  <a href="mitra-dashboard.html">Dashboard</a>
+  <a href="index.html" style="opacity:.6">↗ Sisi wisatawan</a>
+</nav>
+
+<script>
+/* ==========================================================================
+   KELANA — SCENE RENDERER
+   Di produksi (dan di Figma), semua elemen ini diganti IMAGE FILL foto destinasi.
+   Di prototype dipakai ilustrasi SVG supaya:
+     - self-contained, nggak butuh koneksi / aset lisensi
+     - konsisten sama palette brand, jadi review-nya fokus ke layout & hierarki
+   Pakai:  <div class="scene" data-scene="ocean"></div>
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  /* Palet ilustrasi, diselaraskan dengan palet brand Kelana.
+     Aturan yang dipakai:
+       - air & langit mengambil tangga Ocean / Kelana Blue
+       - cahaya matahari memakai keluarga Sunset Orange
+       - siluet daratan memakai Midnight Navy / Slate, bukan cokelat
+       - dedaunan digeser ke teal kebiruan supaya menyatu dengan biru
+     Tidak ada ungu, tidak ada warna neon. */
+  const P = {
+    // Laut & gugus pulau — Labuan Bajo, Komodo
+    ocean:   { sky: ['#9FD7FF', '#EAF5FF'], sun: '#FFC9A8', water: ['#35A8FF', '#1574BF'], land: ['#2F6E9E', '#1E4263'] },
+    // Senja kota & kuliner malam — langit oranye, siluet navy
+    sunset:  { sky: ['#FFC49E', '#FF854C'], sun: '#FFF3E8', water: ['#C9622F', '#8A3A14'], land: ['#2A3A52', '#0F172A'] },
+    // Kawah berkabut — Bromo, Ijen
+    volcano: { sky: ['#C6E1F5', '#FFE8D8'], sun: '#FFF7EE', water: ['#B6C6D6', '#7A8CA3'], land: ['#5E6E86', '#33415A'] },
+    // Karst & laguna — Raja Ampat
+    reef:    { sky: ['#CDEBFF', '#F4FAFF'], sun: '#FFFFFF', water: ['#55C8F5', '#1E8FE6'], land: ['#2F7E8C', '#1A4551'] },
+    // Sawah terasering & palem — Bali
+    jungle:  { sky: ['#D4EDFF', '#F6FBFF'], sun: '#FFF6EA', water: ['#5FB0C9', '#2E7F9E'], land: ['#3E8A72', '#1C4A44'] },
+    // Danau & perbukitan — Toba
+    lake:    { sky: ['#C6E5FB', '#EAF5FF'], sun: '#FFFFFF', water: ['#5FADDE', '#2F6A9E'], land: ['#4E8C98', '#2A5563'] },
+    // Fajar sebelum matahari terbit — biru malam + cahaya oranye (tanpa ungu)
+    dawn:    { sky: ['#3E5F8A', '#FFAE80'], sun: '#FFE4CC', water: ['#3A5377', '#1E2B40'], land: ['#1E293B', '#0F172A'] },
+    // Pantai granit — Belitung, Lombok
+    sand:    { sky: ['#CDEBFF', '#F6FBFF'], sun: '#FFFFFF', water: ['#5BC8EE', '#1E8FE6'], land: ['#EADDC6', '#CBB795'] }
+  };
+
+  let uid = 0;
+
+  function defs(id, pal) {
+    return `
+      <defs>
+        <linearGradient id="sky${id}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${pal.sky[0]}"/>
+          <stop offset="100%" stop-color="${pal.sky[1]}"/>
+        </linearGradient>
+        <linearGradient id="wtr${id}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${pal.water[0]}"/>
+          <stop offset="100%" stop-color="${pal.water[1]}"/>
+        </linearGradient>
+        <linearGradient id="lnd${id}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${pal.land[0]}"/>
+          <stop offset="100%" stop-color="${pal.land[1]}"/>
+        </linearGradient>
+      </defs>`;
+  }
+
+  /* --- Komposisi per tipe scene -------------------------------------------- */
+  const builders = {
+    // Laut + pulau + perahu phinisi (Labuan Bajo, Komodo)
+    ocean(id, pal) {
+      return `
+        <rect width="400" height="300" fill="url(#sky${id})"/>
+        <circle cx="300" cy="78" r="30" fill="${pal.sun}" opacity="0.85"/>
+        <path d="M0 176 L54 142 L96 176 Z" fill="url(#lnd${id})" opacity="0.55"/>
+        <path d="M250 180 L300 134 L352 180 Z" fill="url(#lnd${id})" opacity="0.5"/>
+        <path d="M60 184 L128 120 L168 152 L208 184 Z" fill="url(#lnd${id})"/>
+        <rect y="182" width="400" height="118" fill="url(#wtr${id})"/>
+        <path d="M0 182 q50 10 100 0 t100 0 t100 0 t100 0 v14 H0 Z" fill="${pal.water[0]}" opacity="0.5"/>
+        <g opacity="0.3" stroke="#fff" stroke-width="2" stroke-linecap="round">
+          <path d="M40 220 h34"/><path d="M300 236 h40"/><path d="M130 252 h30"/><path d="M220 210 h24"/>
+        </g>
+        <g transform="translate(172 196)">
+          <path d="M0 24 L64 24 L54 38 L10 38 Z" fill="#1E293B"/>
+          <path d="M30 24 L30 -16 L58 24 Z" fill="#F8FAFC" opacity="0.95"/>
+          <path d="M28 24 L28 -4 L8 24 Z" fill="#F8FAFC" opacity="0.8"/>
+          <rect x="28" y="-18" width="2" height="44" fill="#1E293B"/>
+        </g>`;
+    },
+
+    // Candi + matahari terbit (Yogyakarta, Prambanan/Borobudur)
+    temple(id, pal) {
+      const stupa = (x, y, s) => `
+        <g transform="translate(${x} ${y}) scale(${s})">
+          <path d="M-22 40 L22 40 L16 20 L-16 20 Z" fill="url(#lnd${id})"/>
+          <path d="M-14 20 L14 20 L9 2 L-9 2 Z" fill="url(#lnd${id})"/>
+          <path d="M-7 2 L7 2 L0 -16 Z" fill="url(#lnd${id})"/>
+          <circle cx="0" cy="-20" r="3.4" fill="url(#lnd${id})"/>
+        </g>`;
+      return `
+        <rect width="400" height="300" fill="url(#sky${id})"/>
+        <circle cx="198" cy="132" r="54" fill="${pal.sun}" opacity="0.92"/>
+        <circle cx="198" cy="132" r="84" fill="${pal.sun}" opacity="0.2"/>
+        <path d="M0 196 q70 -26 150 -8 t120 -14 t130 10 v116 H0 Z" fill="${pal.land[1]}" opacity="0.26"/>
+        ${stupa(86, 176, 0.78)}
+        ${stupa(314, 178, 0.72)}
+        ${stupa(198, 152, 1.18)}
+        ${stupa(142, 186, 0.6)}
+        ${stupa(258, 188, 0.58)}
+        <rect y="228" width="400" height="72" fill="url(#lnd${id})"/>
+        <g opacity="0.3" fill="${pal.sky[1]}">
+          <ellipse cx="60" cy="244" rx="46" ry="7"/><ellipse cx="330" cy="256" rx="54" ry="8"/>
+        </g>
+        <g opacity="0.55" fill="${pal.land[1]}">
+          <path d="M28 232 q6 -22 12 0 Z"/><path d="M372 234 q6 -20 12 0 Z"/>
+        </g>`;
+    },
+
+    // Kawah + kaldera berkabut (Bromo, Ijen)
+    volcano(id, pal) {
+      return `
+        <rect width="400" height="300" fill="url(#sky${id})"/>
+        <circle cx="86" cy="66" r="26" fill="${pal.sun}" opacity="0.9"/>
+        <path d="M0 212 L80 128 L120 160 L150 212 Z" fill="url(#lnd${id})" opacity="0.52"/>
+        <path d="M250 212 L320 118 L400 212 Z" fill="url(#lnd${id})" opacity="0.6"/>
+        <path d="M110 216 L212 88 L246 120 L300 216 Z" fill="url(#lnd${id})"/>
+        <path d="M196 96 L212 88 L228 100 q-16 8 -32 -4 Z" fill="#F8FAFC" opacity="0.5"/>
+        <g opacity="0.5">
+          <ellipse cx="212" cy="80" rx="20" ry="9" fill="#F8FAFC"/>
+          <ellipse cx="226" cy="62" rx="15" ry="7" fill="#F8FAFC" opacity="0.7"/>
+          <ellipse cx="208" cy="48" rx="11" ry="5" fill="#F8FAFC" opacity="0.45"/>
+        </g>
+        <rect y="214" width="400" height="86" fill="url(#lnd${id})"/>
+        <g opacity="0.75" fill="#F8FAFC">
+          <ellipse cx="120" cy="218" rx="150" ry="13"/>
+          <ellipse cx="300" cy="232" rx="130" ry="11" opacity="0.6"/>
+        </g>
+        <g opacity="0.22" stroke="${pal.sky[1]}" stroke-width="3" stroke-linecap="round">
+          <path d="M40 258 h70"/><path d="M250 272 h90"/>
+        </g>`;
+    },
+
+    // Karst + laguna (Raja Ampat, Wayag)
+    reef(id, pal) {
+      const karst = (x, y, s, o) => `
+        <g transform="translate(${x} ${y}) scale(${s})" opacity="${o}">
+          <path d="M-34 44 q-6 -34 14 -44 q16 -8 30 4 q18 12 10 40 Z" fill="url(#lnd${id})"/>
+          <path d="M-20 4 q8 -12 20 -6 q10 6 6 14 q-16 4 -26 -8 Z" fill="${pal.land[0]}" opacity="0.5"/>
+        </g>`;
+      return `
+        <rect width="400" height="300" fill="url(#sky${id})"/>
+        <circle cx="330" cy="58" r="22" fill="${pal.sun}" opacity="0.75"/>
+        <g opacity="0.45" fill="#FFFFFF">
+          <ellipse cx="90" cy="54" rx="40" ry="13"/><ellipse cx="124" cy="46" rx="28" ry="10"/>
+        </g>
+        ${karst(60, 128, 0.9, 0.6)}
+        ${karst(330, 134, 0.8, 0.55)}
+        ${karst(150, 112, 1.25, 1)}
+        ${karst(246, 126, 1.0, 0.95)}
+        <rect y="176" width="400" height="124" fill="url(#wtr${id})"/>
+        <path d="M0 176 h400 v26 q-100 14 -200 0 t-200 0 Z" fill="#A8DCFF" opacity="0.5"/>
+        <g opacity="0.4" fill="#FFFFFF">
+          <ellipse cx="120" cy="222" rx="54" ry="9"/><ellipse cx="300" cy="248" rx="62" ry="10"/>
+        </g>
+        <g opacity="0.3" stroke="#fff" stroke-width="2" stroke-linecap="round">
+          <path d="M50 262 h40"/><path d="M230 276 h50"/>
+        </g>`;
+    },
+
+    // Sawah terasering + palem (Bali, Ubud)
+    jungle(id, pal) {
+      const palm = (x, y, s, flip) => `
+        <g transform="translate(${x} ${y}) scale(${flip ? -s : s} ${s})">
+          <path d="M0 0 q-5 -34 3 -62" stroke="${pal.land[1]}" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <g fill="${pal.land[0]}">
+            <path d="M3 -62 q-26 -14 -38 2 q22 6 38 6 Z"/>
+            <path d="M3 -62 q26 -16 40 0 q-24 6 -40 6 Z"/>
+            <path d="M3 -62 q-16 -28 -34 -26 q14 18 34 28 Z"/>
+            <path d="M3 -62 q18 -28 36 -24 q-16 18 -36 26 Z"/>
+            <path d="M3 -62 q-4 -24 2 -32 q8 16 4 32 Z"/>
+          </g>
+        </g>`;
+      return `
+        <rect width="400" height="300" fill="url(#sky${id})"/>
+        <circle cx="310" cy="56" r="26" fill="${pal.sun}" opacity="0.8"/>
+        <path d="M0 150 L70 96 L140 150 Z" fill="url(#lnd${id})" opacity="0.4"/>
+        <path d="M200 150 L286 86 L380 150 Z" fill="url(#lnd${id})" opacity="0.45"/>
+        <rect y="148" width="400" height="152" fill="url(#lnd${id})"/>
+        <g fill="${pal.water[0]}" opacity="0.85">
+          <path d="M0 160 q110 -16 200 0 t200 -4 v14 q-100 14 -200 0 t-200 4 Z"/>
+          <path d="M0 194 q120 -18 210 2 t190 -6 v18 q-110 16 -200 -2 t-200 6 Z" opacity="0.8"/>
+          <path d="M0 236 q130 -20 220 4 t180 -8 v22 q-120 18 -210 -4 t-190 8 Z" opacity="0.7"/>
+        </g>
+        <g opacity="0.3" stroke="${pal.land[1]}" stroke-width="2">
+          <path d="M0 172 q110 -14 200 2 t200 -4"/>
+          <path d="M0 212 q120 -16 210 4 t190 -6"/>
+        </g>
+        ${palm(52, 182, 1.1, false)}
+        ${palm(352, 196, 1.25, true)}
+        ${palm(96, 168, 0.75, true)}`;
+    },
+
+    // Danau + perbukitan (Toba, Ranu Kumbolo)
+    lake(id, pal) {
+      return `
+        <rect width="400" height="300" fill="url(#sky${id})"/>
+        <circle cx="120" cy="60" r="24" fill="${pal.sun}" opacity="0.7"/>
+        <g opacity="0.4" fill="#FFFFFF">
+          <ellipse cx="280" cy="52" rx="48" ry="14"/><ellipse cx="240" cy="60" rx="32" ry="11"/>
+        </g>
+        <path d="M0 166 L90 104 L170 166 Z" fill="url(#lnd${id})" opacity="0.5"/>
+        <path d="M130 170 L240 92 L340 170 Z" fill="url(#lnd${id})" opacity="0.75"/>
+        <path d="M290 170 L360 118 L400 170 Z" fill="url(#lnd${id})" opacity="0.55"/>
+        <rect y="168" width="400" height="132" fill="url(#wtr${id})"/>
+        <g opacity="0.3">
+          <path d="M130 168 L240 236 L340 168 Z" fill="${pal.land[1]}"/>
+        </g>
+        <ellipse cx="240" cy="206" rx="58" ry="12" fill="url(#lnd${id})" opacity="0.9"/>
+        <g opacity="0.35" stroke="#fff" stroke-width="2" stroke-linecap="round">
+          <path d="M40 196 h46"/><path d="M300 224 h54"/><path d="M110 250 h40"/>
+        </g>`;
+    },
+
+    // Fajar / stargazing (Dieng, Bromo pre-dawn)
+    dawn(id, pal) {
+      return `
+        <rect width="400" height="300" fill="url(#sky${id})"/>
+        <g fill="#F8FAFC">
+          <circle cx="46" cy="36" r="1.6" opacity="0.9"/><circle cx="112" cy="22" r="1.2" opacity="0.7"/>
+          <circle cx="178" cy="44" r="1.8" opacity="0.85"/><circle cx="244" cy="18" r="1.1" opacity="0.6"/>
+          <circle cx="310" cy="40" r="1.5" opacity="0.8"/><circle cx="364" cy="24" r="1.3" opacity="0.65"/>
+          <circle cx="78" cy="70" r="1.1" opacity="0.55"/><circle cx="286" cy="76" r="1.4" opacity="0.6"/>
+        </g>
+        <circle cx="318" cy="96" r="20" fill="${pal.sun}" opacity="0.92"/>
+        <circle cx="318" cy="96" r="38" fill="${pal.sun}" opacity="0.16"/>
+        <path d="M0 214 L74 140 L132 186 L180 214 Z" fill="url(#lnd${id})" opacity="0.55"/>
+        <path d="M150 214 L250 128 L310 174 L400 214 Z" fill="url(#lnd${id})"/>
+        <rect y="212" width="400" height="88" fill="${pal.land[1]}"/>
+        <g opacity="0.7" fill="#F8FAFC">
+          <ellipse cx="200" cy="216" rx="190" ry="12"/>
+        </g>
+        <g opacity="0.5" fill="${pal.sun}">
+          <ellipse cx="318" cy="118" rx="60" ry="5"/>
+        </g>`;
+    },
+
+    // Pantai granit (Belitung, Lombok)
+    sand(id, pal) {
+      return `
+        <rect width="400" height="300" fill="url(#sky${id})"/>
+        <circle cx="326" cy="52" r="24" fill="${pal.sun}" opacity="0.85"/>
+        <g opacity="0.35" fill="#FFFFFF">
+          <ellipse cx="80" cy="44" rx="44" ry="13"/><ellipse cx="118" cy="52" rx="30" ry="10"/>
+        </g>
+        <rect y="138" width="400" height="86" fill="url(#wtr${id})"/>
+        <path d="M0 138 h400 v18 q-100 12 -200 0 t-200 0 Z" fill="#A8DCFF" opacity="0.55"/>
+        <path d="M0 214 q100 -16 200 2 t200 -6 v90 H0 Z" fill="url(#lnd${id})"/>
+        <g fill="#94A3B8">
+          <ellipse cx="86" cy="192" rx="36" ry="30"/>
+          <ellipse cx="124" cy="204" rx="24" ry="20" fill="#64748B"/>
+          <ellipse cx="300" cy="186" rx="28" ry="24"/>
+          <ellipse cx="326" cy="200" rx="18" ry="15" fill="#64748B"/>
+        </g>
+        <g opacity="0.3" stroke="#fff" stroke-width="2" stroke-linecap="round">
+          <path d="M160 170 h40"/><path d="M230 158 h30"/>
+        </g>
+        <g opacity="0.45" fill="${pal.land[1]}">
+          <ellipse cx="200" cy="252" rx="120" ry="6"/>
+        </g>`;
+    },
+
+    // Senja kota / kuliner malam
+    sunset(id, pal) {
+      return `
+        <rect width="400" height="300" fill="url(#sky${id})"/>
+        <circle cx="200" cy="158" r="48" fill="${pal.sun}" opacity="0.95"/>
+        <circle cx="200" cy="158" r="76" fill="${pal.sun}" opacity="0.18"/>
+        <g opacity="0.3" fill="${pal.land[0]}">
+          <ellipse cx="90" cy="68" rx="54" ry="10"/><ellipse cx="310" cy="92" rx="66" ry="11"/>
+        </g>
+        <path d="M0 196 q60 -18 120 -4 t140 -10 t140 12 v106 H0 Z" fill="url(#lnd${id})" opacity="0.5"/>
+        <g fill="url(#lnd${id})">
+          <rect x="18" y="186" width="42" height="114"/>
+          <rect x="70" y="212" width="34" height="88"/>
+          <rect x="116" y="196" width="28" height="104"/>
+          <rect x="258" y="204" width="38" height="96"/>
+          <rect x="306" y="180" width="30" height="120"/>
+          <rect x="346" y="214" width="40" height="86"/>
+        </g>
+        <g fill="${pal.sun}" opacity="0.75">
+          <rect x="28" y="198" width="7" height="9"/><rect x="42" y="198" width="7" height="9"/>
+          <rect x="28" y="216" width="7" height="9"/><rect x="42" y="232" width="7" height="9"/>
+          <rect x="80" y="226" width="7" height="9"/><rect x="90" y="244" width="7" height="9"/>
+          <rect x="124" y="210" width="7" height="9"/><rect x="134" y="228" width="7" height="9"/>
+          <rect x="268" y="218" width="7" height="9"/><rect x="280" y="236" width="7" height="9"/>
+          <rect x="314" y="194" width="7" height="9"/><rect x="324" y="212" width="7" height="9"/>
+          <rect x="356" y="228" width="7" height="9"/><rect x="370" y="246" width="7" height="9"/>
+        </g>
+        <rect y="284" width="400" height="16" fill="${pal.land[1]}"/>`;
+    }
+  };
+
+  function render(type) {
+    const key = builders[type] ? type : 'ocean';
+    const pal = P[key] || P.ocean;
+    const id = ++uid;
+    return `<svg class="scene" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"
+                 xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+              ${defs(id, pal)}${builders[key](id, pal)}
+            </svg>`;
+  }
+
+  function mountAll(root) {
+    (root || document).querySelectorAll('[data-scene]').forEach((el) => {
+      if (el.dataset.sceneMounted) return;
+      el.dataset.sceneMounted = '1';
+      el.innerHTML = render(el.dataset.scene);
+      /* Class .scene DITAMBAHKAN ke elemen host.
+         CSS menulis aturan ukuran sebagai `.hero-art-card > .scene`, tapi di
+         HTML host hanya ditandai `data-scene` — tanpa class, selector itu tidak
+         pernah cocok dan host kehilangan tinggi (muncul celah putih di kartu). */
+      el.classList.add('scene');
+      el.style.overflow = 'hidden';
+      const svg = el.firstElementChild;
+      if (svg) { svg.style.width = '100%'; svg.style.height = '100%'; }
+    });
+  }
+
+  window.KelanaScenes = { render, mountAll };
+  document.addEventListener('DOMContentLoaded', () => mountAll(document));
+})();
+
+</script>
+<script>
+/* ==========================================================================
+   KELANA — PROTOTYPE RUNTIME
+   Nav, footer, icon set, toast, modal, chip/tab, dan drag-drop day planner.
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  /* ---------- ICON SET (Figma: Icon / 24px, stroke 1.8) ------------------- */
+  const S = (d, extra) =>
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra || ''}>${d}</svg>`;
+
+  const ICONS = {
+    search:   S('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
+    pin:      S('<path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>'),
+    calendar: S('<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/>'),
+    users:    S('<circle cx="9" cy="8" r="3.4"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M17 8.5a3 3 0 0 1 0 5.6M18 20c0-2 .6-3.6-1-4.8"/>'),
+    star:     '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 3 2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.4l6.1-.8Z"/></svg>',
+    heart:    S('<path d="M12 20s-7.5-4.6-7.5-9.7A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.9C19.5 15.4 12 20 12 20Z"/>'),
+    heartFill:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-9.7A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.9C19.5 15.4 12 20 12 20Z"/></svg>',
+    share:    S('<path d="M12 3v11"/><path d="m8 7 4-4 4 4"/><path d="M5 14v4a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-4"/>'),
+    clock:    S('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),
+    chevR:    S('<path d="m9 5 7 7-7 7"/>'),
+    chevL:    S('<path d="m15 5-7 7 7 7"/>'),
+    chevD:    S('<path d="m5 9 7 7 7-7"/>'),
+    arrowR:   S('<path d="M4 12h15"/><path d="m13 6 6 6-6 6"/>'),
+    plus:     S('<path d="M12 5v14M5 12h14"/>'),
+    check:    S('<path d="m4.5 12.5 5 5 10-11"/>'),
+    x:        S('<path d="M6 6l12 12M18 6 6 18"/>'),
+    menu:     S('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+    sparkle:  S('<path d="M12 3.5l1.7 4.3 4.3 1.7-4.3 1.7L12 15.5l-1.7-4.3L6 9.5l4.3-1.7Z"/><path d="M18.5 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8Z"/>'),
+    compass:  S('<circle cx="12" cy="12" r="8.5"/><path d="m15 9-2 4.4-4.4 2 2-4.4Z"/>'),
+    route:    S('<circle cx="6" cy="18" r="2.4"/><circle cx="18" cy="6" r="2.4"/><path d="M8.4 18H14a3.6 3.6 0 0 0 0-7.2h-4A3.4 3.4 0 0 1 10 4h5.6"/>'),
+    wallet:   S('<rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18"/><circle cx="16.5" cy="14.5" r="1.2" fill="currentColor" stroke="none"/>'),
+    filter:   S('<path d="M4 6h16M7 12h10M10 18h4"/>'),
+    grip:     '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>',
+    car:      S('<path d="M4 16v-3l2-5h12l2 5v3"/><path d="M3 16h18"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/>'),
+    plane:    S('<path d="M3 13l18-7-7 18-2.5-7.5L3 13Z"/>'),
+    food:     S('<path d="M7 3v8a2.5 2.5 0 0 0 5 0V3"/><path d="M9.5 11v10"/><path d="M16 3c2 1.5 2.5 4 2 6.5-.3 1.6-1 2-1 3.5v8"/>'),
+    bed:      S('<path d="M3 18v-7h12a4 4 0 0 1 4 4v3"/><path d="M3 18h18"/><path d="M3 11V7"/><circle cx="7.5" cy="8.5" r="1.8"/>'),
+    camera:   S('<rect x="3" y="7" width="18" height="13" rx="3"/><circle cx="12" cy="13.5" r="3.4"/><path d="M9 7l1.2-2.5h3.6L15 7"/>'),
+    shield:   S('<path d="M12 21s7-3 7-9V6l-7-3-7 3v6c0 6 7 9 7 9Z"/><path d="m9 12 2 2 4-4"/>'),
+    globe:    S('<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.4 2.4 2.4 14.6 0 17-2.4-2.4-2.4-14.6 0-17Z"/>'),
+    download: S('<path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/>'),
+    edit:     S('<path d="M4 20h4L19 9a2.5 2.5 0 0 0-3.5-3.5L4 16.5V20Z"/><path d="m14.5 6.5 3 3"/>'),
+    trash:    S('<path d="M4 7h16"/><path d="M9 7V5h6v2"/><path d="M6 7l1 13h10l1-13"/>'),
+    offline:  S('<path d="M5 18a4 4 0 0 1 .6-8 6 6 0 0 1 11.3-1.3A3.8 3.8 0 0 1 19 18"/><path d="M12 12v6"/><path d="m9.5 15.5 2.5 2.5 2.5-2.5"/>'),
+    sun:      S('<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/>'),
+    info:     S('<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><circle cx="12" cy="8" r="1" fill="currentColor" stroke="none"/>'),
+    chat:     S('<path d="M20 12a7 7 0 0 1-7 7H8l-4 2 1-4.2A7 7 0 0 1 13 5a7 7 0 0 1 7 7Z"/>'),
+    logo:     S('<path d="M12 2.8 20.5 12 12 21.2 3.5 12Z" fill="currentColor" stroke="none" opacity="0.28"/><path d="M12 6.4 16.8 12 12 17.6 7.2 12Z" fill="currentColor" stroke="none"/>')
+  };
+
+  function icon(name) { return ICONS[name] || ''; }
+
+  /* Ganti <i data-icon="pin"></i> jadi SVG inline */
+  function mountIcons(root) {
+    (root || document).querySelectorAll('[data-icon]').forEach((el) => {
+      if (el.dataset.iconMounted) return;
+      el.dataset.iconMounted = '1';
+      el.innerHTML = icon(el.dataset.icon);
+      el.style.display = 'inline-flex';
+      const svg = el.firstElementChild;
+      if (svg && !el.dataset.iconSize) { svg.style.width = '1.15em'; svg.style.height = '1.15em'; }
+      else if (svg) { svg.style.width = el.dataset.iconSize; svg.style.height = el.dataset.iconSize; }
+    });
+  }
+
+  /* ---------- SHARED CHROME: Navbar + Footer + Prototype bar -------------- */
+  /* Semua frame — dipakai bar navigasi prototype di kanan bawah */
+  const PAGES = [
+    { href: 'index.html',      label: 'Beranda' },
+    { href: 'explore.html',    label: 'Jelajah' },
+    { href: 'builder.html',    label: 'Builder' },
+    { href: 'itinerary.html',  label: 'Detail Trip' },
+    { href: 'trips.html',      label: 'Trip Saya' },
+    { href: 'booking.html',    label: 'Booking' },
+    { href: 'checkout.html',       label: 'Checkout' },
+    { href: 'mitra-login.html',    label: 'Mitra · Login' },
+    { href: 'mitra.html',          label: 'Mitra' },
+    { href: 'mitra-daftar.html',   label: 'Mitra · Daftar' },
+    { href: 'mitra-dashboard.html',label: 'Mitra · Dashboard' },
+    { href: 'mobile.html',     label: 'Mobile' },
+    { href: 'styleguide.html', label: 'Design System' }
+  ];
+
+  /* Halaman sisi mitra memakai shell sendiri (navbar & footer berbeda dari
+     sisi wisatawan). Dikenali dari prefix nama file. */
+  const PARTNER_PAGES = ['mitra.html', 'mitra-login.html', 'mitra-daftar.html', 'mitra-dashboard.html'];
+  function isPartnerPage() { return PARTNER_PAGES.indexOf(currentPage()) !== -1; }
+
+  /* Navigasi utama — hanya 4 menu.
+     `match` menentukan menu mana yang menyala saat halaman anak dibuka:
+     Builder dan Detail Trip adalah bagian dari Jelajah, bukan menu sendiri. */
+  const NAV_LINKS = [
+    { href: 'index.html',   label: 'Beranda',   match: ['index.html'] },
+    { href: 'explore.html', label: 'Jelajah',   match: ['explore.html', 'builder.html', 'itinerary.html'] },
+    { href: 'trips.html',   label: 'Trip Saya', match: ['trips.html'] },
+    { href: 'booking.html', label: 'Booking',   match: ['booking.html'] }
+  ];
+
+  function currentPage() {
+    const f = location.pathname.split('/').pop();
+    return f === '' ? 'index.html' : f;
+  }
+
+  const LOGO = `
+    <a class="logo" href="index.html" aria-label="Kelana — beranda">
+      <span class="logo-mark">${icon('logo')}</span>
+      <span class="logo-type">kelana<em>.</em></span>
+    </a>`;
+
+  function navbarHTML() {
+    const page = currentPage();
+    const links = NAV_LINKS.map((l) => {
+      const match = l.match || [l.href];
+      const active = match.indexOf(page) !== -1 ? ' is-active' : '';
+      // data-match dibaca juga oleh router versi file tunggal
+      return `<a class="nav-link${active}" href="${l.href}" data-match="${match.join(',')}">${l.label}</a>`;
+    }).join('');
+    return `
+      <header class="navbar">
+        <div class="container">
+          ${LOGO}
+          <nav class="nav-links" aria-label="Navigasi utama">${links}</nav>
+          <span class="spacer"></span>
+          <button class="btn-icon nav-toggle" data-toggle-nav aria-label="Buka menu">
+            <i data-icon="menu" data-icon-size="20px"></i>
+          </button>
+          <button class="btn btn--ghost btn--sm hide-mobile" data-modal-open="auth">Masuk</button>
+          <button class="btn btn--primary btn--sm hide-mobile" data-modal-open="auth">Daftar gratis</button>
+        </div>
+      </header>`;
+  }
+
+  function footerHTML() {
+    const col = (title, items) =>
+      `<div><h5>${title}</h5>${items.map((i) => `<a class="footer-link" href="${i[1] || '#'}">${i[0]}</a>`).join('')}</div>`;
+    return `
+      <footer class="footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div class="stack stack-200">
+              ${LOGO}
+              <p class="t-body-sm" style="max-width:300px;color:rgba(226,232,240,.72)">
+                Rencana perjalanan yang rapi, realistis, dan siap jalan. Dibuat buat yang pengin liburan
+                tanpa drama riset 40 tab browser.
+              </p>
+              <div class="row row-100" style="margin-top:4px">
+                <span class="badge badge--glass">${icon('shield')} Mitra terverifikasi</span>
+              </div>
+            </div>
+            ${col('Produk', [['Jelajah itinerary', 'explore.html'], ['Buat itinerary', 'builder.html'], ['Trip saya', 'trips.html'], ['Booking pemandu', 'booking.html'], ['Open trip patungan', 'booking.html']])}
+            ${col('Destinasi', [['Labuan Bajo', 'explore.html'], ['Yogyakarta', 'explore.html'], ['Raja Ampat', 'explore.html'], ['Bali', 'explore.html']])}
+            ${col('Perusahaan', [['Tentang kami'], ['Jadi mitra Kelana', 'mitra.html'], ['Pusat bantuan'], ['Syarat & privasi']])}
+          </div>
+          <div class="footer-bottom">
+            <span>© 2026 Kelana. Dibuat di Indonesia.</span>
+            <span>Prototype v1.0 — design review internal</span>
+          </div>
+        </div>
+      </footer>`;
+  }
+
+  /* ---------- SHELL SISI MITRA ----------
+     Logo memakai sufiks "mitra", menu berbeda, dan CTA mengarah ke pendaftaran.
+     Dipakai di mitra.html & mitra-daftar.html (dashboard pakai sidebar sendiri). */
+  const LOGO_MITRA = `
+    <a class="logo" href="mitra.html" aria-label="Kelana Mitra — beranda">
+      <span class="logo-mark logo-mark--mitra">${icon('logo')}</span>
+      <span class="logo-type">kelana<em>.</em></span>
+      <span class="logo-chip-mitra">Mitra</span>
+    </a>`;
+
+  const PARTNER_NAV = [
+    { href: 'mitra.html#kenapa',   label: 'Kenapa Kelana' },
+    { href: 'mitra.html#tipe',     label: 'Tipe mitra' },
+    { href: 'mitra.html#cara',     label: 'Cara kerja' },
+    { href: 'mitra-dashboard.html',label: 'Lihat dashboard' }
+  ];
+
+  function partnerNavbarHTML() {
+    const links = PARTNER_NAV.map((l) =>
+      `<a class="nav-link" href="${l.href}">${l.label}</a>`).join('');
+    return `
+      <header class="navbar navbar--mitra">
+        <div class="container">
+          ${LOGO_MITRA}
+          <nav class="nav-links" aria-label="Navigasi mitra">${links}</nav>
+          <span class="spacer"></span>
+          <button class="btn-icon nav-toggle" data-toggle-nav aria-label="Buka menu">
+            <i data-icon="menu" data-icon-size="20px"></i>
+          </button>
+          <a class="btn btn--ghost btn--sm hide-mobile" href="index.html">Ke sisi wisatawan</a>
+          <a class="btn btn--secondary btn--sm hide-mobile" href="mitra-login.html">Masuk</a>
+          <a class="btn btn--primary btn--sm" href="mitra-daftar.html">Daftar jadi mitra</a>
+        </div>
+      </header>`;
+  }
+
+  function partnerFooterHTML() {
+    const col = (title, items) =>
+      `<div><h5>${title}</h5>${items.map((i) => `<a class="footer-link" href="${i[1] || '#'}">${i[0]}</a>`).join('')}</div>`;
+    return `
+      <footer class="footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div class="stack stack-200">
+              ${LOGO_MITRA}
+              <p class="t-body-sm" style="max-width:300px;color:rgba(226,232,240,.72)">
+                Jangkau ribuan wisatawan, kelola booking dari satu tempat, dan terima pembayaran
+                tepat waktu. Gratis didaftarkan.
+              </p>
+              <div class="row row-100" style="margin-top:4px">
+                <span class="badge badge--glass">${icon('shield')} Mitra terverifikasi</span>
+              </div>
+            </div>
+            ${col('Untuk mitra', [['Jadi mitra', 'mitra.html'], ['Daftar sekarang', 'mitra-daftar.html'], ['Dashboard', 'mitra-dashboard.html'], ['Pusat bantuan mitra']])}
+            ${col('Tipe mitra', [['Pemandu wisata', 'mitra-daftar.html'], ['UMKM lokal', 'mitra-daftar.html'], ['Operator open trip', 'mitra-daftar.html']])}
+            ${col('Perusahaan', [['Tentang Kelana', 'index.html'], ['Sisi wisatawan', 'index.html'], ['Syarat kemitraan'], ['Kebijakan privasi']])}
+          </div>
+          <div class="footer-bottom">
+            <span>© 2026 Kelana. Dibuat di Indonesia.</span>
+            <span>Prototype v1.0 — sisi mitra</span>
+          </div>
+        </div>
+      </footer>`;
+  }
+
+  function protoBarHTML() {
+    const page = currentPage();
+    const links = PAGES.map((p) =>
+      `<a href="${p.href}" class="${p.href === page ? 'is-active' : ''}">${p.label}</a>`).join('');
+    return `<nav class="proto-bar" aria-label="Navigasi prototype">
+              <span class="proto-bar-label">Frame</span>${links}
+            </nav>`;
+  }
+
+  /* ---------- TOAST ---------- */
+  function toast(message, iconName) {
+    let region = document.querySelector('.toast-region');
+    if (!region) {
+      region = document.createElement('div');
+      region.className = 'toast-region';
+      region.setAttribute('role', 'status');
+      region.setAttribute('aria-live', 'polite');
+      document.body.appendChild(region);
+    }
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.innerHTML = `<span class="toast-icon">${icon(iconName || 'check')}</span><span>${message}</span>`;
+    region.appendChild(el);
+    setTimeout(() => {
+      el.classList.add('is-leaving');
+      setTimeout(() => el.remove(), 260);
+    }, 2600);
+  }
+
+  /* ---------- MODAL ---------- */
+  function openModal(id) {
+    const el = document.querySelector(`[data-modal="${id}"]`);
+    if (!el) return;
+    el.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    const focusable = el.querySelector('input, button, select, textarea');
+    if (focusable) setTimeout(() => focusable.focus(), 120);
+  }
+  function closeModal(el) {
+    const target = el || document.querySelector('.overlay.is-open');
+    if (!target) return;
+    target.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  /* ---------- DRAG & DROP day planner (Figma: interaksi manual) ---------- */
+  function initDragDrop(scope) {
+    const lists = (scope || document).querySelectorAll('[data-sortable]');
+    lists.forEach((list) => {
+      let dragged = null;
+
+      list.querySelectorAll('[data-draggable]').forEach((item) => {
+        item.setAttribute('draggable', 'true');
+
+        item.addEventListener('dragstart', (e) => {
+          dragged = item;
+          item.classList.add('is-dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          try { e.dataTransfer.setData('text/plain', 'kelana-activity'); } catch (_) {}
+        });
+
+        item.addEventListener('dragend', () => {
+          item.classList.remove('is-dragging');
+          list.querySelectorAll('.is-drop-target').forEach((n) => n.classList.remove('is-drop-target'));
+          dragged = null;
+          renumberTimes(list);
+          toast('Urutan hari diperbarui — estimasi waktu dihitung ulang', 'clock');
+        });
+
+        item.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          if (!dragged || dragged === item) return;
+          item.classList.add('is-drop-target');
+        });
+
+        item.addEventListener('dragleave', () => item.classList.remove('is-drop-target'));
+
+        item.addEventListener('drop', (e) => {
+          e.preventDefault();
+          item.classList.remove('is-drop-target');
+          if (!dragged || dragged === item) return;
+          const items = [...list.querySelectorAll('[data-draggable]')];
+          const from = items.indexOf(dragged);
+          const to = items.indexOf(item);
+          if (from < to) item.after(dragged); else item.before(dragged);
+        });
+      });
+    });
+  }
+
+  /* Setelah reorder, waktu di-recalc biar kelihatan "pintar" saat demo */
+  function renumberTimes(list) {
+    let minutes = 7 * 60 + 30; // mulai 07:30
+    list.querySelectorAll('[data-draggable]').forEach((item) => {
+      const timeEl = item.querySelector('.activity-time');
+      const dur = parseInt(item.dataset.duration || '90', 10);
+      if (timeEl) {
+        const h = String(Math.floor(minutes / 60) % 24).padStart(2, '0');
+        const m = String(minutes % 60).padStart(2, '0');
+        timeEl.textContent = `${h}.${m}`;
+      }
+      minutes += dur;
+    });
+  }
+
+  /* ---------- GLOBAL EVENT DELEGATION ---------- */
+  function initEvents() {
+    document.addEventListener('click', (e) => {
+      // Modal
+      const openBtn = e.target.closest('[data-modal-open]');
+      if (openBtn) { e.preventDefault(); openModal(openBtn.dataset.modalOpen); return; }
+
+      if (e.target.closest('[data-modal-close]')) { e.preventDefault(); closeModal(); return; }
+      if (e.target.classList.contains('overlay')) { closeModal(e.target); return; }
+
+      // Chip / filter toggle
+      const chip = e.target.closest('.chip');
+      if (chip && !chip.dataset.noToggle) {
+        chip.classList.toggle('is-selected');
+        return;
+      }
+
+      // Tabs
+      const tab = e.target.closest('.tab');
+      if (tab) {
+        const group = tab.closest('.tabs');
+        group.querySelectorAll('.tab').forEach((t) => t.classList.remove('is-active'));
+        tab.classList.add('is-active');
+        const panelId = tab.dataset.tabTarget;
+        if (panelId) {
+          const scope = document.querySelector(`[data-tab-scope="${group.dataset.tabGroup}"]`) || document;
+          scope.querySelectorAll('[data-tab-panel]').forEach((p) => {
+            p.hidden = p.dataset.tabPanel !== panelId;
+          });
+        }
+        return;
+      }
+
+      // Save / wishlist
+      const save = e.target.closest('[data-save]');
+      if (save) {
+        e.preventDefault();
+        e.stopPropagation();
+        const on = save.classList.toggle('is-active');
+        save.innerHTML = on ? ICONS.heartFill : ICONS.heart;
+        const svg = save.firstElementChild;
+        if (svg) { svg.style.width = '20px'; svg.style.height = '20px'; }
+        toast(on ? 'Disimpan ke Trip Saya' : 'Dihapus dari Trip Saya', on ? 'heart' : 'info');
+        return;
+      }
+
+      // Toast demo trigger
+      const t = e.target.closest('[data-toast]');
+      if (t) { toast(t.dataset.toast, t.dataset.toastIcon || 'check'); }
+
+      // Mobile nav
+      if (e.target.closest('[data-toggle-nav]')) {
+        const links = document.querySelector('.nav-links');
+        if (!links) return;
+        const open = links.style.display === 'flex';
+        links.style.cssText = open ? '' : `
+          display:flex; position:absolute; top:var(--nav-height); left:0; right:0;
+          flex-direction:column; align-items:stretch; gap:4px;
+          background:var(--bg-surface); padding:16px 20px 20px;
+          border-bottom:1px solid var(--border-subtle); box-shadow:var(--shadow-lg);`;
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Navbar shadow saat scroll
+    const nav = document.querySelector('.navbar');
+    if (nav) {
+      const onScroll = () => {
+        nav.style.boxShadow = window.scrollY > 8 ? 'var(--shadow-sm)' : 'none';
+      };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+  }
+
+  /* ---------- BOOT ---------- */
+  function boot() {
+    document.querySelectorAll('[data-slot="navbar"]').forEach((n) => (n.outerHTML = navbarHTML()));
+    document.querySelectorAll('[data-slot="footer"]').forEach((n) => (n.outerHTML = footerHTML()));
+    document.querySelectorAll('[data-slot="partner-navbar"]').forEach((n) => (n.outerHTML = partnerNavbarHTML()));
+    document.querySelectorAll('[data-slot="partner-footer"]').forEach((n) => (n.outerHTML = partnerFooterHTML()));
+    document.querySelectorAll('[data-slot="protobar"]').forEach((n) => (n.outerHTML = protoBarHTML()));
+
+    mountIcons(document);
+    if (window.KelanaScenes) window.KelanaScenes.mountAll(document);
+    initDragDrop(document);
+    initEvents();
+  }
+
+  window.Kelana = { icon, toast, openModal, closeModal, mountIcons, initDragDrop };
+  document.addEventListener('DOMContentLoaded', boot);
+})();
+
+</script>
+<script>
+/* ===== script mitra-daftar.html ===== */
+/* Wizard pendaftaran mitra — pola stepper sama seperti builder. */
+(function () {
+  const TITLES = {
+    1: 'Kamu mitra tipe apa?',
+    2: 'Ceritakan usahamu',
+    3: 'Verifikasi identitas',
+    4: 'Pasang layanan pertamamu',
+    5: 'Pendaftaran terkirim'
+  };
+  const LAST_STEP = 4; // jumlah dot di stepper
+
+  function goStep(n) {
+    document.querySelectorAll('[data-step]').forEach((p) => {
+      p.hidden = p.dataset.step !== String(n);
+    });
+    document.querySelectorAll('[data-step-indicator]').forEach((el) => {
+      const i = Number(el.dataset.stepIndicator);
+      const done = i < n;
+      el.classList.toggle('is-current', i === n && n <= LAST_STEP);
+      el.classList.toggle('is-done', done);
+      const dot = el.querySelector('.step-dot');
+      dot.innerHTML = done ? Kelana.icon('check') : String(i);
+      const svg = dot.firstElementChild;
+      if (svg && svg.tagName === 'svg') { svg.style.width = '14px'; svg.style.height = '14px'; }
+    });
+    const titleEl = document.getElementById('mitra-daftar-title');
+    if (titleEl) titleEl.textContent = TITLES[n];
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (n === 5) {
+      setTimeout(() => Kelana.toast('Pendaftaran terkirim — menunggu verifikasi', 'check'), 420);
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-goto-step]');
+    if (btn) { e.preventDefault(); goStep(Number(btn.dataset.gotoStep)); }
+
+    const card = e.target.closest('.select-card');
+    if (card) {
+      const input = card.querySelector('input');
+      if (input && input.type === 'radio') {
+        document.querySelectorAll('.select-card').forEach((c) => c.classList.remove('is-selected'));
+        card.classList.add('is-selected');
+      }
+    }
+
+    /* Dropzone: klik menandai "terunggah" untuk keperluan demo */
+    const dz = e.target.closest('[data-dropzone]');
+    if (dz && !dz.classList.contains('is-done')) {
+      dz.classList.add('is-done');
+      const label = dz.querySelector('strong');
+      if (label) label.textContent = 'Berhasil diunggah';
+      const icon = dz.querySelector('.dropzone-icon');
+      if (icon) { icon.innerHTML = Kelana.icon('check'); const s = icon.firstElementChild; if (s) { s.style.width='24px'; s.style.height='24px'; } }
+      Kelana.toast('Dokumen terunggah', 'check');
+    }
+  });
+})();
+/* ===== script mitra-dashboard.html ===== */
+/* Interaksi dashboard mitra */
+(function () {
+  /* Sidebar: tandai aktif + scroll ke seksi */
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('.dash-navlink');
+    if (link) {
+      if (link.dataset.soon !== undefined) {
+        e.preventDefault();
+        Kelana.toast('Halaman ini di luar lingkup prototype', 'info');
+        return;
+      }
+      const href = link.getAttribute('href') || '';
+      if (href.charAt(0) === '#') {
+        document.querySelectorAll('.dash-navlink').forEach((l) => l.classList.remove('is-active'));
+        link.classList.add('is-active');
+      }
+    }
+
+    /* Terima / tolak booking: kartu hilang dengan animasi ringkas */
+    const act = e.target.closest('[data-accept], [data-reject]');
+    if (act) {
+      const req = act.closest('[data-req]');
+      if (req) {
+        req.style.transition = 'opacity .24s, transform .24s';
+        req.style.opacity = '0';
+        req.style.transform = 'translateX(8px)';
+        setTimeout(() => {
+          req.remove();
+          const left = document.querySelectorAll('#booking [data-req]').length;
+          const badge = document.querySelector('#booking .badge--accent');
+          if (badge) badge.textContent = left ? (left + ' menunggu konfirmasi') : 'Semua beres';
+          const navBadge = document.querySelector('.dash-navlink .badge--accent');
+          if (navBadge) { if (left) navBadge.textContent = left; else navBadge.remove(); }
+        }, 240);
+      }
+    }
+  });
+
+  /* Toggle "menerima booking" di topbar */
+  document.addEventListener('change', (e) => {
+    const av = e.target.closest('[data-availability]');
+    if (av) Kelana.toast(av.checked ? 'Kamu sekarang menerima booking' : 'Booking baru dinonaktifkan', av.checked ? 'check' : 'info');
+  });
+})();
+</script>
+<script>
+
+/* Router bundel mitra: tiap halaman = satu .kframe. Tautan *.html antar
+   halaman mitra dialihkan jadi pergantian frame. Tautan ke frame yang tidak
+   ada (mis. index.html "ke sisi wisatawan") dibiarkan apa adanya. */
+(function () {
+  'use strict';
+  function show(slug, hash) {
+    var target = document.querySelector('.kframe[data-frame="' + slug + '"]');
+    if (!target) return false;
+    document.querySelectorAll('.kframe').forEach(function (f) {
+      f.hidden = (f.dataset.frame !== slug);
+    });
+    document.querySelectorAll('.proto-bar a').forEach(function (a) {
+      a.classList.toggle('is-active', a.getAttribute('href') === slug + '.html');
+    });
+    if (hash) {
+      var t = document.querySelector(hash);
+      if (t) { t.scrollIntoView({ behavior: 'smooth' }); return true; }
+    }
+    window.scrollTo(0, 0);
+    return true;
+  }
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('button, [data-save], [data-modal-open], [data-modal-close],' +
+                         ' [data-toast], input, select, textarea, label')) return;
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    if (!/\.html(#|$)/.test(href)) return;
+    var parts = href.split('#');
+    var slug = parts[0].replace('.html', '');
+    /* Hanya cegat kalau framenya memang ada di bundel ini. */
+    if (!document.querySelector('.kframe[data-frame="' + slug + '"]')) return;
+    e.preventDefault();
+    if (show(slug, parts[1] ? '#' + parts[1] : null)) {
+      history.replaceState(null, '', '#' + slug);
+    }
+  }, false);
+  document.addEventListener('DOMContentLoaded', function () {
+    var h = (location.hash || '').replace('#', '');
+    if (h) show(h, null);
+  });
+})();
+
+</script>
+</body>
+</html>

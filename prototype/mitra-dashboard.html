@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard Mitra — Kelana</title>
+<meta name="description" content="Kelola booking masuk, layanan, pendapatan, dan ketersediaan dari satu dashboard mitra Kelana.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+<!-- ======================================================================
+     Dashboard mitra — shell sidebar + main (bukan navbar wisatawan)
+     Figma: Desktop/Mitra 03 Dashboard
+     ====================================================================== -->
+<div class="dash-layout">
+
+  <!-- ============ Sidebar ============ -->
+  <aside class="dash-sidebar">
+    <a class="logo" href="mitra.html" aria-label="Kelana Mitra">
+      <span class="logo-mark logo-mark--mitra"><i data-icon="logo" data-icon-size="22px"></i></span>
+      <span class="logo-type">kelana<em>.</em></span>
+    </a>
+
+    <nav class="dash-nav" aria-label="Navigasi dashboard">
+      <span class="dash-nav-label">Kelola</span>
+      <a class="dash-navlink is-active" href="#ringkasan"><i data-icon="compass"></i> Dashboard</a>
+      <a class="dash-navlink" href="#booking"><i data-icon="calendar"></i> Booking <span class="badge badge--accent">3</span></a>
+      <a class="dash-navlink" href="#layanan"><i data-icon="route"></i> Layanan</a>
+      <a class="dash-navlink" data-soon><i data-icon="clock"></i> Kalender</a>
+      <a class="dash-navlink" href="#ringkasan"><i data-icon="wallet"></i> Pendapatan</a>
+      <a class="dash-navlink" href="#ulasan"><i data-icon="star"></i> Ulasan</a>
+      <span class="dash-nav-label">Akun</span>
+      <a class="dash-navlink" data-soon><i data-icon="users"></i> Profil usaha</a>
+      <a class="dash-navlink" data-soon><i data-icon="shield"></i> Pengaturan</a>
+    </nav>
+
+    <div class="stack stack-150" style="margin-top:auto">
+      <div class="card card--pad stack stack-100" style="background:var(--bg-ice);border-color:var(--ocean-100)">
+        <span class="badge badge--success" style="align-self:flex-start"><i data-icon="shield"></i> Terverifikasi</span>
+        <span class="t-caption t-muted">Yanto Nugraha · Pemandu, Labuan Bajo</span>
+      </div>
+      <a class="dash-navlink" href="index.html"><i data-icon="globe"></i> Ke sisi wisatawan</a>
+    </div>
+  </aside>
+
+  <!-- ============ Main ============ -->
+  <div class="dash-main">
+    <header class="dash-topbar">
+      <div class="stack" style="gap:0">
+        <strong class="t-h5" id="dash-title">Dashboard</strong>
+        <span class="t-caption t-muted">Halo, Yanto — ini ringkasan usahamu</span>
+      </div>
+      <span class="spacer"></span>
+      <label class="toggle hide-mobile" title="Terima booking baru">
+        <input type="checkbox" checked data-availability>
+        <span class="toggle-track"></span>
+        <span class="t-body-sm" style="font-weight:var(--fw-semibold)">Menerima booking</span>
+      </label>
+      <button class="btn-icon" data-toast="2 notifikasi baru" data-toast-icon="info" aria-label="Notifikasi"><i data-icon="chat" data-icon-size="18px"></i></button>
+      <span class="avatar">YN</span>
+    </header>
+
+    <div class="dash-body">
+
+      <!-- ===== Ringkasan ===== -->
+      <section id="ringkasan" class="stack stack-400" style="scroll-margin-top:84px">
+        <div class="grid grid-4">
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-card-icon"><i data-icon="wallet"></i></span>
+              <span class="stat-delta stat-delta--up"><i data-icon="arrowR" data-icon-size="12px" style="transform:rotate(-45deg)"></i> 18%</span>
+            </div>
+            <span class="stat-card-value">Rp 8,4jt</span>
+            <span class="stat-card-label">Pendapatan bulan ini</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-card-icon stat-card-icon--alt"><i data-icon="calendar"></i></span>
+              <span class="stat-delta stat-delta--up"><i data-icon="arrowR" data-icon-size="12px" style="transform:rotate(-45deg)"></i> 3 baru</span>
+            </div>
+            <span class="stat-card-value">12</span>
+            <span class="stat-card-label">Booking aktif</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-card-icon stat-card-icon--accent"><i data-icon="star"></i></span>
+              <span class="stat-delta stat-delta--up">4,9</span>
+            </div>
+            <span class="stat-card-value">284</span>
+            <span class="stat-card-label">Ulasan diterima</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <span class="stat-card-icon stat-card-icon--success"><i data-icon="chat"></i></span>
+              <span class="stat-delta stat-delta--up">Cepat</span>
+            </div>
+            <span class="stat-card-value">98%</span>
+            <span class="stat-card-label">Tingkat respons</span>
+          </div>
+        </div>
+
+        <div class="dash-split">
+          <div class="card card--pad stack stack-200">
+            <div class="row row-between">
+              <div class="stack" style="gap:0">
+                <strong class="t-h5">Pendapatan 7 bulan terakhir</strong>
+                <span class="t-caption t-muted">Total Rp 46,2 jt</span>
+              </div>
+              <div class="select-wrap">
+                <select class="input" style="height:40px;font-size:var(--fs-body-sm)">
+                  <option>2026</option><option>2025</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart">
+              <div class="chart-col"><div class="chart-bar" style="height:38%"></div><span class="chart-x">Apr</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:52%"></div><span class="chart-x">Mei</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:45%"></div><span class="chart-x">Jun</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:70%"></div><span class="chart-x">Jul</span></div>
+              <div class="chart-col is-peak"><div class="chart-bar" style="height:92%"></div><span class="chart-x">Agu</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:64%"></div><span class="chart-x">Sep</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:78%"></div><span class="chart-x">Okt</span></div>
+            </div>
+          </div>
+
+          <div class="card card--pad stack stack-200">
+            <div class="row row-between">
+              <strong class="t-h5">Ketersediaan</strong>
+              <span class="badge badge--success">Aktif</span>
+            </div>
+            <p class="t-body-sm t-muted">Atur hari kamu bisa menerima tamu minggu ini.</p>
+            <div class="stack stack-100">
+              <label class="toggle row-between" style="justify-content:space-between;width:100%">
+                <span class="t-body-sm">Sen – Jum</span>
+                <span style="display:inline-flex"><input type="checkbox" checked><span class="toggle-track"></span></span>
+              </label>
+              <hr class="divider">
+              <label class="toggle" style="justify-content:space-between;width:100%">
+                <span class="t-body-sm">Sabtu</span>
+                <span style="display:inline-flex"><input type="checkbox" checked><span class="toggle-track"></span></span>
+              </label>
+              <hr class="divider">
+              <label class="toggle" style="justify-content:space-between;width:100%">
+                <span class="t-body-sm">Minggu</span>
+                <span style="display:inline-flex"><input type="checkbox"><span class="toggle-track"></span></span>
+              </label>
+            </div>
+            <button class="btn btn--secondary btn--sm btn--block" data-toast="Ketersediaan tersimpan" data-toast-icon="check">Simpan ketersediaan</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Booking masuk ===== -->
+      <section id="booking" class="stack stack-200" style="scroll-margin-top:84px">
+        <div class="row row-between">
+          <h2 class="t-h4">Booking masuk</h2>
+          <span class="badge badge--accent">3 menunggu konfirmasi</span>
+        </div>
+
+        <div class="booking-req is-pending" data-req>
+          <div class="service-thumb"><div data-scene="ocean"></div></div>
+          <div class="booking-req-main">
+            <strong class="t-body">Sailing Komodo 3 Hari · 2 orang</strong>
+            <span class="t-body-sm t-muted"><i data-icon="calendar"></i> 14–16 Nov 2026 · dipesan Dara Pramesti</span>
+            <span class="row row-100"><span class="badge badge--neutral">Rp 3,9 jt</span><span class="badge badge--warning">Konfirmasi &lt; 24 jam</span></span>
+          </div>
+          <div class="booking-req-actions">
+            <button class="btn btn--primary btn--sm" data-accept data-toast="Booking diterima — Dara dikabari" data-toast-icon="check"><i data-icon="check"></i> Terima</button>
+            <button class="btn btn--secondary btn--sm" data-reject data-toast="Booking ditolak" data-toast-icon="x">Tolak</button>
+          </div>
+        </div>
+
+        <div class="booking-req is-pending" data-req>
+          <div class="service-thumb"><div data-scene="reef"></div></div>
+          <div class="booking-req-main">
+            <strong class="t-body">Trip Manta Point · 4 orang</strong>
+            <span class="t-body-sm t-muted"><i data-icon="calendar"></i> 20 Nov 2026 · dipesan Rizky Adiputra</span>
+            <span class="row row-100"><span class="badge badge--neutral">Rp 2,4 jt</span><span class="badge badge--warning">Konfirmasi &lt; 24 jam</span></span>
+          </div>
+          <div class="booking-req-actions">
+            <button class="btn btn--primary btn--sm" data-accept data-toast="Booking diterima" data-toast-icon="check"><i data-icon="check"></i> Terima</button>
+            <button class="btn btn--secondary btn--sm" data-reject data-toast="Booking ditolak" data-toast-icon="x">Tolak</button>
+          </div>
+        </div>
+
+        <div class="booking-req is-pending" data-req>
+          <div class="service-thumb"><div data-scene="sunset"></div></div>
+          <div class="booking-req-main">
+            <strong class="t-body">Open trip Padar Sunrise · 1 kursi</strong>
+            <span class="t-body-sm t-muted"><i data-icon="calendar"></i> 28 Nov 2026 · dipesan Laras Puspita</span>
+            <span class="row row-100"><span class="badge badge--neutral">Rp 850 rb</span><span class="badge badge--info">Patungan 5/8 kursi</span></span>
+          </div>
+          <div class="booking-req-actions">
+            <button class="btn btn--primary btn--sm" data-accept data-toast="Peserta diterima ke open trip" data-toast-icon="check"><i data-icon="check"></i> Terima</button>
+            <button class="btn btn--secondary btn--sm" data-reject data-toast="Peserta ditolak" data-toast-icon="x">Tolak</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Layanan aktif ===== -->
+      <section id="layanan" class="stack stack-200" style="scroll-margin-top:84px">
+        <div class="row row-between">
+          <h2 class="t-h4">Layanan aktif</h2>
+          <button class="btn btn--secondary btn--sm" data-toast="Form tambah layanan — di luar lingkup prototype" data-toast-icon="plus"><i data-icon="plus"></i> Tambah layanan</button>
+        </div>
+
+        <div class="service-row">
+          <div class="service-thumb"><div data-scene="ocean"></div></div>
+          <div class="stack" style="gap:2px;flex:1;min-width:160px">
+            <strong class="t-body">Sailing Komodo 3 Hari</strong>
+            <span class="t-caption t-muted">Rp 650 rb / hari · 48 booking · rating 4,9</span>
+          </div>
+          <span class="badge badge--success">Tayang</span>
+          <button class="btn-icon btn-icon--sm" data-toast="Edit layanan" data-toast-icon="edit" aria-label="Edit"><i data-icon="edit" data-icon-size="16px"></i></button>
+        </div>
+
+        <div class="service-row">
+          <div class="service-thumb"><div data-scene="reef"></div></div>
+          <div class="stack" style="gap:2px;flex:1;min-width:160px">
+            <strong class="t-body">Manta Point Day Trip</strong>
+            <span class="t-caption t-muted">Rp 600 rb / orang · 31 booking · rating 4,8</span>
+          </div>
+          <span class="badge badge--success">Tayang</span>
+          <button class="btn-icon btn-icon--sm" data-toast="Edit layanan" data-toast-icon="edit" aria-label="Edit"><i data-icon="edit" data-icon-size="16px"></i></button>
+        </div>
+
+        <div class="service-row">
+          <div class="service-thumb"><div data-scene="sunset"></div></div>
+          <div class="stack" style="gap:2px;flex:1;min-width:160px">
+            <strong class="t-body">Open Trip Padar Sunrise</strong>
+            <span class="t-caption t-muted">Rp 850 rb / orang · 5/8 kursi terisi</span>
+          </div>
+          <span class="badge badge--warning">Draf</span>
+          <button class="btn-icon btn-icon--sm" data-toast="Edit layanan" data-toast-icon="edit" aria-label="Edit"><i data-icon="edit" data-icon-size="16px"></i></button>
+        </div>
+      </section>
+
+      <!-- ===== Ulasan ===== -->
+      <section id="ulasan" class="stack stack-200" style="scroll-margin-top:84px">
+        <div class="row row-between">
+          <h2 class="t-h4">Ulasan terbaru</h2>
+          <span class="rating"><i data-icon="star"></i> 4,9 rata-rata</span>
+        </div>
+        <div class="grid grid-2">
+          <article class="card card--pad stack stack-150">
+            <div class="row row-100">
+              <span class="avatar avatar--sm">RA</span>
+              <div class="stack" style="gap:0"><strong class="t-body-sm">Rizky Adiputra</strong><span class="t-caption t-muted">Sailing Komodo · Nov 2026</span></div>
+              <span class="rating" style="margin-left:auto"><i data-icon="star"></i> 5,0</span>
+            </div>
+            <p class="t-body-sm t-muted">"Pak Yanto tahu jam terbaik ke Padar supaya nggak kena rombongan. Pengalaman yang mulus dari awal sampai akhir."</p>
+            <button class="btn btn--ghost btn--sm" style="align-self:flex-start" data-toast="Balasan terkirim" data-toast-icon="chat"><i data-icon="chat"></i> Balas</button>
+          </article>
+          <article class="card card--pad stack stack-150">
+            <div class="row row-100">
+              <span class="avatar avatar--sm avatar--c2">DP</span>
+              <div class="stack" style="gap:0"><strong class="t-body-sm">Dara Pramesti</strong><span class="t-caption t-muted">Manta Point · Okt 2026</span></div>
+              <span class="rating" style="margin-left:auto"><i data-icon="star"></i> 4,0</span>
+            </div>
+            <p class="t-body-sm t-muted">"Seru banget! Cuma kapalnya agak telat berangkat. Selebihnya memuaskan dan ramah."</p>
+            <button class="btn btn--ghost btn--sm" style="align-self:flex-start" data-toast="Balasan terkirim" data-toast-icon="chat"><i data-icon="chat"></i> Balas</button>
+          </article>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div data-slot="protobar"></div>
+
+<script src="assets/js/scenes.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+/* Interaksi dashboard mitra */
+(function () {
+  /* Sidebar: tandai aktif + scroll ke seksi */
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('.dash-navlink');
+    if (link) {
+      if (link.dataset.soon !== undefined) {
+        e.preventDefault();
+        Kelana.toast('Halaman ini di luar lingkup prototype', 'info');
+        return;
+      }
+      const href = link.getAttribute('href') || '';
+      if (href.charAt(0) === '#') {
+        document.querySelectorAll('.dash-navlink').forEach((l) => l.classList.remove('is-active'));
+        link.classList.add('is-active');
+      }
+    }
+
+    /* Terima / tolak booking: kartu hilang dengan animasi ringkas */
+    const act = e.target.closest('[data-accept], [data-reject]');
+    if (act) {
+      const req = act.closest('[data-req]');
+      if (req) {
+        req.style.transition = 'opacity .24s, transform .24s';
+        req.style.opacity = '0';
+        req.style.transform = 'translateX(8px)';
+        setTimeout(() => {
+          req.remove();
+          const left = document.querySelectorAll('#booking [data-req]').length;
+          const badge = document.querySelector('#booking .badge--accent');
+          if (badge) badge.textContent = left ? (left + ' menunggu konfirmasi') : 'Semua beres';
+          const navBadge = document.querySelector('.dash-navlink .badge--accent');
+          if (navBadge) { if (left) navBadge.textContent = left; else navBadge.remove(); }
+        }, 240);
+      }
+    }
+  });
+
+  /* Toggle "menerima booking" di topbar */
+  document.addEventListener('change', (e) => {
+    const av = e.target.closest('[data-availability]');
+    if (av) Kelana.toast(av.checked ? 'Kamu sekarang menerima booking' : 'Booking baru dinonaktifkan', av.checked ? 'check' : 'info');
+  });
+})();
+</script>
+</body>
+</html>

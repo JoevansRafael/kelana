@@ -11,21 +11,25 @@ bisa di-import langsung ke Figma.
 
 ### 1. Lihat prototype-nya (paling cepat)
 
-**Download satu file ini, lalu klik dua kali:**
+**Download satu file, lalu klik dua kali. Ada dua bundel sesuai sisi pengguna:**
 
 ```
-kelana-prototype-LENGKAP.html          (288 KB)
+kelana-prototype-LENGKAP.html   — SISI WISATAWAN (8 frame + design system)
+kelana-mitra-LENGKAP.html       — SISI MITRA / UMKM / tour guide (3 frame)
 ```
 
-Seluruh prototype — 7 frame, design system, dan builder drag-and-drop — dibungkus jadi
-satu file mandiri. Nggak butuh server, build step, folder aset, atau koneksi internet.
-Bisa dikirim lewat chat atau email ke siapa pun; penerima cukup klik dua kali.
+Masing-masing file mandiri — tanpa server, build step, folder aset, atau koneksi internet.
+Bisa dikirim lewat chat/email; penerima cukup klik dua kali, dan punya bar frame sendiri di
+pojok kanan bawah untuk pindah antar halaman.
 
-Bisa juga dibuka langsung ke frame tertentu pakai hash:
-`kelana-prototype-LENGKAP.html#builder`
+- **`kelana-mitra-LENGKAP.html`** berisi: landing *Jadi Mitra*, wizard pendaftaran,
+  dan dashboard pengelolaan. Inilah file yang memuat seluruh UI sisi mitra.
+- Bisa dibuka langsung ke frame tertentu pakai hash, mis.
+  `kelana-mitra-LENGKAP.html#mitra-dashboard`.
 
-> File tunggal ini di-generate dari versi multi-halaman. Kalau kamu mengubah file di
-> `prototype/`, jalankan `python3 tools/build-single-file.py` untuk membangunnya ulang.
+> Dua bundel karena tiap sisi punya navbar/shell sendiri. Generate ulang dengan
+> `python3 tools/build-single-file.py` (wisatawan) dan
+> `python3 tools/build-mitra-file.py` (mitra) setelah mengubah file di `prototype/`.
 
 ### Alternatif: versi multi-halaman
 
@@ -42,8 +46,16 @@ Di kanan bawah ada **bar navigasi frame** untuk melompat antar halaman. Yang bis
 | `builder.html` | **Alur 3 langkah + drag-and-drop day planner** ← fitur andalan |
 | `trips.html` | Tab status trip, lanjutkan draf |
 | `booking.html` | **Pemandu wisata + open trip patungan** · tier harga, modal gabung |
+| `checkout.html` | **Konfirmasi trip** — itinerary + pemandu + rincian biaya |
 | `mobile.html` | 4 frame mobile dalam device mockup |
 | `styleguide.html` | Design system lengkap: warna, tipografi, semua komponen |
+| `mitra.html` | **Sisi mitra** — landing "Jadi Mitra Kelana" (UMKM/tour guide) |
+| `mitra-login.html` | **Sisi mitra** — login (email/Google) ke dashboard |
+| `mitra-daftar.html` | **Sisi mitra** — wizard pendaftaran 4 langkah + status verifikasi |
+| `mitra-dashboard.html` | **Sisi mitra** — dashboard: booking masuk, layanan, pendapatan |
+
+Alur ujung-ke-ujung (login mitra, dan susun itinerary → tambah pemandu → checkout)
+didokumentasikan di [`docs/03-user-flows.md`](docs/03-user-flows.md).
 
 > **Coba ini saat demo:** buka frame **Builder** → klik sampai langkah 3 → **tarik kartu
 > aktivitas** untuk menukar urutan. Jam tiap aktivitas langsung dihitung ulang. Ini bagian
@@ -104,7 +116,8 @@ Responsif di 390px:
 ```
 kelana/
 ├── README.md
-├── kelana-prototype-LENGKAP.html .... ★ SATU FILE — download & klik dua kali
+├── kelana-prototype-LENGKAP.html .... ★ SATU FILE wisatawan — klik dua kali
+├── kelana-mitra-LENGKAP.html ........ ★ SATU FILE mitra/UMKM — klik dua kali
 ├── docs/
 │   ├── 01-design-brief.md ........... masalah, persona, IA, alur, keputusan desain
 │   ├── 02-figma-build-guide.md ...... cara membangunnya di Figma, langkah demi langkah
@@ -118,7 +131,8 @@ kelana/
 │   ├── README.md ................... cara pasang & cakupan
 │   └── test/mock-run.js ............ uji logika pakai Figma API palsu
 ├── tools/
-│   ├── build-single-file.py ........ generator file tunggal di atas
+│   ├── build-single-file.py ........ generator bundel wisatawan
+│   ├── build-mitra-file.py ......... generator bundel mitra
 │   └── audit-palette.py ............ audit proporsi warna dari screenshot
 └── prototype/ ...................... versi multi-halaman, untuk dikembangkan
     ├── index.html ................... Beranda
@@ -127,6 +141,11 @@ kelana/
     ├── itinerary.html ............... Detail trip                    (anak Jelajah)
     ├── trips.html ................... Trip Saya
     ├── booking.html ................. Booking — pemandu + open trip patungan
+    ├── checkout.html ................ Konfirmasi trip (itinerary + pemandu)
+    ├── mitra.html ................... Sisi mitra — landing "Jadi Mitra"
+    ├── mitra-login.html ............. Sisi mitra — login
+    ├── mitra-daftar.html ............ Sisi mitra — wizard pendaftaran
+    ├── mitra-dashboard.html ......... Sisi mitra — dashboard pengelolaan
     ├── mobile.html .................. 4 frame mobile 390×844
     ├── styleguide.html .............. Design system hidup
     └── assets/
@@ -138,6 +157,21 @@ kelana/
 
 Navigasi utama hanya 4 menu: **Beranda · Jelajah · Trip Saya · Booking**.
 Builder dan Detail Trip adalah anak dari Jelajah, bukan menu sendiri.
+
+### Dua sisi (marketplace)
+
+Kelana punya dua sisi pengguna dengan shell navigasi masing-masing:
+
+- **Sisi wisatawan** — 8 halaman di atas, navbar biru + 4 menu.
+- **Sisi mitra** (UMKM / tour guide / operator) — `mitra.html`, `mitra-daftar.html`,
+  `mitra-dashboard.html`. Navbar sendiri dengan pil "Mitra", dan dashboard memakai
+  layout sidebar. Tautan silang: footer wisatawan → "Jadi mitra Kelana", dan sidebar
+  mitra → "Ke sisi wisatawan".
+
+Sisi mitra punya bundel satu-file sendiri, **`kelana-mitra-LENGKAP.html`** — karena
+tiap sisi butuh navbar/shell berbeda, keduanya tidak digabung dalam satu bundel.
+Buka file mitra itu (atau file `prototype/mitra*.html` secara langsung) untuk melihat
+seluruh UI sisi mitra.
 
 ---
 

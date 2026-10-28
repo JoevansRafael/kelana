@@ -29,8 +29,14 @@ PAGES = [
     ('itinerary',  'Detail Trip'),
     ('trips',      'Trip Saya'),
     ('booking',    'Booking'),
+    ('checkout',   'Checkout'),
     ('mobile',     'Mobile'),
     ('styleguide', 'Design System'),
+    # Catatan: halaman sisi mitra (mitra.html, mitra-login.html, mitra-daftar.html,
+    # mitra-dashboard.html) sengaja TIDAK dibundel di sini. Bundel satu-file
+    # memakai satu navbar wisatawan yang persisten untuk semua frame; sisi
+    # mitra punya shell sendiri (dan dashboard tak punya <main>). Partner
+    # pages dibuka sebagai file mandiri, dan tetap terjangkau lewat proto-bar.
 ]
 
 ROUTER = r'''

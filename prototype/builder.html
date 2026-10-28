@@ -514,10 +514,9 @@
                 <button class="btn btn--secondary" data-toast="Draf disimpan — bisa dilanjut nanti" data-toast-icon="download">
                   Simpan draf
                 </button>
-                <a class="btn btn--accent btn--lg" href="trips.html"
-                   onclick="sessionStorage.setItem('kelana-new-trip','1')">
+                <button class="btn btn--accent btn--lg" data-modal-open="trip-done">
                   <i data-icon="check"></i> Selesai &amp; simpan rencana
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -636,6 +635,50 @@
           </div>
           <button class="btn btn--secondary btn--sm" disabled>Nggak muat</button>
         </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================================
+     MODAL: Selesai menyusun — tawarkan tambah pemandu
+     Figma: Modal/TripDone
+     ====================================================================== -->
+<div class="overlay" data-modal="trip-done" role="dialog" aria-modal="true" aria-labelledby="done-title">
+  <div class="modal" style="position:relative">
+    <button class="btn-icon btn-icon--sm modal-close" data-modal-close aria-label="Tutup">
+      <i data-icon="x" data-icon-size="18px"></i>
+    </button>
+    <div class="stack stack-300">
+      <div class="stack stack-100" style="align-items:center;text-align:center">
+        <span class="dropzone-icon is-done" style="width:60px;height:60px;background:var(--success-100);color:var(--success-700)">
+          <i data-icon="check" data-icon-size="28px"></i>
+        </span>
+        <h2 class="t-h3" id="done-title">Rencana 4 hari kamu tersimpan</h2>
+        <p class="t-body-sm t-muted" style="max-width:380px">
+          Mau ditemani pemandu lokal terverifikasi? Mereka tahu jam terbaik tiap titik dan
+          bisa atur ulang rencanamu kalau cuaca berubah.
+        </p>
+      </div>
+
+      <!-- Kartu pemandu yang disarankan untuk rute ini -->
+      <div class="card card--pad row" style="gap:var(--space-200);align-items:center;background:var(--bg-ice);border-color:var(--ocean-100)">
+        <div class="service-thumb"><div data-scene="ocean"></div></div>
+        <div class="stack" style="gap:2px;flex:1;min-width:0">
+          <strong class="t-body-sm">Yanto Nugraha</strong>
+          <span class="t-caption t-muted">Pemandu Labuan Bajo · 4,9 · dari Rp 650 rb/hari</span>
+        </div>
+        <span class="badge badge--brand">Cocok rute</span>
+      </div>
+
+      <div class="stack stack-100">
+        <a class="btn btn--primary btn--block btn--lg" href="booking.html">
+          <i data-icon="users"></i> Pilih pemandu wisata
+        </a>
+        <a class="btn btn--ghost btn--block" href="trips.html"
+           onclick="sessionStorage.setItem('kelana-new-trip','1')">
+          Nanti saja, simpan dulu
+        </a>
       </div>
     </div>
   </div>
