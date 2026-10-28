@@ -6,6 +6,62 @@ bundel satu-file (`kelana-prototype-LENGKAP.html` dan `kelana-mitra-LENGKAP.html
 
 ---
 
+## Flowchart
+
+Diagram dibuat lewat `tools/build-flowchart.py` (SVG mandiri, tanpa dependensi).
+Sumber SVG bisa diedit/diskalakan di `docs/flowcharts/`.
+
+### Alur wisatawan
+![Flowchart alur wisatawan](flowcharts/wisatawan.png)
+
+### Alur mitra
+![Flowchart alur mitra](flowcharts/mitra.png)
+
+---
+
+## Versi Mermaid (render otomatis di GitHub, paling mudah diedit)
+
+### Wisatawan
+```mermaid
+flowchart TD
+  A([Buka Kelana · Beranda]) --> B[Jelajah itinerary]
+  B --> C{Pakai template<br/>atau susun sendiri?}
+  C -->|Template| D[Buka template · Detail trip]
+  C -->|Susun sendiri| E[Builder 3 langkah:<br/>Dasar · Minat · Rencana]
+  D --> F[Rencana harian siap]
+  E --> F
+  F --> G{Tambah pemandu<br/>wisata?}
+  G -->|Ya| H[Booking pemandu]
+  H --> I[Checkout & bayar]
+  G -->|Nanti saja| J[Tersimpan di Trip Saya]
+  I --> J
+  J --> K[Mode jalan offline<br/>saat trip berlangsung]
+  K --> L([Trip selesai · beri ulasan])
+```
+
+### Mitra
+```mermaid
+flowchart TD
+  A([Buka Kelana Mitra]) --> B{Sudah punya akun?}
+  B -->|Sudah| C[Login · email / Google]
+  B -->|Belum| D[Daftar: pilih tipe & data usaha]
+  D --> E[Unggah verifikasi & pasang layanan]
+  E --> F[Kirim · menunggu verifikasi]
+  F --> G{Disetujui tim Kelana?}
+  G -->|Belum| H[Perbaiki dokumen]
+  H -.-> F
+  G -->|Ya| I[Dashboard mitra]
+  C --> I
+  I --> J{Ada booking masuk?}
+  J -->|Terima| K[Terima & konfirmasi]
+  K --> L[Jalankan trip · dibayar H+2]
+  J -->|Kelola| M[Kelola layanan,<br/>ketersediaan & ulasan]
+  L --> M
+  M --> N([Usaha berjalan])
+```
+
+---
+
 ## A. Mitra (UMKM / tour guide) — mulai dari login
 
 ```
