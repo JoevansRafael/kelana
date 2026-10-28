@@ -44,6 +44,9 @@ Di kanan bawah ada **bar navigasi frame** untuk melompat antar halaman. Yang bis
 | `booking.html` | **Pemandu wisata + open trip patungan** · tier harga, modal gabung |
 | `mobile.html` | 4 frame mobile dalam device mockup |
 | `styleguide.html` | Design system lengkap: warna, tipografi, semua komponen |
+| `mitra.html` | **Sisi mitra** — landing "Jadi Mitra Kelana" (UMKM/tour guide) |
+| `mitra-daftar.html` | **Sisi mitra** — wizard pendaftaran 4 langkah + status verifikasi |
+| `mitra-dashboard.html` | **Sisi mitra** — dashboard: booking masuk, layanan, pendapatan |
 
 > **Coba ini saat demo:** buka frame **Builder** → klik sampai langkah 3 → **tarik kartu
 > aktivitas** untuk menukar urutan. Jam tiap aktivitas langsung dihitung ulang. Ini bagian
@@ -127,6 +130,9 @@ kelana/
     ├── itinerary.html ............... Detail trip                    (anak Jelajah)
     ├── trips.html ................... Trip Saya
     ├── booking.html ................. Booking — pemandu + open trip patungan
+    ├── mitra.html ................... Sisi mitra — landing "Jadi Mitra"
+    ├── mitra-daftar.html ............ Sisi mitra — wizard pendaftaran
+    ├── mitra-dashboard.html ......... Sisi mitra — dashboard pengelolaan
     ├── mobile.html .................. 4 frame mobile 390×844
     ├── styleguide.html .............. Design system hidup
     └── assets/
@@ -138,6 +144,20 @@ kelana/
 
 Navigasi utama hanya 4 menu: **Beranda · Jelajah · Trip Saya · Booking**.
 Builder dan Detail Trip adalah anak dari Jelajah, bukan menu sendiri.
+
+### Dua sisi (marketplace)
+
+Kelana punya dua sisi pengguna dengan shell navigasi masing-masing:
+
+- **Sisi wisatawan** — 8 halaman di atas, navbar biru + 4 menu.
+- **Sisi mitra** (UMKM / tour guide / operator) — `mitra.html`, `mitra-daftar.html`,
+  `mitra-dashboard.html`. Navbar sendiri dengan pil "Mitra", dan dashboard memakai
+  layout sidebar. Tautan silang: footer wisatawan → "Jadi mitra Kelana", dan sidebar
+  mitra → "Ke sisi wisatawan".
+
+Halaman mitra sengaja tidak digabung ke `kelana-prototype-LENGKAP.html` (bundel itu
+memakai satu navbar wisatawan yang persisten). Buka file mitra secara langsung, atau
+lewat bar frame di bawah prototype.
 
 ---
 

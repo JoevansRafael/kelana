@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daftar Jadi Mitra — Kelana</title>
+<meta name="description" content="Daftarkan jasa pemandu, UMKM, atau open trip di Kelana dalam empat langkah: pilih tipe, data usaha, verifikasi, dan pasang layanan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  /* Figma: Desktop/Mitra 02 Daftar */
+  .wizard { max-width: 760px; margin-inline: auto; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-250); }
+  @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+
+  .select-card {
+    position: relative;
+    padding: var(--space-250);
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    cursor: pointer; text-align: left;
+    display: flex; flex-direction: column; gap: var(--space-150);
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+  .select-card:hover { border-color: var(--ocean-400); background: var(--ocean-50); }
+  .select-card input { display: none; }
+  .select-card.is-selected {
+    border-color: var(--ocean-500); background: var(--ocean-50);
+    box-shadow: 0 0 0 3px var(--ocean-50);
+  }
+  .select-card__tick {
+    position: absolute; top: 14px; right: 14px;
+    width: 22px; height: 22px; border-radius: var(--radius-full);
+    background: var(--ocean-500); color: var(--white);
+    display: grid; place-items: center;
+    opacity: 0; transform: scale(.6);
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+  .select-card.is-selected .select-card__tick { opacity: 1; transform: scale(1); }
+</style>
+</head>
+<body>
+
+<div data-slot="partner-navbar"></div>
+
+<main>
+  <!-- Header + stepper -->
+  <section style="background:var(--bg-surface);border-bottom:1px solid var(--border-subtle);padding-block:var(--space-400)">
+    <div class="container">
+      <div class="wizard">
+        <div class="row row-wrap row-between" style="gap:var(--space-300)">
+          <div class="stack stack-100">
+            <p class="t-overline t-accent">Pendaftaran mitra</p>
+            <h1 class="t-h3" id="mitra-daftar-title">Kamu mitra tipe apa?</h1>
+          </div>
+          <div class="stepper" id="stepper">
+            <div class="step is-current" data-step-indicator="1"><span class="step-dot">1</span><span class="step-label hide-mobile">Tipe</span></div>
+            <span class="step-line"></span>
+            <div class="step" data-step-indicator="2"><span class="step-dot">2</span><span class="step-label hide-mobile">Data</span></div>
+            <span class="step-line"></span>
+            <div class="step" data-step-indicator="3"><span class="step-dot">3</span><span class="step-label hide-mobile">Verifikasi</span></div>
+            <span class="step-line"></span>
+            <div class="step" data-step-indicator="4"><span class="step-dot">4</span><span class="step-label hide-mobile">Layanan</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="wizard">
+
+        <!-- ============ LANGKAH 1 — Tipe mitra ============ -->
+        <div data-step="1">
+          <div class="stack stack-300">
+            <p class="t-body t-muted">Pilih yang paling pas. Kamu bisa menambah tipe lain nanti dari dashboard.</p>
+            <div class="stack stack-150">
+              <label class="select-card is-selected" style="flex-direction:row;align-items:center">
+                <input type="radio" name="tipe" checked>
+                <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                <span class="feature-icon" style="width:48px;height:48px;flex:none"><i data-icon="compass" data-icon-size="24px"></i></span>
+                <span class="stack" style="flex:1">
+                  <strong class="t-body">Pemandu wisata</strong>
+                  <span class="t-body-sm t-muted">Jasa memandu harian atau per-trip, dengan tarif per hari.</span>
+                </span>
+              </label>
+              <label class="select-card" style="flex-direction:row;align-items:center">
+                <input type="radio" name="tipe">
+                <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                <span class="feature-icon feature-icon--accent" style="width:48px;height:48px;flex:none"><i data-icon="food" data-icon-size="24px"></i></span>
+                <span class="stack" style="flex:1">
+                  <strong class="t-body">UMKM lokal</strong>
+                  <span class="t-body-sm t-muted">Warung, kerajinan, sewa alat, homestay, atau pengalaman khas.</span>
+                </span>
+              </label>
+              <label class="select-card" style="flex-direction:row;align-items:center">
+                <input type="radio" name="tipe">
+                <span class="select-card__tick"><i data-icon="check" data-icon-size="13px"></i></span>
+                <span class="feature-icon feature-icon--sand" style="width:48px;height:48px;flex:none"><i data-icon="route" data-icon-size="24px"></i></span>
+                <span class="stack" style="flex:1">
+                  <strong class="t-body">Operator open trip</strong>
+                  <span class="t-body-sm t-muted">Buka trip patungan untuk umum dengan kuota dan tarif bertingkat.</span>
+                </span>
+              </label>
+            </div>
+            <div class="row row-between row-wrap" style="gap:var(--space-200)">
+              <a class="btn btn--ghost" href="mitra.html"><i data-icon="chevL"></i> Batal</a>
+              <button class="btn btn--primary btn--lg" data-goto-step="2">Lanjut ke data usaha <i data-icon="arrowR"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ LANGKAH 2 — Data usaha ============ -->
+        <div data-step="2" hidden>
+          <div class="stack stack-300">
+            <div class="card card--pad stack stack-300">
+              <h2 class="t-h4">Profil usaha</h2>
+              <div class="form-grid">
+                <label class="field">
+                  <span class="field-label">Nama usaha / nama kamu</span>
+                  <input class="input" type="text" placeholder="mis. Komodo Sail by Yanto">
+                </label>
+                <label class="field">
+                  <span class="field-label">Nama penanggung jawab</span>
+                  <input class="input" type="text" placeholder="Nama lengkap sesuai KTP">
+                </label>
+                <label class="field">
+                  <span class="field-label">Destinasi / kota</span>
+                  <div class="select-wrap">
+                    <select class="input">
+                      <option>Labuan Bajo, NTT</option>
+                      <option>Yogyakarta</option>
+                      <option>Bali</option>
+                      <option>Bromo &amp; Malang</option>
+                      <option>Raja Ampat</option>
+                    </select>
+                  </div>
+                </label>
+                <label class="field">
+                  <span class="field-label">Nomor WhatsApp</span>
+                  <input class="input" type="tel" placeholder="08xx xxxx xxxx">
+                </label>
+              </div>
+              <label class="field">
+                <span class="field-label">Ceritakan usahamu</span>
+                <textarea class="input input--textarea" placeholder="Apa yang kamu tawarkan, apa yang bikin beda, pengalaman kamu…"></textarea>
+                <span class="field-hint">Ini yang dibaca wisatawan di profilmu. Jujur dan spesifik lebih meyakinkan.</span>
+              </label>
+            </div>
+            <div class="row row-between row-wrap" style="gap:var(--space-200)">
+              <button class="btn btn--ghost" data-goto-step="1"><i data-icon="chevL"></i> Kembali</button>
+              <button class="btn btn--primary btn--lg" data-goto-step="3">Lanjut ke verifikasi <i data-icon="arrowR"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ LANGKAH 3 — Verifikasi ============ -->
+        <div data-step="3" hidden>
+          <div class="stack stack-300">
+            <div class="card card--pad stack stack-300">
+              <div class="stack stack-100">
+                <h2 class="t-h4">Verifikasi identitas</h2>
+                <p class="t-body-sm t-muted">Dokumen hanya dipakai untuk verifikasi dan tidak ditampilkan ke wisatawan.</p>
+              </div>
+              <div class="form-grid">
+                <div class="dropzone" data-dropzone>
+                  <span class="dropzone-icon"><i data-icon="users" data-icon-size="24px"></i></span>
+                  <strong class="t-body-sm">KTP penanggung jawab</strong>
+                  <span class="t-caption t-muted">JPG atau PNG, maks 5 MB</span>
+                </div>
+                <div class="dropzone" data-dropzone>
+                  <span class="dropzone-icon"><i data-icon="shield" data-icon-size="24px"></i></span>
+                  <strong class="t-body-sm">NIB / sertifikasi</strong>
+                  <span class="t-caption t-muted">Opsional untuk UMKM, wajib untuk pemandu</span>
+                </div>
+              </div>
+              <div class="card card--pad stack stack-100" style="background:var(--bg-ice);border-color:var(--ocean-100)">
+                <div class="row row-100">
+                  <i data-icon="info" data-icon-size="18px" style="color:var(--text-brand)"></i>
+                  <strong class="t-body-sm">Butuh 1–2 hari kerja</strong>
+                </div>
+                <p class="t-caption t-muted">
+                  Kamu tetap bisa menyelesaikan pendaftaran dan memasang layanan sekarang. Layanan
+                  mulai tampil ke wisatawan setelah verifikasi disetujui.
+                </p>
+              </div>
+            </div>
+            <div class="row row-between row-wrap" style="gap:var(--space-200)">
+              <button class="btn btn--ghost" data-goto-step="2"><i data-icon="chevL"></i> Kembali</button>
+              <button class="btn btn--primary btn--lg" data-goto-step="4">Lanjut ke layanan <i data-icon="arrowR"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ LANGKAH 4 — Layanan & tarif ============ -->
+        <div data-step="4" hidden>
+          <div class="stack stack-300">
+            <div class="card card--pad stack stack-300">
+              <div class="row row-between">
+                <h2 class="t-h4">Layanan pertamamu</h2>
+                <span class="badge badge--neutral">Bisa tambah lagi nanti</span>
+              </div>
+              <div class="form-grid">
+                <label class="field">
+                  <span class="field-label">Nama layanan</span>
+                  <input class="input" type="text" value="Sailing Komodo 3 Hari">
+                </label>
+                <label class="field">
+                  <span class="field-label">Tarif</span>
+                  <input class="input" type="text" value="Rp 650.000 / hari">
+                </label>
+              </div>
+              <label class="field">
+                <span class="field-label">Deskripsi singkat</span>
+                <textarea class="input input--textarea" placeholder="Apa yang termasuk, durasi, titik temu…"></textarea>
+              </label>
+              <div class="field">
+                <span class="field-label">Foto layanan</span>
+                <div class="dropzone" data-dropzone>
+                  <span class="dropzone-icon"><i data-icon="camera" data-icon-size="24px"></i></span>
+                  <strong class="t-body-sm">Tarik foto ke sini atau klik untuk pilih</strong>
+                  <span class="t-caption t-muted">Minimal 3 foto, rasio 4:3 paling bagus</span>
+                </div>
+              </div>
+            </div>
+            <div class="row row-between row-wrap" style="gap:var(--space-200)">
+              <button class="btn btn--ghost" data-goto-step="3"><i data-icon="chevL"></i> Kembali</button>
+              <button class="btn btn--accent btn--lg" data-goto-step="5"><i data-icon="check"></i> Selesai &amp; kirim</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ LANGKAH 5 — Selesai ============ -->
+        <div data-step="5" hidden>
+          <div class="card card--pad stack stack-300" style="text-align:center;align-items:center;padding-block:var(--space-800)">
+            <span class="dropzone-icon is-done" style="width:72px;height:72px;background:var(--success-100);color:var(--success-700)">
+              <i data-icon="check" data-icon-size="34px"></i>
+            </span>
+            <div class="stack stack-150" style="align-items:center;max-width:460px">
+              <h2 class="t-h3">Pendaftaran terkirim!</h2>
+              <p class="t-body t-muted">
+                Tim Kelana sedang memverifikasi datamu. Kamu akan dikabari lewat WhatsApp dalam
+                1–2 hari kerja. Sementara itu, lengkapi profil dan layananmu di dashboard.
+              </p>
+              <span class="badge badge--warning" style="margin-top:var(--space-100)">
+                <span class="badge-dot"></span> Status: menunggu verifikasi
+              </span>
+            </div>
+            <div class="row row-wrap" style="justify-content:center;margin-top:var(--space-100)">
+              <a class="btn btn--primary btn--lg" href="mitra-dashboard.html"><i data-icon="arrowR"></i> Buka dashboard</a>
+              <a class="btn btn--secondary btn--lg" href="mitra.html">Kembali ke beranda mitra</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<div data-slot="partner-footer"></div>
+<div data-slot="protobar"></div>
+
+<script src="assets/js/scenes.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+/* Wizard pendaftaran mitra — pola stepper sama seperti builder. */
+(function () {
+  const TITLES = {
+    1: 'Kamu mitra tipe apa?',
+    2: 'Ceritakan usahamu',
+    3: 'Verifikasi identitas',
+    4: 'Pasang layanan pertamamu',
+    5: 'Pendaftaran terkirim'
+  };
+  const LAST_STEP = 4; // jumlah dot di stepper
+
+  function goStep(n) {
+    document.querySelectorAll('[data-step]').forEach((p) => {
+      p.hidden = p.dataset.step !== String(n);
+    });
+    document.querySelectorAll('[data-step-indicator]').forEach((el) => {
+      const i = Number(el.dataset.stepIndicator);
+      const done = i < n;
+      el.classList.toggle('is-current', i === n && n <= LAST_STEP);
+      el.classList.toggle('is-done', done);
+      const dot = el.querySelector('.step-dot');
+      dot.innerHTML = done ? Kelana.icon('check') : String(i);
+      const svg = dot.firstElementChild;
+      if (svg && svg.tagName === 'svg') { svg.style.width = '14px'; svg.style.height = '14px'; }
+    });
+    const titleEl = document.getElementById('mitra-daftar-title');
+    if (titleEl) titleEl.textContent = TITLES[n];
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (n === 5) {
+      setTimeout(() => Kelana.toast('Pendaftaran terkirim — menunggu verifikasi', 'check'), 420);
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-goto-step]');
+    if (btn) { e.preventDefault(); goStep(Number(btn.dataset.gotoStep)); }
+
+    const card = e.target.closest('.select-card');
+    if (card) {
+      const input = card.querySelector('input');
+      if (input && input.type === 'radio') {
+        document.querySelectorAll('.select-card').forEach((c) => c.classList.remove('is-selected'));
+        card.classList.add('is-selected');
+      }
+    }
+
+    /* Dropzone: klik menandai "terunggah" untuk keperluan demo */
+    const dz = e.target.closest('[data-dropzone]');
+    if (dz && !dz.classList.contains('is-done')) {
+      dz.classList.add('is-done');
+      const label = dz.querySelector('strong');
+      if (label) label.textContent = 'Berhasil diunggah';
+      const icon = dz.querySelector('.dropzone-icon');
+      if (icon) { icon.innerHTML = Kelana.icon('check'); const s = icon.firstElementChild; if (s) { s.style.width='24px'; s.style.height='24px'; } }
+      Kelana.toast('Dokumen terunggah', 'check');
+    }
+  });
+})();
+</script>
+</body>
+</html>
